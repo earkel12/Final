@@ -1,7 +1,7 @@
---Å×ÀÌºí»ı¼º--
---¸Ç ÇÏ´ÜÀÇ ½ÃÄö½º»ı¼º-- 
+--í…Œì´ë¸”ìƒì„±--
+--ë§¨ í•˜ë‹¨ì˜ ì‹œí€€ìŠ¤ìƒì„±-- 
 
---À¯ÀúÅ×ÀÌºí-- 
+--ìœ ì €í…Œì´ë¸”-- 
 CREATE TABLE user (
     id	VARCHAR2(50) PRIMARY KEY,
 	pwd	VARCHAR2(100) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE user (
 	point NUMBER(50) NOT NULL
 );
 
---¹®ÀÇÅ×ÀÌºí-- 
+--ë¬¸ì˜í…Œì´ë¸”-- 
 CREATE TABLE ask (
 	id VARCHAR2(50),
 	type VARCHAR2(50) NOT NULL,
@@ -21,11 +21,11 @@ CREATE TABLE ask (
 	content VARCHAR2(1000) NOT NULL,
 	upload VARCHAR2(200),
 	comment VARCHAR2(200) NOT NULL,
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_ask_id foreign key(id) references user(id)
 );
 
---ÁÖÂ÷ÀåÅ×ÀÌºí-- 
+--ì£¼ì°¨ì¥í…Œì´ë¸”-- 
 CREATE TABLE parkinglot (
 	idx	NUMBER(100)	PRIMARY KEY,
 	name VARCHAR2(200) NOT NULL UNIQUE,
@@ -42,7 +42,7 @@ CREATE TABLE parkinglot (
 	maxweight NUMBER(50) DEFAULT 0 NOT NULL	
 );
 
---¿¹¾à³»¿ªÅ×ÀÌºí-- 
+--ì˜ˆì•½ë‚´ì—­í…Œì´ë¸”-- 
 CREATE TABLE booking (
 	bookingnum VARCHAR2(300) PRIMARY KEY,
 	bookingdate	DATE NOT NULL,
@@ -52,17 +52,17 @@ CREATE TABLE booking (
 	valet NUMBER(50) DEFAULT 0 NOT NULL,
 	instand	NUMBER(50) DEFAULT 0 NOT NULL,
 	price NUMBER(100) DEFAULT 0 NOT NULL,
-	status VARCHAR2(100) DEFAULT '¿¹¾àÁ¢¼ö' NOT NULL,
+	status VARCHAR2(100) DEFAULT 'ì˜ˆì•½ì ‘ìˆ˜' NOT NULL,
 	obstacle NUMBER(5) DEFAULT 0 NOT NULL,
 	idx	NUMBER(100),
 	id VARCHAR2(50),
-	-- FOREIGN KEY ¼³Á¤ (idx-> parkinglot Å×ÀÌºíÀÇ idx ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (idx-> parkinglot í…Œì´ë¸”ì˜ idx ì°¸ì¡°)--
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_booking_id foreign key(id) references user(id)
 );
 
---ÆÄÅ·¸ŞÀÌÆ®µî·ÏÅ×ÀÌºí-- 
+--íŒŒí‚¹ë©”ì´íŠ¸ë“±ë¡í…Œì´ë¸”-- 
 CREATE TABLE parkingmate (
 	idx NUMBER(200)	PRIMARY KEY,
 	license VARCHAR2(300) NOT NULL,
@@ -72,11 +72,11 @@ CREATE TABLE parkingmate (
 	account NUMBER(100) NOT NULL,
 	bank VARCHAR2(100) NOT NULL,
 	id VARCHAR2(50),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_parkingmate_id foreign key(id) references user(id)
 );
 
---Ä¿¹Â´ÏÆ¼°Ô½ÃÆÇÅ×ÀÌºí-- 
+--ì»¤ë®¤ë‹ˆí‹°ê²Œì‹œíŒí…Œì´ë¸”-- 
 CREATE TABLE community (
 	idx NUMBER(100)	PRIMARY KEY,
 	id VARCHAR2(50),
@@ -86,11 +86,11 @@ CREATE TABLE community (
 	readnum NUMBER(10) DEFAULT 0 NOT NULL,
 	good NUMBER(10) DEFAULT 0 NOT NULL,
 	bad NUMBER(10) DEFAULT 0 NOT NULL,
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_community_id foreign key(id) references user(id)
 );
 
---Ä¿¹Â´ÏÆ¼´ñ±ÛÅ×ÀÌºí-- 
+--ì»¤ë®¤ë‹ˆí‹°ëŒ“ê¸€í…Œì´ë¸”-- 
 CREATE TABLE comment (
 	idx NUMBER(100)	PRIMARY KEY,
 	idx NUMBER(100),
@@ -99,13 +99,13 @@ CREATE TABLE comment (
 	ref NUMBER(50) DEFAULT 0 NOT NULL,
 	lev NUMBER(50) DEFAULT 0 NOT NULL,
 	sunbun NUMBER(50) DEFAULT 0 NOT NULL,
-	-- FOREIGN KEY ¼³Á¤ (id -> community Å×ÀÌºíÀÇ idx ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> community í…Œì´ë¸”ì˜ idx ì°¸ì¡°)--
 	CONSTRAINT fk_comment_idx foreign key(idx) references community(idx),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_comment_id foreign key(id) references user(id)
 );
 
---Â÷À¯Çü-- 
+--ì°¨ìœ í˜•-- 
 CREATE TABLE car_type (
 	modelname VARCHAR2(300)	PRIMARY KEY,
 	brandname VARCHAR2(100)	NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE car_type (
 	weight NUMBER(50) DEFAULT 0 NOT NULL
 );
 
---»ç¿ëÀÚÂ÷·®Á¤º¸Å×ÀÌºí-- 
+--ì‚¬ìš©ìì°¨ëŸ‰ì •ë³´í…Œì´ë¸”-- 
 CREATE TABLE user_cars (
 	car-num VARCHAR2(300) PRIMARY KEY,
 	model_year NUMBER(50) NOT NULL,
@@ -124,13 +124,13 @@ CREATE TABLE user_cars (
 	gear VARCHAR2(50) NOT NULL,
 	id VARCHAR2(50),
 	modelname VARCHAR2(300),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_user_cars_id foreign key(id) references user(id),
-	-- FOREIGN KEY ¼³Á¤ (modelname ->  car_type Å×ÀÌºíÀÇ modelname ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (modelname ->  car_type í…Œì´ë¸”ì˜ modelname ì°¸ì¡°)--
 	CONSTRAINT fk_user_cars_modelname foreign key(modelname) references car_type(modelname)
 );
 
---ÆÄÅ·¸ŞÀÌÆ®Á¤»êÅ×ÀÌºí-- 
+--íŒŒí‚¹ë©”ì´íŠ¸ì •ì‚°í…Œì´ë¸”-- 
 CREATE TABLE mate_paycheck (
 	idx NUMBER(200)	PRIMARY KEY, 
 	id	VARCHAR2(50),
@@ -140,11 +140,11 @@ CREATE TABLE mate_paycheck (
 	price NUMBER(300) DEFAULT 0 NULL,
 	mid VARCHAR2(50),
 	car-num VARCHAR2(300),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_mate_paycheck_id foreign key(id) references user(id),
-	-- FOREIGN KEY ¼³Á¤ (mid -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (mid -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_mate_paycheck_mid foreign key(mid) references user(id),
-	-- FOREIGN KEY ¼³Á¤ (car_num ->  user_cars Å×ÀÌºíÀÇ car_num ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (car_num ->  user_cars í…Œì´ë¸”ì˜ car_num ì°¸ì¡°)--
 	CONSTRAINT fk_mate_paycheck_car_num foreign key(car_num) references user_cars(car_num)	
 );
 
@@ -155,14 +155,14 @@ CREATE TABLE review (
 	rating`	NUMBER(2) DEFAULT 0 NOT NULL,
 	content VARCHAR2(1000) NOT NULL,
 	upload VARCHAR2(500),
-	-- FOREIGN KEY ¼³Á¤ (id -> user Å×ÀÌºíÀÇ id ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (id -> user í…Œì´ë¸”ì˜ id ì°¸ì¡°)--
 	CONSTRAINT fk_review_id foreign key(id) references user(id),
-	-- FOREIGN KEY ¼³Á¤ (bookingnum -> booking Å×ÀÌºíÀÇ bookingnum ÂüÁ¶)--
+	-- FOREIGN KEY ì„¤ì • (bookingnum -> booking í…Œì´ë¸”ì˜ bookingnum ì°¸ì¡°)--
 	CONSTRAINT fk_review_bookingnum foreign key(bookingnum) references booking(bookingnum) 
 );
 
 
---°¢Å×ÀÌºí °íÀ¯¹øÈ£ ½ÃÄö½º»ı¼º--
+--ê°í…Œì´ë¸” ê³ ìœ ë²ˆí˜¸ ì‹œí€€ìŠ¤ìƒì„±--
 
 CREATE SEQUENCE sq_parkingmate_idx START WITH 1 INCREMENT BY 1;
 
