@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th = http://www.thymeleaf.org>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>회 원 가 입</h1>
+<form name="registerForm" action="/registerForm" method="post">
+<fieldset>
+	<legend>파킹메이트 회원등록</legend>
+	<table>
+		<tr>
+			<th>아이디:</th>
+			<td><input type="text" name="id">
+		</tr>
+		<tr>
+			<th>비밀번호:</th>
+			<td><input type="password" name="pwd">
+		</tr>
+		<tr>
+			<th>이름:</th>
+			<td><input type="text" name="name">
+		</tr>
+		<tr>
+			<th>주민등록번호:</th>
+			<td><input type="text" name="resident_num">
+		</tr>
+		<tr>
+			<th>전화번호:</th>
+			<td><input type="text" name="tel">
+		</tr>
+		<tr>
+			<th>이메일:</th>
+			<td><input type="text" name="email">
+		</tr>
+		<tr>
+			<td colspan="2" align="right">
+			<input type="submit" value="등록">
+			<input type="button" value="취소" onclick="window.location.href='/main.html';">
+			</td>
+		</tr>
+	</table>
+</fieldset>
+</form>
+</body>
+</html>
