@@ -1,0 +1,77 @@
+package com.pm.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.pm.pm.model.ParkingMateDTO;
+import com.pm.pm.service.ParkingMateService;
+
+
+
+@Controller
+public class ParkingMateController {
+	
+	@Autowired
+	private ParkingMateService service;
+	
+	@GetMapping
+	public String redirectToMain() {
+		return "redirect:/pm/main";
+	}
+
+	@GetMapping("/pm/main")
+	public String GetPmMain() {
+		return "pm/main";
+	}
+
+	@GetMapping("/pm/notice")
+	public String GetPmNotice() {
+		
+		return "pm/notice";
+	}
+
+	@PostMapping("/pm/notice")
+	public ModelAndView PostpmNotice(ParkingMateDTO dto) {
+		System.out.println("DTO license = " + dto.getLicense());
+	    String msg = null;
+	    try {
+			int result = service.insertParkingMate(dto);
+			msg = result>0?"파킹메이트 등록에 성공하셨습니다.":"파킹메이트 등록에 실패하셨습니다.";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    ModelAndView mav = new ModelAndView();
+		mav.addObject("msg", msg);
+		mav.setViewName("pm/pmMsg");
+	    return mav;
+	}
+
+	@GetMapping("/pm/register")
+	public String showPmRegister() {
+
+		return "pm/register";
+	}
+
+	@GetMapping("/pm/settlement")
+	public String showPmSettlement() {
+
+		return "pm/settlement";
+	}
+
+	@GetMapping("/pm/usagehistory")
+	public String showPmUsagehistory() {
+
+		return "pm/usagehistory";
+	}
+
+	@GetMapping("/pm/worklog")
+	public String showWorklog() {
+
+		return "pm/worklog";
+	}
+
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>파킹메이트</title>
+</head>
+<body>
+	<header>
+		<h1>파킹메이트 메인</h1>
+	</header>
+	<nav>
+		<ul>
+			<li><a th:href="@{/pm/notice}">파킹메이트 등록</a></li>
+			<li><a th:href="@{/pm/register}">공지사항</a></li>
+			<li><a th:href="@{/pm/settlement}">정산내역</a></li>
+			<li><a th:href="@{/pm/usagehistory}">이용현황</a></li>
+			<li><a th:href="@{/pm/worklog}">근무관리</a></li>
+		</ul>
+	</nav>
+</body>
+</html>
