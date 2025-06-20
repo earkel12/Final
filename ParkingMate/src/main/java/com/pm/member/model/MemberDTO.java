@@ -18,9 +18,9 @@ public class MemberDTO {
 	private String id;
 	private String pwd;
 	private String name;
-	private String residentnum;
+	private String resident_num;
 	private String tel;
 	private String email;
-	private int matenum;
+	private int mate_use;
 	private int point;
 }
