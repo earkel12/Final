@@ -17,8 +17,14 @@ public class RegisterServiceImple implements RegisterService {
 		
 		int count = mapper.registerForm(dto);
 		return count;
+	}
+	
+	@Override
+	public boolean checkId(String id) throws Exception {
+		String result = mapper.checkId(id);
+		System.out.println("id체크:"+result);
 		
-		
+		return result==null?false:true;
 	}
 
 }
