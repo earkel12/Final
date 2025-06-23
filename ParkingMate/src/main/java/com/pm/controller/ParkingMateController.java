@@ -17,11 +17,6 @@ public class ParkingMateController {
 	
 	@Autowired
 	private ParkingMateService service;
-	
-	@GetMapping
-	public String redirectToMain() {
-		return "redirect:/pm/main";
-	}
 
 	@GetMapping("/pm/main")
 	public String GetPmMain() {
