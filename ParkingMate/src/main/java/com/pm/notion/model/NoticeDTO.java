@@ -1,4 +1,4 @@
-package com.pm.model;
+package com.pm.notion.model;
 
 import java.util.Date;
 
