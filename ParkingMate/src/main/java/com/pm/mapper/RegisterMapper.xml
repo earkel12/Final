@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pm.mapper.RegisterMapper">
+	<!-- mybatis설정 -->
+	<insert id="registerForm" parameterType="com.pm.member.model.MemberDTO">
+		insert into
+			user(id, pwd, name,
+			resident_num, tel, email)
+		VALUES(
+			#{id}, #{pwd}, #{name},
+			#{resident_num}, #{tel}, #{email}	
+		)
+	
+	</insert>
+
+</mapper>
