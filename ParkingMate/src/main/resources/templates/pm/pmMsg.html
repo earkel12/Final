@@ -6,8 +6,8 @@
 </head>
 <body>
 	<script th:inline="javascript">
-		window.alert('[[${msg}]]');
-		location.href = '/pm';
+	 	alert([[${msg}]]);
+	    location.href = [[${gourl}]];
 	</script>
 </body>
 </html>

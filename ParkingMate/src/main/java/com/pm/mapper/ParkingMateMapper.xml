@@ -11,4 +11,5 @@
 		#{license}, #{history}, #{picture}, #{addr}, #{bank}, #{account}, #{id}
 		)
 	</insert>
+	
 </mapper>

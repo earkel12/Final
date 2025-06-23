@@ -5,20 +5,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.notice.service.NoticeService;
+import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.ParkingMateDTO;
 import com.pm.pm.service.ParkingMateService;
 
 
-
 @Controller
 public class ParkingMateController {
+
+    private final NoticeServiceImple noticeServiceImple;
 	
 	@Autowired
 	private ParkingMateService service;
 
-	@GetMapping("/pm")
+    ParkingMateController(NoticeServiceImple noticeServiceImple) {
+        this.noticeServiceImple = noticeServiceImple;
+    }
+
+	@GetMapping("/pm/main")
 	public String GetPmMain() {
 		return "pm/main";
 	}
@@ -40,14 +48,9 @@ public class ParkingMateController {
 		}
 	    ModelAndView mav = new ModelAndView();
 		mav.addObject("msg", msg);
+		mav.addObject("gourl", "/pm/main");
 		mav.setViewName("pm/pmMsg");
 	    return mav;
-	}
-
-	@GetMapping("/pm/notice")
-	public String showPmNotice() {
-
-		return "pm/notice";
 	}
 
 	@GetMapping("/pm/settlement")
