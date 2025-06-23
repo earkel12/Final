@@ -55,7 +55,7 @@ public class MemberController {
 				ck.setMaxAge(60*60*24*30);
 				resp.addCookie(ck);
 			}else {
-				Cookie saveidCookie = new Cookie("saveid", userid);
+				Cookie saveidCookie = new Cookie("saveid", "");
 				saveidCookie.setMaxAge(0);
 				resp.addCookie(saveidCookie);
 			}
@@ -73,5 +73,21 @@ public class MemberController {
 			e.printStackTrace();
 		}
 		return mav;
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+	
+	@GetMapping("/idFind")
+	public String idFindForm() {
+		return "member/idFind";
+	}
+	
+	@GetMapping("/pwdFind")
+	public String pwdFindForm() {
+		return "member/pwdFind";
 	}
 }

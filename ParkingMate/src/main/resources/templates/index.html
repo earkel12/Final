@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th = "http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
+<div th:if = "${session.sname != null}">
+ <p th:text = "${session.sname}+ '님 로그인 중'"> </p>| <a href = "logout">로그아웃</a>
+</div>
+<div th:if = "${session.sname == null}">
 <a href = "login">로그인</a>
+</div>
 </body>
 </html>
