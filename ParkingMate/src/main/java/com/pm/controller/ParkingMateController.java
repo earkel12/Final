@@ -23,14 +23,14 @@ public class ParkingMateController {
 		return "pm/main";
 	}
 
-	@GetMapping("/pm/notice")
-	public String GetPmNotice() {
+	@GetMapping("/pm/register")
+	public String GetPmRegister() {
 		
-		return "pm/notice";
+		return "pm/register";
 	}
 
-	@PostMapping("/pm/notice")
-	public ModelAndView PostpmNotice(ParkingMateDTO dto) {
+	@PostMapping("/pm/register")
+	public ModelAndView PostPmRegister(ParkingMateDTO dto) {
 	    String msg = null;
 	    try {
 			int result = service.insertParkingMate(dto);
@@ -44,10 +44,10 @@ public class ParkingMateController {
 	    return mav;
 	}
 
-	@GetMapping("/pm/register")
-	public String showPmRegister() {
+	@GetMapping("/pm/notice")
+	public String showPmNotice() {
 
-		return "pm/register";
+		return "pm/notice";
 	}
 
 	@GetMapping("/pm/settlement")

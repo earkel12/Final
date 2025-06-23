@@ -1,25 +1,21 @@
 package com.pm.pm.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParkingMateDTO {
 
-	private Integer idx;
+	private int idx;
 	private String license;
 	private String history;
 	private String picture;
 	private String addr;
 	private String bank;
-	private Integer account;
+	private int account;
 	private String id;
 
 }
