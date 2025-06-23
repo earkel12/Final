@@ -114,6 +114,12 @@
               <artifactId>lombok</artifactId>
             </path>
           </annotationProcessorPaths>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
@@ -130,4 +136,17 @@
       </plugin>
     </plugins>
   </build>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
 </project>

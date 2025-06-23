@@ -18,7 +18,7 @@ public class ParkingMateController {
 	@Autowired
 	private ParkingMateService service;
 
-	@GetMapping("/pm/main")
+	@GetMapping("/pm")
 	public String GetPmMain() {
 		return "pm/main";
 	}
@@ -31,7 +31,6 @@ public class ParkingMateController {
 
 	@PostMapping("/pm/notice")
 	public ModelAndView PostpmNotice(ParkingMateDTO dto) {
-		System.out.println("DTO license = " + dto.getLicense());
 	    String msg = null;
 	    try {
 			int result = service.insertParkingMate(dto);
