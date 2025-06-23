@@ -6,6 +6,9 @@ public interface RegisterService {
 	
 	public int registerForm(MemberDTO dto) throws Exception;
 	
+	public boolean checkId(String id) throws Exception;
+	
+	
 	
 	
 }

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.member.model.MemberDTO;
@@ -17,7 +19,19 @@ public class RegisterController {
 	
 	@GetMapping("/register")
 	public String register() {
+		return "register/termsofuse";
+	}
+	
+	@GetMapping("/choosetermsofuse")
+	public String accepttermsofuse() {
 		return "register/register";
+	}
+	
+	@GetMapping("/checkId")
+	@ResponseBody
+	public String checkId(@RequestParam("id") String id) throws Exception {
+	    boolean exists = service.checkId(id);
+	    return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
 	}
 	
 	@PostMapping("/registerForm")
@@ -38,6 +52,7 @@ public class RegisterController {
 		mav.setViewName("register/registerMsg");
 		return mav;
 	}
+ 
 	
 	
 }
