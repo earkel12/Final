@@ -1,10 +1,15 @@
 package com.pm.notice.service;
 
+
+import java.util.List;
+
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +18,20 @@ import com.pm.notice.model.NoticeDTO;
 
 @Service
 public class NoticeServiceImple implements NoticeService {
+
+	@Autowired
+	private NoticeMapper mapper;
+	
+	@Override
+	public int noticeInsert(NoticeDTO dto) throws Exception {
+		int count = mapper.noticeInsert(dto);
+		return count;
+	}
+	
+	@Override
+	public List<NoticeDTO> getAllNotice() throws Exception {
+		return mapper.getALlNotices();
+
 	
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
@@ -56,5 +75,6 @@ public class NoticeServiceImple implements NoticeService {
 	public NoticeDTO getContent(int idx) {
 		NoticeDTO dto = sqlSessionTemplate.selectOne("com.pm.mapper.NoticeMapper.getContent", idx);
 		return dto;
+
 	}
 }
