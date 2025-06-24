@@ -2,13 +2,41 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.pm.mapper.NoticeMapper">
+
+<mapper namespace="com.pm.mapper.NoticeMapper">
   
-    <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
+      <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
     	insert into notice (id, title, content, writedate, readnum, division) values(#{id}, #{title}, #{content}, now(), 0, 0)
     </insert>
     
     <select id = "getALlNotices" resultType="com.pm.notice.model.NoticeDTO">
     	select * from notice order by idx desc
     </select>
-  </mapper>
+  
+	<select id="getPmNotice"
+		resultType="com.pm.notice.model.NoticeDTO">
+		SELECT * FROM notice
+    	WHERE division = 1
+    	ORDER BY idx DESC
+    	LIMIT #{start}, #{end}
+	</select>
+	<insert id="insertPmNotice"
+		parameterType="com.pm.notice.model.NoticeDTO" useGeneratedKeys="true"
+		keyProperty="idx">
+		insert into notice (id, title, content, writedate,
+		readnum, division)
+		values (#{id}, #{title}, #{content}, #{writedate},
+		#{readnum},
+		#{division})
+	</insert>
+	<select id="getPmTotalCnt" resultType="int">
+		select count(*) from notice where division = 1
+	</select>
+	<select id="getPmMaxRef" resultType="int">
+		select max(ref) from notice where division = 1
+	</select>
+	<select id="getContent" parameterType="int" resultType="com.pm.notice.model.NoticeDTO">
+		select * from notice where idx = #{idx}
+	</select>
+</mapper>
+

@@ -12,7 +12,13 @@
 			#{id}, #{pwd}, #{name},
 			#{resident_num}, #{tel}, #{email}	
 		)
-	
 	</insert>
+	<select id="checkId" parameterType="String" resultType="String">
+		select
+			id
+		from
+			user
+		where id = #{id}
+	</select>
 
 </mapper>

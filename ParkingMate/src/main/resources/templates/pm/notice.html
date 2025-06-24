@@ -4,10 +4,28 @@
 <meta charset="UTF-8">
 <title>파킹메이트</title>
 </head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const titleCells = document.querySelectorAll(".clickable-title");
+      const detailBox = document.getElementById("post-detail");
+      const detailTitle = document.getElementById("detail-title");
+      const detailContent = document.getElementById("detail-content");
+
+      titleCells.forEach(cell => {
+        cell.addEventListener("click", () => {
+          const title = cell.dataset.title;
+          const content = cell.dataset.content;
+
+          detailTitle.textContent = title;
+          detailContent.textContent = content;
+          detailBox.style.display = "block";
+        });
+      });
+    });
+  </script>
 <body>
 	<h1>파킹메이트 공지사항</h1>
 	<form name="/pm/notice" method="post">
-		<label>파킹메이트 공지사항</label>
 		<table border="1" cellspacing="0" width="550">
 			<thead>
 				<tr>
@@ -22,15 +40,31 @@
 				<tr th:if="${#lists.isEmpty(arr)}">
 					<td colspan="5" align="center">등록된 게시글이 없습니다.</td>
 				</tr>
+				<tr th:each="dto : ${arr}">
+					<td th:text="${dto.idx}">번호</td>
+					<td><a href="#" class="clickable-title" th:text="${dto.title}"
+						th:attr="data-title=${dto.title}, data-content=${dto.content}">
+							공지제목 </a></td>
+					<td th:text="${dto.id}">작성자</td>
+					<td th:text="${dto.readnum}">조회수</td>
+					<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">2025-06-20</td>
+				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
-					
+					<td colspan="4" align="center" th:utext="${pageStr}"></td>
+					<td th:if="${userid == 'admin'}"><a href="/pm/pmNoticeWrite">글쓰기</a>
+					</td>
 				</tr>
 			</tfoot>
 		</table>
 	</form>
-	<a th:href="@{/pm}">파킹메이트 메인</a>
+	<a th:href="@{/pm/main}">파킹메이트 메인</a>
 	<br>
+	<br>
+	<div id="post-detail" style="display: none;">
+		<h3 id="detail-title">제목</h3>
+		<div id="detail-content">내용</div>
+	</div>
 </body>
 </html>

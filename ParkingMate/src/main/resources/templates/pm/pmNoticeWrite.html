@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/pm/pmNoticeWrite" method="post" enctype="multipart/form-data">
+		<h1>공지사항 쓰기</h1>
+		<label for="title">제목</label><br> 
+		<input type="text" id="title" name="title"><br>
+		<label for="content">내용</label><br>
+		<textarea id="content" name="content" rows="8" cols="50"></textarea><br> 
+  		<label>사진 업로드 (최대 4개)(구현중)</label><br>
+  		<input type="file" name="photos" multiple><br><br>
+		<input type="reset" value="초기화"> 
+		<input type="submit" value="등록">
+	</form>
+	<a th:href="@{/pm/notice}">뒤로 돌아가기</a>
+</body>
+</html>

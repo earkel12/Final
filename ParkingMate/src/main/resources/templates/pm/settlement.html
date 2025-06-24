@@ -6,9 +6,43 @@
 </head>
 <body>
 <h1>파킹메이트 정산내역</h1>
-<form name = "settlement" action = "settlement">
-	<label>파킹메이트 정산내역</label>
-</form>
-<a th:href="@{/pm}">파킹메이트 메인</a><br>
+<form action="/pm/settlement" method="post">
+		<table border="1" cellspacing="0" width="550">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>요청자ID</th>
+					<th>시작일시</th>
+					<th>종료일시</th>
+					<th>상태구분</th>
+					<th>금액</th>
+					<th>메이트ID</th>
+					<th>차량번호</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.isEmpty(arr)}">
+					<td colspan="8" align="center">정산내역이 없습니다.</td>
+				</tr>
+				<tr th:each="dto : ${arr}">
+					<td th:text="${dto.idx}">번호</td>         
+					<td th:text="${dto.id}">요청자ID</td>
+					<td th:text="${#dates.format(dto.starttime, 'yyyy-MM-dd')}">시작일시</td>
+					<td th:text="${#dates.format(dto.endtime, 'yyyy-MM-dd')}">종료일시</td>
+					<td th:text="${dto.status}">상태구분</td>
+					<td th:text="${dto.price}">금액</td>
+					<td th:text="${dto.mid}">메이트ID</td>
+					<td th:text="${dto.car_num}">차량번호</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="8" align="center">날짜 기준 페이징(미구현)</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+<a th:href="@{/pm/main}">파킹메이트 메인</a><br>
 </body>
+<br>
 </html>
