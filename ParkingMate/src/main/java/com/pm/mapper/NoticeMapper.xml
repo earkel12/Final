@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.pm.mapper.NoticeMapper">
+  
+    <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
+    	insert into notice (id, title, content, writedate, readnum, division) values(#{id}, #{title}, #{content}, now(), 0, 0)
+    </insert>
+    
+    <select id = "getALlNotices" resultType="com.pm.notice.model.NoticeDTO">
+    	select * from notice order by idx desc
+    </select>
+  </mapper>

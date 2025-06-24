@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th = "http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -24,7 +24,13 @@
 		</tr>
 	</tfoot>
 	<tbody>
-		<tr>
+		<tr th:each = "notice : ${noticeList}">
+			<td th:text = "${notice.idx}"></td>
+			<td th:text = "${notice.title}"></td>
+			<td th:text = "${#dates.format(notice.writedate, 'yy-MM-dd HH:mm')}"></td>
+			<td th:text = "${notice.readnum}"></td>
+		</tr>
+		<tr th:if = "${noticeList == null}">
 			<td colspan = "4" align = "center">
 				공지사항을 등록해주세요.
 			</td>
