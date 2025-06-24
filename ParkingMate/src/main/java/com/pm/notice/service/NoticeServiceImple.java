@@ -30,15 +30,12 @@ public class NoticeServiceImple implements NoticeService {
 	
 	@Override
 	public List<NoticeDTO> getAllNotice() throws Exception {
-		return mapper.getALlNotices();
-
+		return mapper.getAllNotices();
+	}
 	
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
-
-	@Autowired
-	private NoticeMapper mapper;
-
+	
 	@Override
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception {
 		int start = (cp - 1) * ls;
@@ -77,4 +74,5 @@ public class NoticeServiceImple implements NoticeService {
 		return dto;
 
 	}
+	
 }

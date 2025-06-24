@@ -10,7 +10,7 @@ import java.util.*;
 @Mapper
 public interface NoticeMapper {
   public int noticeInsert(NoticeDTO dto) throws Exception;
-	public List<NoticeDTO> getALlNotices() throws Exception;
+	public List<NoticeDTO> getAllNotices() throws Exception;
 	public List<NoticeDTO> getPmNotice() throws Exception;
 	public int insertPmNotice(NoticeDTO dto) throws Exception;
 	public int getPmMaxRef();
