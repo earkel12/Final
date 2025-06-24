@@ -5,7 +5,7 @@
 
 <mapper namespace="com.pm.mapper.NoticeMapper">
   
-      <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
+    <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
     	insert into notice (id, title, content, writedate, readnum, division) values(#{id}, #{title}, #{content}, now(), 0, 0)
     </insert>
     
