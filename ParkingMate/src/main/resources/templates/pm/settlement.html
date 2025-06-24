@@ -5,8 +5,8 @@
 <title>파킹메이트</title>
 </head>
 <body>
-<h1>파킹메이트 정산내역</h1>
-<form action="/pm/settlement" method="post">
+	<h1>파킹메이트 정산내역</h1>
+	<form action="/pm/settlement" method="get">
 		<table border="1" cellspacing="0" width="550">
 			<thead>
 				<tr>
@@ -25,7 +25,7 @@
 					<td colspan="8" align="center">정산내역이 없습니다.</td>
 				</tr>
 				<tr th:each="dto : ${arr}">
-					<td th:text="${dto.idx}">번호</td>         
+					<td th:text="${dto.idx}">번호</td>
 					<td th:text="${dto.id}">요청자ID</td>
 					<td th:text="${#dates.format(dto.starttime, 'yyyy-MM-dd')}">시작일시</td>
 					<td th:text="${#dates.format(dto.endtime, 'yyyy-MM-dd')}">종료일시</td>
@@ -37,12 +37,17 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="8" align="center">날짜 기준 페이징(미구현)</td>
+					시작일:
+					<input type="date" name="startDate" th:value="${startDate}">
+					종료일:
+					<input type="date" name="endDate" th:value="${endDate}">
+					<button type="submit">조회</button>
 				</tr>
 			</tfoot>
 		</table>
 	</form>
-<a th:href="@{/pm/main}">파킹메이트 메인</a><br>
+	<a th:href="@{/pm/main}">파킹메이트 메인</a>
+	<br>
 </body>
 <br>
 </html>

@@ -9,7 +9,7 @@
     	insert into notice (id, title, content, writedate, readnum, division) values(#{id}, #{title}, #{content}, now(), 0, 0)
     </insert>
     
-    <select id = "getALlNotices" resultType="com.pm.notice.model.NoticeDTO">
+    <select id = "getAllNotices" resultType="com.pm.notice.model.NoticeDTO">
     	select * from notice order by idx desc
     </select>
   
