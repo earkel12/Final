@@ -7,31 +7,41 @@
 <body>
 <h1>파킹메이트 등록</h1>
 
- <form action="/pm/register" method="post">
-    <label for="license">차량 번호:</label>
-    <input type="text" id="license" name="license" required /><br/><br/>
-
-    <label for="history">차량 이력:</label>
-    <input type="text" id="history" name="history" /><br/><br/>
-	
-	<label for="picture">사진 URL:</label>
-    <input type="text" id="picture" name="picture" /><br/><br/>
-	
-	<label for="addr">주소:</label>
-    <input type="text" id="addr" name="addr" required /><br/><br/>
-    
-    <label for="bank">은행명:</label>
-    <input type="text" id="bank" name="bank" required /><br/><br/>
-
-    <label for="account">계좌번호:</label>
-    <input type="text" id="account" name="account" required /><br/><br/>
-
-	<label for="id">사용자 ID(테스트용):</label>
-    <input type="text" id="id" name="id" required /><br/><br/>
-    
-    <button type="submit">등록</button>
-  </form>
-
-  <p><a th:href="@{/pm/main}">파킹메이트 메인</a></p>
+<form action="/pm/register" method="post">
+  <table border="1" cellspacing="0" cellpadding="8">
+    <tbody>
+      <tr>
+        <th><label for="license">차량 번호</label></th>
+        <td><input type="text" id="license" name="license" required /></td>
+      </tr>
+      <tr>
+        <th><label for="history">차량 이력</label></th>
+        <td><input type="text" id="history" name="history" /></td>
+      </tr>
+      <tr>
+        <th><label for="picture">사진 URL</label></th>
+        <td><input type="text" id="picture" name="picture" /></td>
+      </tr>
+      <tr>
+        <th><label for="addr">주소</label></th>
+        <td><input type="text" id="addr" name="addr" required /></td>
+      </tr>
+      <tr>
+        <th><label for="bank">은행명</label></th>
+        <td><input type="text" id="bank" name="bank" required /></td>
+      </tr>
+      <tr>
+        <th><label for="account">계좌번호</label></th>
+        <td><input type="text" id="account" name="account" required /></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center">
+          <button type="submit">등록</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<p><a th:href="@{/pm/main}">파킹메이트 메인</a></p>
 </body>
 </html>

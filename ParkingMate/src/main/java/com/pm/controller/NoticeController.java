@@ -9,10 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.notice.model.NoticeDTO;
 import com.pm.notice.service.NoticeService;
+import com.pm.page.PageModule;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,21 +30,24 @@ public class NoticeController {
 	}
 
 	@GetMapping("/pm/notice")
-	public ModelAndView showPmNotice(HttpSession session) {
+	public ModelAndView showPmNotice(
+			HttpSession session, 
+			@RequestParam(value = "cp", defaultValue = "1") int cp) throws Exception {
+		
 		int listSize = 5;
 		int pageSize = 5;
-		int totalCnt = 10;
-		List<NoticeDTO> arr = new ArrayList<>();
-		try {
-			arr = service.getPmNotice();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		int totalCnt = service.getPmTotalCnt();
+	
+		List<NoticeDTO> arr = service.getPmNotice(cp, listSize);
+		String pageStr = PageModule.makePaging("/pm/notice", totalCnt, listSize, pageSize, cp);
+		
 		ModelAndView mav = new ModelAndView();
+		String userid = (String) session.getAttribute("sid");
 		mav.addObject("arr", arr);
-		 String userid = (String) session.getAttribute("sid");
 		mav.addObject("userid", userid);
+		mav.addObject("pageStr", pageStr);
 		mav.setViewName("pm/notice");
+		
 		return mav;
 	}
 
@@ -59,7 +64,7 @@ public class NoticeController {
 		dto.setDivision(1);
 		String msg = null;
 		try {
-			int result = service.insertNotice(dto);
+			int result = service.insertPmNotice(dto);
 			msg = result > 0 ? "공지사항 등록에 성공하셨습니다." : "공지사항 등록에 실패하셨습니다.";
 		} catch (Exception e) {
 			e.printStackTrace();

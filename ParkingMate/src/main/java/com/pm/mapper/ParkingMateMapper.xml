@@ -3,13 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pm.mapper.ParkingMateMapper">
+	<select id="getParkingMate" parameterType="String" resultType="com.pm.pm.model.ParkingMateDTO">
+		select * from parkingmate where id=#{id}
+	</select>
 	<insert id="insertParkingMate"
 		parameterType="com.pm.pm.model.ParkingMateDTO">
 		insert into parkingmate (
-		license, history, picture, addr, bank, account, id
+		license, history, picture,
+		addr, bank, account, id
 		) values (
-		#{license}, #{history}, #{picture}, #{addr}, #{bank}, #{account}, #{id}
+		#{license}, #{history}, #{picture},
+		#{addr}, #{bank}, #{account}, #{id}
 		)
 	</insert>
-	
+	<select id="getMatePayCheck"
+		resultType="com.pm.pm.model.MatePayCheckDTO">
+		select * from mate_paycheck
+	</select>
 </mapper>

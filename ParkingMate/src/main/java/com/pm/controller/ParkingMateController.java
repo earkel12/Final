@@ -1,5 +1,8 @@
 package com.pm.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,23 +11,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.notice.model.NoticeDTO;
 import com.pm.notice.service.NoticeService;
 import com.pm.notice.service.NoticeServiceImple;
+import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
 import com.pm.pm.service.ParkingMateService;
 
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ParkingMateController {
 
-    private final NoticeServiceImple noticeServiceImple;
-	
+	private final NoticeServiceImple noticeServiceImple;
+
 	@Autowired
 	private ParkingMateService service;
 
-    ParkingMateController(NoticeServiceImple noticeServiceImple) {
-        this.noticeServiceImple = noticeServiceImple;
-    }
+	ParkingMateController(NoticeServiceImple noticeServiceImple) {
+		this.noticeServiceImple = noticeServiceImple;
+	}
 
 	@GetMapping("/pm/main")
 	public String GetPmMain() {
@@ -33,30 +39,41 @@ public class ParkingMateController {
 
 	@GetMapping("/pm/register")
 	public String GetPmRegister() {
-		
 		return "pm/register";
 	}
 
 	@PostMapping("/pm/register")
-	public ModelAndView PostPmRegister(ParkingMateDTO dto) {
-	    String msg = null;
-	    try {
-			int result = service.insertParkingMate(dto);
-			msg = result>0?"파킹메이트 등록에 성공하셨습니다.":"파킹메이트 등록에 실패하셨습니다.";
-		} catch (Exception e) {
-			e.printStackTrace();
+	public ModelAndView PostPmRegister(HttpSession session, ParkingMateDTO dto) throws Exception {
+		String userid = (String) session.getAttribute("sid");
+		if (userid == null || userid.isEmpty()) {
+		   ModelAndView mav = new ModelAndView();
+		   mav.addObject("msg", "로그인 후 이용 가능합니다.");
+		   mav.addObject("gourl", "/login");
+		   mav.setViewName("pm/pmMsg");
+		   return mav;
 		}
-	    ModelAndView mav = new ModelAndView();
+		
+		dto.setId(userid);
+		int result = service.insertParkingMate(dto);
+		String msg = result > 0 ? "파킹메이트 등록에 성공하셨습니다." : "파킹메이트 등록에 실패하셨습니다.";
+
+		ModelAndView mav = new ModelAndView();
 		mav.addObject("msg", msg);
 		mav.addObject("gourl", "/pm/main");
 		mav.setViewName("pm/pmMsg");
-	    return mav;
+		return mav;
 	}
-
+	
 	@GetMapping("/pm/settlement")
-	public String showPmSettlement() {
-
-		return "pm/settlement";
+	public ModelAndView showPmSettlement() throws Exception {
+		int listSize = 5;
+		int pageSize = 5;
+		int totalCnt = 10;
+		List<MatePayCheckDTO> arr = service.getMatePayCheck();
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("arr", arr);
+		mav.setViewName("pm/settlement");
+		return mav;
 	}
 
 	@GetMapping("/pm/usagehistory")
@@ -66,9 +83,31 @@ public class ParkingMateController {
 	}
 
 	@GetMapping("/pm/worklog")
-	public String showWorklog() {
+	public ModelAndView showWorklog(HttpSession session) throws Exception {
+		String userid = (String) session.getAttribute("sid");
 
-		return "pm/worklog";
+		if (userid == null || userid.isEmpty()) {
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("msg", "로그인 후 이용 가능합니다.");
+			mav.addObject("gourl", "/login");
+			mav.setViewName("pm/pmMsg");
+			return mav;
+		}
+
+		ParkingMateDTO dto = service.getParkingMate(userid);
+
+		if (dto == null) {
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("msg", "파킹메이트 등록 후 이용 가능합니다.");
+			mav.addObject("gourl", "/parkingmate");
+			mav.setViewName("pm/pmMsg");
+			return mav;
+		}
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("worklog", dto);
+		mav.setViewName("pm/worklog");
+		return mav;
 	}
 
 }
