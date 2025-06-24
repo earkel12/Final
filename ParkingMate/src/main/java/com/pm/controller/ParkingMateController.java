@@ -65,11 +65,12 @@ public class ParkingMateController {
 	}
 	
 	@GetMapping("/pm/settlement")
-	public ModelAndView showPmSettlement() throws Exception {
+	public ModelAndView showPmSettlement(HttpSession session) throws Exception {
 		int listSize = 5;
 		int pageSize = 5;
 		int totalCnt = 10;
-		List<MatePayCheckDTO> arr = service.getMatePayCheck();
+		String userid = (String) session.getAttribute("sid");
+		List<MatePayCheckDTO> arr = service.getMatePayCheck(userid);
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("arr", arr);
 		mav.setViewName("pm/settlement");
@@ -78,7 +79,6 @@ public class ParkingMateController {
 
 	@GetMapping("/pm/usagehistory")
 	public String showPmUsagehistory() {
-
 		return "pm/usagehistory";
 	}
 

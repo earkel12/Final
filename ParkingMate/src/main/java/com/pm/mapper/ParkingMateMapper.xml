@@ -16,8 +16,8 @@
 		#{addr}, #{bank}, #{account}, #{id}
 		)
 	</insert>
-	<select id="getMatePayCheck"
+	<select id="getMatePayCheck" parameterType="String"
 		resultType="com.pm.pm.model.MatePayCheckDTO">
-		select * from mate_paycheck
+		select * from mate_paycheck where mid=#{mid}
 	</select>
 </mapper>

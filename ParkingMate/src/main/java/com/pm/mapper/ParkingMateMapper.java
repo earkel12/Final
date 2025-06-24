@@ -11,5 +11,5 @@ import com.pm.pm.model.ParkingMateDTO;
 public interface ParkingMateMapper {
 	public ParkingMateDTO getParkingMate(String id) throws Exception;
 	public int insertParkingMate(ParkingMateDTO dto) throws Exception;
-	public List<MatePayCheckDTO> getMatePayCheck() throws Exception;
+	public List<MatePayCheckDTO> getMatePayCheck(String mid) throws Exception;
 }

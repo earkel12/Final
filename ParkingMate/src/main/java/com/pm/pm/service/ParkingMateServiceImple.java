@@ -21,8 +21,8 @@ public class ParkingMateServiceImple implements ParkingMateService {
         return count;
     }
     @Override
-    public List<MatePayCheckDTO> getMatePayCheck() throws Exception {
-    	return mapper.getMatePayCheck();
+    public List<MatePayCheckDTO> getMatePayCheck(String mid) throws Exception {
+    	return mapper.getMatePayCheck(mid);
     }
     @Override
     public ParkingMateDTO getParkingMate(String id) throws Exception {
