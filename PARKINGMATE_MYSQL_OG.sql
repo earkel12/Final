@@ -273,3 +273,24 @@ CREATE TABLE review (
 	-- FOREIGN KEY 설정 (bookingnum -> booking 테이블의 bookingnum 참조)--
 	CONSTRAINT fk_review_bookingnum foreign key(bookingnum) references booking(bookingnum) 
 );
+
+create table notice (
+   idx int AUTO_INCREMENT primary key,
+    id varchar(50) not null,
+    title varchar(100) NOT NULL,
+    content varchar(1000) NOT NULL,
+    writedate DATETIME NOT NULL,
+    readnum int NOT NULL,
+    division int NOT NULL
+)ENGINE=InnoDB AUTO_INCREMENT=1;
+
+create table notice_poto (
+   idx int AUTO_INCREMENT PRIMARY KEY,
+    notice_num int,
+    poto_1 varchar(100),
+    poto_2 varchar(100),
+    poto_3 varchar(100),
+    poto_4 varchar(100),
+    
+    CONSTRAINT fk_notice_num foreign key(notice_num) references notice(idx)
+)ENGINE=InnoDB AUTO_INCREMENT=1;
