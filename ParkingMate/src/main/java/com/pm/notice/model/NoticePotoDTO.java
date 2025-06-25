@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoticePotoDTO {
 	private int idx;
-	private int notice_num;
+	private int noticeNum;
 	private String poto1;
 	private String poto2;
 	private String poto3;

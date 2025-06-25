@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.pm.mapper.NoticeMapper;
 import com.pm.notice.model.NoticeDTO;
+import com.pm.notice.model.NoticePotoDTO;
 
 @Service
 public class NoticeServiceImple implements NoticeService {
@@ -53,15 +54,12 @@ public class NoticeServiceImple implements NoticeService {
 		return mapper.insertPmNotice(dto);
 	}
 
-	@Override
-	public int getPmMaxRef() {
-		Integer maxRef = sqlSessionTemplate.selectOne("com.pm.mapper.NoticeMapper.getPmMaxRef");
-		if (maxRef == null) {
-			return 0;
-		}
-		return maxRef;
-	}
+    @Override
+    public int insertPmNoticePoto(NoticePotoDTO potoDto) throws Exception {
+        return mapper.insertPmNoticePoto(potoDto);
+    }
 
+	
 	@Override
 	public int getPmTotalCnt() {
 		int totalCnt = sqlSessionTemplate.selectOne("com.pm.mapper.NoticeMapper.getPmTotalCnt");
@@ -74,5 +72,4 @@ public class NoticeServiceImple implements NoticeService {
 		return dto;
 
 	}
-	
 }
