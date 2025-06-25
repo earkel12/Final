@@ -1,5 +1,7 @@
 package com.pm.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +18,18 @@ public class MapController {
 
     @Autowired
     private MapService service;
-
+    
+    @ResponseBody
+    @GetMapping("/list")
+    public List<ParkingLotDTO> getParkingList() throws Exception {
+        return service.plInfo();  // 전체 주차장 목록 JSON 응답
+    }
+    
     // AJAX 호출 응답용
     @ResponseBody
     @GetMapping("/parking")
     public ParkingLotDTO getParkingInfo(@RequestParam("name") String name) throws Exception {
-        return service.plInfo(name);
+        return service.plbyname(name);
     }
 
     // 초기 HTML 페이지 로드

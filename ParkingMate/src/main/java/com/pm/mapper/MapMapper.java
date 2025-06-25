@@ -8,5 +8,6 @@ import com.pm.map.model.ParkingLotDTO;
 
 @Mapper
 public interface MapMapper {
-	public ParkingLotDTO plInfo(String name) throws Exception;
+	public List<ParkingLotDTO> plInfo() throws Exception;
+	public ParkingLotDTO plbyname(String name) throws Exception;
 }
