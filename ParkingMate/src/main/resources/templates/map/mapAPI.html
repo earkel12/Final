@@ -18,44 +18,37 @@
   </table>
 
   <script>
-    kakao.maps.load(function () {
-      const map = new kakao.maps.Map(document.getElementById('map'), {
-        center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 5
-      });
-
-      const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-
-      const markerPositions = [
-        { title: "주차장A", latlng: new kakao.maps.LatLng(37.5665, 126.9780) },
-        { title: "광화문", latlng: new kakao.maps.LatLng(37.5759, 126.9769) }
-      ];
-
-      markerPositions.forEach(pos => {
-        const marker = new kakao.maps.Marker({
-          map: map,
-          position: pos.latlng,
-          title: pos.title
-        });
-
-        kakao.maps.event.addListener(marker, 'click', function () {
-          infowindow.setContent(`<div style="padding:5px;">${pos.title}</div>`);
-          infowindow.open(map, marker);
-
-          // ✅ 서버로 데이터 요청
-          fetch(`/map/parking?name=${encodeURIComponent(pos.title)}`)
-            .then(res => res.json())
-            .then(data => {
-            	console.log("📦 받은 데이터:", data);  // 👈 여기를 꼭 확인
-              document.getElementById('name').textContent = data.name;
-              document.getElementById('addr').textContent = data.addr;
-              document.getElementById('type').textContent = data.type;
-              document.getElementById('price').textContent = data.price + "원";
-              document.getElementById('valet').textContent = data.valet === 1 ? "가능" : "불가능";
-            });
-        });
-      });
-    });
-  </script>
+	kakao.maps.load(function () {
+	  const mapContainer = document.getElementById('map');
+	  const mapOption = {
+	    center: new kakao.maps.LatLng(37.5665, 126.9780),
+	    level: 5
+	  };
+	
+	  const map = new kakao.maps.Map(mapContainer, mapOption);
+	  const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+	
+	  // ✅ 서버에서 주차장 목록 가져오기
+	  fetch('/map/list')
+	    .then(response => response.json())
+	    .then(data => {
+	      data.forEach(parking => {
+	        const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+	        const marker = new kakao.maps.Marker({
+	          map: map,
+	          position: position,
+	          title: parking.name
+	        });
+	
+	        kakao.maps.event.addListener(marker, 'click', function () {
+	          const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+	          infowindow.setContent(content);
+	          infowindow.open(map, marker);
+	        });
+	      });
+	    })
+	    .catch(err => console.error(err));
+	});
+	</script>
 </body>
 </html>

@@ -44,12 +44,14 @@ CREATE TABLE ask (
 );
 
 INSERT INTO parkinglot
-  (name, addr, type, price, price2, time) VALUES
-  ('주차장A','서울시 강남구','실내',3000,5000,'2025-06-18');
+  (name, addr, type, price, price2, time, latitude, longitude) VALUES
+  ('주차장A','서울시 강남구','실내',3000,5000,'2025-06-18',37.5665, 126.9780);
 
 #시퀀스용확인쿼리문
 SELECT LAST_INSERT_ID() AS parkinglot_idx;
-  
+
+SELECT * FROM parkinglot;
+
 #주차장테이블
 CREATE TABLE parkinglot (
 	idx	INT(100) AUTO_INCREMENT PRIMARY KEY,
@@ -64,7 +66,9 @@ CREATE TABLE parkinglot (
 	obstacle INT(50) DEFAULT 0 NOT NULL,
 	maxheight INT(50) DEFAULT 0 NOT NULL,
 	maxwidth INT(50) DEFAULT 0 NOT NULL,
-	maxweight INT(50) DEFAULT 0 NOT NULL	
+	maxweight INT(50) DEFAULT 0 NOT NULL,
+    latitude double DEFAULT 0 NOT NULL,
+    longitude double DEFAULT 0 NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=200;
 
 INSERT INTO `booking` (
@@ -107,7 +111,7 @@ INSERT INTO `parkingmate` (
   '서울 강남구 역삼동',
   '국민은행',
   1234567890,
-  'ROSA1'
+  'ROSA1' 
 );
 
 SELECT LAST_INSERT_ID() AS parkingmate_idx;
