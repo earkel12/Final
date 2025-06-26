@@ -8,7 +8,7 @@ import java.util.*;
 
 
 public interface NoticeService {
-  public int noticeInsert(NoticeDTO dto)throws Exception;
+	public int noticeInsert(NoticeDTO dto)throws Exception;
 	public List<NoticeDTO> getAllNotice() throws Exception;
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception;
 	

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pm.mapper.CommunityMapper">
+	<select id="getCommunityList"
+		resultType="com.pm.com.model.CommunityDTO">
+		select * from community
+		order by idx desc
+		limit #{start}, #{end}
+	</select>
+	
+	<insert id="insertCommunity" parameterType="com.pm.com.model.CommunityDTO" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO community (id, title, content, writedate, readnum, good, bad)
+    VALUES (#{id}, #{title}, #{content}, now(), 0, 0, 0)
+	</insert>
+	
+	<insert id="insertComment" parameterType="com.pm.com.model.CommentDTO">
+    INSERT INTO comment (idx, id, content, ref, lev, sunbun)
+    VALUES (#{idx}, #{id}, #{content}, #{ref}, #{lev}, #{sunbun})
+	</insert>
+	
+	<select id="getTotalCnt" resultType="int">
+		select count(*) from community
+	</select>
+	
+	<select id="getCommunityIdx" parameterType="int" resultType="com.pm.com.model.CommunityDTO">
+    SELECT * FROM community WHERE idx = #{idx}
+	</select>
+	
+	<update id="updateReadnum" parameterType="int">
+    UPDATE community SET readnum = readnum + 1 WHERE idx = #{idx}
+	</update>
+	
+	<update id="increaseGood">
+    UPDATE community SET good = good + 1 WHERE idx = #{idx}
+	</update>
+
+	<update id="increaseBad">
+    UPDATE community SET bad = bad + 1 WHERE idx = #{idx}
+	</update>
+	
+	<update id="updateCommunity" parameterType="com.pm.com.model.CommunityDTO">
+    UPDATE community
+    SET title = #{title}, content = #{content}
+    WHERE idx = #{idx}
+	</update>
+
+	<delete id="deleteCommentsByCommunityIdx" parameterType="int">
+    DELETE FROM comment WHERE idx = #{idx}
+	</delete>
+
+	<delete id="deleteCommunity" parameterType="int">
+    DELETE FROM community WHERE idx = #{idx}
+	</delete>
+	
+	<select id="getCommentsByCommunityIdx" resultType="com.pm.com.model.CommentDTO">
+    SELECT * FROM comment WHERE idx = #{idx}
+    ORDER BY ref ASC, sunbun ASC
+	</select>
+
+</mapper>

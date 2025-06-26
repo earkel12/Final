@@ -9,7 +9,7 @@ import java.util.*;
 
 @Mapper
 public interface NoticeMapper {
-  public int noticeInsert(NoticeDTO dto) throws Exception;
+	public int noticeInsert(NoticeDTO dto) throws Exception;
 	public List<NoticeDTO> getAllNotices() throws Exception;
 	public List<NoticeDTO> getPmNotice() throws Exception;
 	

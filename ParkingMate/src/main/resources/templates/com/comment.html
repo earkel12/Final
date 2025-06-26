@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>커뮤니티 글 상세</title>
+</head>
+<body>
+	
+	<h1>제목: <span th:text="${dto.title}"></span></h1>
+  	<p>작성자: <span th:text="${dto.id}">작성자</span></p>
+  	<p>작성일: <span th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd HH:mm')}">2025-06-20</span></p>
+  	<p>조회수: <span th:text="${dto.readnum}">0</span></p>
+  	<div th:text="${dto.content}">글 내용</div><br>
+  	<button type="button"
+        th:onclick="|location.href='@{/community/good(idx=${dto.idx})}'|">
+    추천 (<span th:text="${dto.good}">0</span>)
+	</button>
+
+	<button type="button"
+        th:onclick="|location.href='@{/community/bad(idx=${dto.idx})}'|">
+    비추천 (<span th:text="${dto.bad}">0</span>)
+	</button>
+	<br>
+	<a th:href="@{/community/edit(idx=${dto.idx})}">수정</a>
+	<a th:href="@{/community/delete(idx=${dto.idx})}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+  	
+  	<h4>댓글 목록</h4>
+	<ul>
+		 <li th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</li>
+		 <li th:each="c : ${comments}">
+		   <strong th:text="${c.id}">작성자</strong> : 
+		   <span th:text="${c.content}">내용</span>
+		 </li>
+	</ul>
+
+	<h4>댓글 작성</h4>
+	<form th:action="@{/comment/write}" method="post">
+	  <input type="hidden" name="idx" th:value="${dto.idx}" />
+	  <textarea name="content" rows="3" cols="50" placeholder="댓글을 입력하세요"></textarea><br>
+	  <button type="submit">댓글 작성</button>
+	</form>
+  	<a th:href="@{/comList}">목록으로 돌아가기</a>
+</body>
+</html>

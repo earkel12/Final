@@ -23,6 +23,9 @@ public class NoticeServiceImple implements NoticeService {
 	@Autowired
 	private NoticeMapper mapper;
 	
+	@Autowired
+	private SqlSessionTemplate sqlSessionTemplate;
+	
 	@Override
 	public int noticeInsert(NoticeDTO dto) throws Exception {
 		int count = mapper.noticeInsert(dto);
@@ -33,9 +36,6 @@ public class NoticeServiceImple implements NoticeService {
 	public List<NoticeDTO> getAllNotice() throws Exception {
 		return mapper.getAllNotices();
 	}
-	
-	@Autowired
-	private SqlSessionTemplate sqlSessionTemplate;
 	
 	@Override
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception {

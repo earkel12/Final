@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>커뮤니티</title>
+</head>
+<body>
+	<h1>커뮤니티</h1>
+	<form th:action="@{/comList}" method="post">
+		<table border="1" cellspacing="0" width="550">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>조회수</th>
+					<th>추천수</th>
+					<th>작성일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.isEmpty(arr)}">
+					<td colspan="5" align="center">등록된 게시글이 없습니다.</td>
+				</tr>
+				<tr th:each="dto : ${arr}">
+					<td th:text="${dto.idx}">번호</td>
+					<td><a th:href="@{'/comment'(idx=${dto.idx})}"
+						th:text="${dto.title}">제목</a></td>
+					<td th:text="${dto.id}">작성자</td>
+					<td th:text="${dto.readnum}">조회수</td>
+					<td th:text="${dto.good}">0</td>
+					<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">2025-06-20</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" align="center" th:utext="${pageStr}"></td>
+					<td><a th:href="@{communityWrite}">글쓰기</a></td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	
+	<p> 검색 기능(개발예정) </p>
+	<a th:href="@{/community}">커뮤니티 메인</a>
+</body>
+</html>

@@ -1,25 +1,17 @@
 package com.pm.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.pm.notice.model.NoticeDTO;
-import com.pm.notice.service.NoticeService;
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
 import com.pm.pm.service.ParkingMateService;
-
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -34,19 +26,33 @@ public class ParkingMateController {
 		this.noticeServiceImple = noticeServiceImple;
 	}
 
-	@GetMapping("/pm/main")
+	@GetMapping("/parkingmate")
 	public String GetPmMain() {
-		return "pm/main";
+		return "/pm/main";
 	}
 
 	@GetMapping("/pm/register")
-	public String GetPmRegister() {
-		return "pm/register";
+	public ModelAndView GetPmRegister(HttpSession session) {
+		String userid = (String) session.getAttribute("sid");
+
+		if (userid == null || userid.isEmpty()) {
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("msg", "로그인 후 이용 가능합니다.");
+			mav.addObject("gourl", "/login");
+			mav.setViewName("pm/pmMsg");
+			return mav;
+		}
+		
+		ModelAndView mav = new ModelAndView();
+	    mav.setViewName("pm/register");
+	    return mav;
+
 	}
 
 	@PostMapping("/pm/register")
 	public ModelAndView PostPmRegister(HttpSession session, ParkingMateDTO dto) throws Exception {
 		String userid = (String) session.getAttribute("sid");
+
 		if (userid == null || userid.isEmpty()) {
 			ModelAndView mav = new ModelAndView();
 			mav.addObject("msg", "로그인 후 이용 가능합니다.");
@@ -119,26 +125,25 @@ public class ParkingMateController {
 	}
 
 	@GetMapping("/pm/settlement")
-	public ModelAndView showPmSettlement(HttpSession session, 
-			@RequestParam(required = false) String startDate,
+	public ModelAndView showPmSettlement(HttpSession session, @RequestParam(required = false) String startDate,
 			@RequestParam(required = false) String endDate) throws Exception {
-		
-		String userid = (String) session.getAttribute("sid");
-	    if (userid == null) {
-	        ModelAndView mav = new ModelAndView();
-	        mav.addObject("msg", "로그인 후 이용 가능합니다.");
-	        mav.addObject("gourl", "/login");
-	        mav.setViewName("pm/pmMsg");
-	        return mav;
-	    }
-	    
-	    List<MatePayCheckDTO> arr = service.getMatePayCheck(userid, startDate, endDate);
 
-	    ModelAndView mav = new ModelAndView();
-	    mav.addObject("arr", arr);
-	    mav.addObject("startDate", startDate);
-	    mav.addObject("endDate", endDate);
-	    mav.setViewName("pm/settlement");
+		String userid = (String) session.getAttribute("sid");
+		if (userid == null) {
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("msg", "로그인 후 이용 가능합니다.");
+			mav.addObject("gourl", "/login");
+			mav.setViewName("pm/pmMsg");
+			return mav;
+		}
+
+		List<MatePayCheckDTO> arr = service.getMatePayCheck(userid, startDate, endDate);
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("arr", arr);
+		mav.addObject("startDate", startDate);
+		mav.addObject("endDate", endDate);
+		mav.setViewName("pm/settlement");
 		return mav;
 	}
 
