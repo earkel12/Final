@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pm.mapper.ReserMapper">
+	<!-- mybatis설정 -->
+	<insert id="insertReser" parameterType="com.pm.reser.model.ReserDTO">
+        INSERT INTO booking (bookingdate, bookingcarnum, intime, outime, valet, instand, price, status, obstacle, idx, id)
+        VALUES (#{bookingdate}, #{bookingcarnum}, #{intime}, #{outime}, #{valet}, #{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id})
+    </insert>
+	<select id="carbyid" parameterType="String" resultType="com.pm.reser.model.UserCarDTO">
+		SELECT car_num, modelname from user_cars where id=#{id} 
+	</select>
+
+</mapper>

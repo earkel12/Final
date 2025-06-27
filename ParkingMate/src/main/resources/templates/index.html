@@ -37,6 +37,7 @@
   <tr><th>요금</th><td id="price">-</td></tr>
   <tr><th>발렛</th><td id="valet">-</td></tr>
 </table>
+<a href="reser">예약하기</a><br>
 
 <script>
   kakao.maps.load(function () {
@@ -65,6 +66,10 @@
             const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
             infowindow.setContent(content);
             infowindow.open(map, marker);
+            
+            // 주차장 정보를 서버로 전달
+            fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
+            .then(res => console.log("Session 저장 완료"));
 
             // 표 정보 업데이트
             document.getElementById('name').innerText = parking.name;

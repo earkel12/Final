@@ -82,8 +82,8 @@ SELECT * FROM BOOKING;
 
 #예약내역테이블
 CREATE TABLE booking (
-	bookingnum VARCHAR(300) PRIMARY KEY,
-	bookingdate	DATE NOT NULL,
+	bookingnum INT auto_increment PRIMARY KEY,
+	bookingdate	DATETIME NOT NULL,
 	bookingcarnum VARCHAR(300)	NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	outime DATETIME NOT NULL,
