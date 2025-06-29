@@ -12,4 +12,9 @@ public class IndexController {
 	public String index() {
 		return "index";
 	}
+	
+	@RequestMapping("/header")
+	public String header() {
+		return "header";
+	}
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Parking Mate</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    .header {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center; /* 수직 가운데 정렬 */
+	  background: linear-gradient(90deg, #B1B2FF, #AAC4FF,#D2DAFF,#AAC4FF,#B1B2FF);
+	  color: #1a1a1a;
+	  padding: 10px 20px;
+	  height: 100px; /* 고정 높이 */
+	}
+    .menu, .auth {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .logo {
+	  display: flex;
+	  align-items: center;
+	}
+	
+	.logo-img {
+	  height: 220px; /* 이미지 조금 크게 */
+	  width: auto;
+	  margin-right: 10px;
+	}
+    .auth a {
+      text-decoration: none;
+      margin-left: 15px;
+      color: #1a1a1a;
+    }
+    .auth a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="menu">MENU</div>
+    <div class="logo">
+	  <img src="/img/logo.png" alt="ParkingMate" class="logo-img">
+	</div>
+    <div class="auth">
+      <a href="#">Sign In</a> / <a href="#">Sign Up</a>
+    </div>
+  </header>
+</body>
+</html>
