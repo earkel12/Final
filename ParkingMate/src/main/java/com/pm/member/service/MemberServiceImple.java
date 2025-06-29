@@ -1,7 +1,5 @@
 package com.pm.member.service;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +10,7 @@ public class MemberServiceImple implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
-	
+
 	@Override
 	public int loginCheck(String userid, String userpwd) throws Exception {
 		String dbpwd = mapper.loginCheck(userid);
@@ -28,11 +26,11 @@ public class MemberServiceImple implements MemberService {
 		}
 		return result;
 	}
-	
+
 @Override
 public String userInfo(String userid) throws Exception {
 	String dbname = mapper.userInfo(userid);
-	
+
 	return dbname;
 }
 }

@@ -7,7 +7,12 @@
 <body>
 <script>
 window.alert('[[${msg}]]');
-location.href = 'register';
+let msg='[[${msg}]]';
+if (msg == "회원정보수정성공") {
+    location.href = '/userInfo';
+  }else{
+	location.href = '/registerUpdate';
+  }
 </script>
 </body>
 </html>

@@ -4,6 +4,22 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.pm.mapper.FaqMapper">
   	<insert id = "faqInsert" parameterType="com.pm.faq.model.FaqDTO">
-  		insert into faq (id, title, content, writedate) values(#{id}, #{title}, #{content}, now())
+  		insert into faq (question, answer) values(#{question}, #{answer})
   	</insert>
+  	
+  	<select id = "faqSelect" resultType="com.pm.faq.model.FaqDTO">
+  		select * from faq order by idx desc
+  	</select>
+  	
+  	<select id = "faqEditSel" parameterType="int" resultType="com.pm.faq.model.FaqDTO">
+  		select * from faq where idx = #{idx}
+  	</select>
+  	
+  	<update id = "faqUpdate" parameterType="com.pm.faq.model.FaqDTO">
+  		update faq set question = #{question}, answer = #{answer} where idx = #{idx}
+  	</update>
+  	
+  	<delete id = "faqDelete" >
+  		delete from faq where idx = #{idx}
+  	</delete>
   </mapper>

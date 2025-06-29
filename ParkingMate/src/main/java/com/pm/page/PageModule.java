@@ -4,15 +4,17 @@ public class PageModule {
 	public static String makePaging(String pagename, int totalCnt, int listSize, int pageSize, int cp) {
 		// 총 페이지 수
 		int totalPage = (totalCnt / listSize) + 1;
-		if (totalCnt % listSize == 0)
+		if (totalCnt % listSize == 0) {
 			totalPage--;
-		int userGroup = cp / pageSize; 
-		if (cp % pageSize == 0)
-			userGroup--; 
+		}
+		int userGroup = cp / pageSize;
+		if (cp % pageSize == 0) {
+			userGroup--;
+		}
 
 		// 페이지 구하기
 		StringBuffer sb = new StringBuffer();
-		
+
 		if (userGroup != 0) {
 			sb.append("<a href='");
 			sb.append(pagename);
@@ -30,7 +32,7 @@ public class PageModule {
 			sb.append(i);
 			sb.append("'>");
 			sb.append(i);
-			sb.append("</a>&nbsp;&nbsp;");												
+			sb.append("</a>&nbsp;&nbsp;");
 			if (i == totalPage) {
 				break;
 			}
@@ -42,7 +44,7 @@ public class PageModule {
 			sb.append("?cp=");
 			int temp = (userGroup+1)*pageSize+1;
 			sb.append(temp);
-			sb.append("'>&gt; &gt;</a>");	
+			sb.append("'>&gt; &gt;</a>");
 		}
 		return sb.toString();
 	}

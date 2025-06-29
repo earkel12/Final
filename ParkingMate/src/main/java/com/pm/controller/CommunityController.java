@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class CommunityController {
 
+
 	@Autowired
 	private CommunityService service;
 
@@ -181,5 +182,6 @@ public class CommunityController {
 
 	    return "redirect:/comment?idx=" + comment.getIdx();
 	}
+
 
 }

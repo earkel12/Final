@@ -4,6 +4,32 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pm.mapper.NoticeMapper">
+
+  
+    <insert id = "noticeInsert" parameterType="com.pm.notice.model.NoticeDTO">
+    	insert into notice (id, title, content, writedate, readnum, division) values(#{id}, #{title}, #{content}, now(), 0, 0)
+    </insert>
+    
+    <select id = "getAllNotices" parameterType="map" resultType="com.pm.notice.model.NoticeDTO">
+    	select * from notice where division = 0 order by idx desc limit #{start}, #{end}
+    </select>
+  
+  	<select id = "contentSelect" parameterType="int" resultType="com.pm.notice.model.NoticeDTO">
+  		select * from notice where idx = #{idx}
+  	</select>
+  	
+  	<delete id="noticeDelete">
+  		delete from notice where idx = #{idx}
+  	</delete>
+  	
+  	<update id="noticeUpdate" parameterType="com.pm.notice.model.NoticeDTO">
+  		update notice set title = #{title}, content = #{content} where idx = #{idx}
+  	</update>
+  	
+  	<select id = "getTotalCnt" resultType="int">
+  		select count(*) from notice where division = 0
+  	</select>
+  	
 	<!-- 언더바로 인한 사용 이름 변경 -->
 	<resultMap id="noticePotoMap" type="com.pm.notice.model.NoticePotoDTO">
 	    <id column="idx" property="idx"/>
@@ -25,6 +51,7 @@
 		select * from notice order by idx desc
 	</select>
 	
+
 	<select id="getPmNotice"
 		resultType="com.pm.notice.model.NoticeDTO">
 		SELECT * FROM notice
