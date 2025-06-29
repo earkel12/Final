@@ -1,4 +1,4 @@
-package com.pm.reser.model;
+package com.pm.booking.model;
 
 import lombok.AllArgsConstructor;
 

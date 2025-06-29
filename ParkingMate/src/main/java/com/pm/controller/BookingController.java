@@ -14,30 +14,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.pm.reser.model.ReserDTO;
-import com.pm.reser.model.UserCarDTO;
-import com.pm.reser.service.ReserService;
+import com.pm.booking.model.BookingDTO;
+import com.pm.booking.model.UserCarDTO;
+import com.pm.booking.service.BookingService;
 
 import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-public class ReserController {
+public class BookingController {
 
 	@Autowired
-	private ReserService service;
+	private BookingService service;
 	
-	@GetMapping("/reser")
-	public String reserForm(HttpSession session, Model model) throws Exception {
+	@GetMapping("/booking")
+	public String bookingForm(HttpSession session, Model model) throws Exception {
 	    String userId = (String) session.getAttribute("sid"); // 세션에서 사용자 ID 추출
 	    List<UserCarDTO> carList = service.carbyid(userId);   // 차량 리스트 불러오기
 	    model.addAttribute("carList", carList);               // View에 전달
 
-	    return "reser/reser"; 
+	    return "booking/booking"; 
 	}
 	
-	@PostMapping("/reser/payment")
-	public String confirmReservation(@ModelAttribute ReserDTO booking,
+	@PostMapping("/booking/payment")
+	public String confirmReservation(@ModelAttribute BookingDTO booking,
 	                                 HttpSession session, Model model,
 	                                 @RequestParam("duration") int duration) throws Exception {
 	    // 1. 세션에서 사용자 정보와 주차장 번호 가져오기
@@ -65,10 +65,10 @@ public class ReserController {
 	    booking.setPrice(base + timeCost);
 
 	    // 6. insert 호출
-	    service.insertReser(booking);
+	    service.insertBooking(booking);
 
 	    model.addAttribute("message", "예약이 완료되었습니다.");
-	    return "reser/payment";
+	    return "booking/payment";
 	}
 	
 	

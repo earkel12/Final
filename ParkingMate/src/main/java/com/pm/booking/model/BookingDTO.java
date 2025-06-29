@@ -1,4 +1,4 @@
-package com.pm.reser.model;
+package com.pm.booking.model;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReserDTO {
+public class BookingDTO {
 
 	private String bookingnum;
 	private LocalDateTime bookingdate;

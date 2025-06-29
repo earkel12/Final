@@ -33,7 +33,7 @@
 	<p>30분당 이용 금액 : <span id="per30min" th:text="${session.price2}">0</span>원</p>
 
     <!-- 2. 예약 정보 입력 영역 -->
-    <form action="/reser/payment" method="post">
+    <form action="/booking/payment" method="post">
       <select id="bookingcarnum" name="bookingcarnum">
 		  <option value="">-- 선택 --</option>
 		  <option th:each="car : ${carList}"
