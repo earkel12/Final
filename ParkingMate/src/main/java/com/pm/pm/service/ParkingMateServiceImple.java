@@ -1,6 +1,8 @@
 package com.pm.pm.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,27 @@ public class ParkingMateServiceImple implements ParkingMateService {
         int count = mapper.insertParkingMate(dto);
         return count;
     }
+    
     @Override
-    public List<MatePayCheckDTO> getMatePayCheck(String mid) throws Exception {
-    	return mapper.getMatePayCheck(mid);
+    public int updateParkingMate(ParkingMateDTO dto) throws Exception {
+    	return mapper.updateParkingMate(dto);
+    }
+    
+    @Override
+    public List<MatePayCheckDTO> getMatePayCheck(String userid, String startDate, String endDate) throws Exception {
+    	Map<String, Object> params = new HashMap<>();
+        params.put("mid", userid);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+        return mapper.getMatePayCheck(params);
     }
     @Override
     public ParkingMateDTO getParkingMate(String id) throws Exception {
     	return mapper.getParkingMate(id);
+    }
+    @Override
+    public Map<String, Object> getTotalPmWorklog(String mid) throws Exception {
+    	 return mapper.totalPmWorklog(mid);
     }
 }
 

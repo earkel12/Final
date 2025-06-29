@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS
   mate_paycheck,
   user_cars,
   car_type,
-  comments,
+  comment,
   community,
   parkingmate,
   booking,

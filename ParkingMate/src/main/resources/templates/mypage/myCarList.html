@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+    function goToCarInfo(btn) {
+        const carNum = btn.getAttribute('data-carNum');
+        location.href = '/myCarInfoShow?car_num=' + encodeURIComponent(carNum);
+    }
+</script>
+</head>
+<body>
+<h1>내차량확인</h1>
+<article>
+<table border="1" width="550" cellspacing="0">
+	<thead>
+	 	<tr>
+            <th colspan="8" style="text-align: right;">
+                <button type="button" onclick="location.href='/myCarAdd'">차량 등록</button>
+            </th>
+        </tr>
+		<tr>
+			<th>차량번호</th>
+			<th>모델명</th>
+			<th>연식</th>
+			<th>유종</th>
+			<th>색상</th>
+			<th>수동/자동</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tr th:if="${#lists.isEmpty(carList)}">
+		<td colspan="8" align="center">
+		등록된 차량이 없습니다.
+		</td>
+	</tr>
+	<tr th:each="dto:${carList}">
+		<td th:text="${dto.car_num}"></td>
+		<td th:text="${dto.modelname}"></td>
+		<td th:text="${dto.model_year}"></td>
+		<td th:text="${dto.gas_type}"></td>
+		<td th:text="${dto.color}"></td>
+		<td th:text="${dto.gear}"></td>
+	<form name="myCarInfoShow" action="/myCarInfoShow" method="get">
+		<td align="center">		
+			<input type="hidden" name="car_num" th:value="${dto.car_num}">
+		    <button type="submit">수정</button>
+		</td>
+	</form>
+	<form name="myCarDelete" action="/myCarDelete" method="get">
+		<td align="center">
+			<input type="hidden" name="car_num" th:value="${dto.car_num}">
+		    <button type="submit">삭제</button>
+		</td>
+	</form>
+	</tr>
+	
+</table>
+</article>
+</body>
+</html>

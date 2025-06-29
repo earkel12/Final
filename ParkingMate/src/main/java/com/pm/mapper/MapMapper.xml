@@ -3,8 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.pm.mapper.MapMapper">
-    <select id = "plInfo" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
+    <select id = "plInfo" resultType="com.pm.map.model.ParkingLotDTO">
+  		select * from parkinglot
+  	</select>
+  	<select id = "plbyname" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
   		select * from parkinglot where name = #{name}
   	</select>
-  	
   </mapper>

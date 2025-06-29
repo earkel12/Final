@@ -13,9 +13,20 @@ public class MapServiceImple implements MapService {
 	private MapMapper mapper;
 
 	@Override
+
 	public ParkingLotDTO plInfo(String name) throws Exception {
 
 		return mapper.plInfo(name);
+
+	public List<ParkingLotDTO> plInfo() throws Exception {
+		return mapper.plInfo();
+	}
+	
+	@Override
+	public ParkingLotDTO plbyname(String name) throws Exception {
+		
+		return mapper.plbyname(name);
+
 	}
 
 }

@@ -5,55 +5,65 @@
 <title>파킹메이트</title>
 </head>
 <body>
-<h1>파킹메이트 근무관리</h1>
-<form name="worklog" action="/pm/worklog" method="post">
-  <table border="1" cellspacing="0" cellpadding="8">
-    <tbody>
-      <tr>
-        <th><label for="license">차량 번호</label></th>
-        <td><span th:text="${worklog.license}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="history">차량 이력</label></th>
-        <td><span th:text="${worklog.history}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="picture">사진 URL</label></th>
-        <td><span th:text="${worklog.picture}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="addr">주소</label></th>
-        <td><span th:text="${worklog.addr}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="bank">은행명</label></th>
-        <td><span th:text="${worklog.bank}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="account">계좌번호</label></th>
-        <td><span th:text="${worklog.account}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="id">사용자 ID</label></th>
-        <td><span th:text="${worklog.id}"></span></td>
-      </tr>
-      <tr>
-        <th><label for="totalServiceCount">총 대행 횟수</label></th>
-        <td><span></span></td>
-      </tr>
-      <tr>
-        <th><label for="totalPayCount">총 정산 금액</label></th>
-        <td><span></span></td>
-      </tr>
-      <tr>
-        <td colspan="2" align="center">
-          <button type="submit">수정(미개발)</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</form>
+	<h1>파킹메이트 근무관리</h1>
+	<table border="1" cellspacing="0" cellpadding="3">
+		<tr>
+			<th><label for="id">사용자 ID</label></th>
+			<td><span th:text="${worklog.id}"></span></td>
+		</tr>
+		<tr>
+			<th><label for="totalServiceCount">총 대행 횟수</label></th>
+			<td><span th:text="${totalServiceCount} + '회'"></span></td>
+		</tr>
+		<tr>
+			<th><label for="totalPayCount">총 정산 금액</label></th>
+			<td><span th:text="${totalPayCount} + '원'"></span></td>
+		</tr>
+	</table>
+	<br>
+	<form name="worklog" action="/pm/worklog" method="post">
+		<table border="1" cellspacing="0" cellpadding="5">
+			<tbody>
+				<tr>
+					<th><label for="license">차량 번호</label></th>
+					<td><input type="text" id="license" name="license"
+						th:value="${worklog.license}"></td>
+				</tr>
+				<tr>
+					<th><label for="history">차량 이력</label></th>
+					<td><input type="text" id="history" name="history"
+						th:value="${worklog.history}"></td>
+				</tr>
+				<tr>
+					<th><label for="picture">사진 URL</label></th>
+					<td><input type="text" id="picture" name="picture"
+						th:value="${worklog.picture}"></td>
+				</tr>
+				<tr>
+					<th><label for="addr">주소</label></th>
+					<td><input type="text" id="addr" name="addr"
+						th:value="${worklog.addr}"></td>
+				</tr>
+				<tr>
+					<th><label for="bank">은행명</label></th>
+					<td><input type="text" id="bank" name="bank"
+						th:value="${worklog.bank}"></td>
+				</tr>
+				<tr>
+					<th><label for="account">계좌번호</label></th>
+					<td><input type="text" id="account" name="account"
+						th:value="${worklog.account}"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<button type="submit">수정</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
 
-<a th:href="@{/pm/main}">파킹메이트 메인</a><br>
-</body> 
+	<a th:href="@{/parkingmate}">파킹메이트 메인</a>
+	<br>
+</body>
 </html>
