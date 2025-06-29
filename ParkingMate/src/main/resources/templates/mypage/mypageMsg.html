@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th= "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script>
+window.alert('[[${msg}]]');
+let msg='[[${msg}]]';
+if (msg == "이미 등록된 차량번호입니다.") {
+    location.href = '/myCarAdd';
+  } else if(msg=="차량정보 수정실패") {
+    location.href = '/myCarInfoShow';
+  } else if(msg=="차량정보 수정완료") {
+	location.href = '/myCarList';
+  } else if(msg=="차량삭제성공" || msg=="차량삭제실패") {
+	location.href = '/myCarList';
+  } else {
+	location.href = '/mypageMain';
+  }
+</script>
+</body>
+</html>
+</body>
+</html>

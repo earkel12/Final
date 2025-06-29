@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xml:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>차량검색</title>
+<script>
+function selectModel(el) {
+    const modelName = el.getAttribute("data-modelname");
+//  const brandName = el.getAttribute("data-brandname");
+
+    window.opener.document.getElementById("modelname").value = modelName;
+    // brandname도 넘기고 싶다면 input 추가하고 아래 라인 활성화
+    //window.opener.document.getElementById("brandname").value = brandName;
+    window.close();
+}
+</script>
+</head>
+<body>
+<form action="/findCarModelName" method="post">
+	<select name="fkey">
+		<option value="brandname">브랜드명</option>
+		<option value="modelname">모델명</option>
+	</select>
+	<input type="text" name="fvalue">
+	<input type="submit" value="검색">
+</form>
+
+<table border="1">
+	<thead>
+		<tr>
+		<th>브랜드명</th>
+		<th>모델명</th>
+		<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="car:${carList}">
+			<td th:text="${car.brandname}">브랜드명</td>
+			<td th:text="${car.modelname}">모델명</td>
+			<td>
+	        	<button type="button"
+	                th:attr="data-modelname=${car.modelname}, data-brandname=${car.brandname}"
+	                onclick="selectModel(this)">선택</button>
+   			</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>
