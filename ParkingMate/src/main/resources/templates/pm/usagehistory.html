@@ -3,12 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <title>파킹메이트</title>
+<!-- 카카오 지도 API -->
+<script
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
 </head>
 <body>
-<h1>파킹메이트 이용현황</h1>
-<form name = "usagehistory" action = "usagehistory">
-	<label>파킹메이트 이용현황</label>
+	<h1>파킹메이트 이용현황</h1>
+	<form name="usagehistory" action="usagehistory">
+	<div id="map" style="width: 50%; height: 300px;"></div>
+	<script>
+    kakao.maps.load(function () {
+      const mapContainer = document.getElementById('map');
+      const mapOption = {
+    	center: new kakao.maps.LatLng(37.5563, 126.9220),
+        level: 5
+      };
+
+      const map = new kakao.maps.Map(mapContainer, mapOption);
+      const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+      fetch('/map/list')
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(parking => {
+            const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+            const marker = new kakao.maps.Marker({
+              map: map,
+              position: position,
+              title: parking.name
+            });
+
+            kakao.maps.event.addListener(marker, 'click', function () {
+              const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+              infowindow.setContent(content);
+              infowindow.open(map, marker);
+
+              document.getElementById('name').textContent = parking.name;
+              document.getElementById('addr').textContent = parking.addr;
+              document.getElementById('type').textContent = parking.type;
+              document.getElementById('price').textContent = parking.price;
+              document.getElementById('valet').textContent = parking.valet;
+            });
+          });
+        })
+        .catch(err => console.error(err));
+    });
+    </script>
 </form>
-<a th:href="@{/pm}">파킹메이트 메인</a><br>
+<a th:href="@{/parkingmate}">파킹메이트 메인</a>
+<br>
 </body>
 </html>

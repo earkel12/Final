@@ -1,12 +1,75 @@
 package com.pm.notice.service;
 
+
+import java.util.List;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mybatis.spring.SqlSessionTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pm.mapper.NoticeMapper;
+import com.pm.notice.model.NoticeDTO;
+import com.pm.notice.model.NoticePotoDTO;
 
 @Service
 public class NoticeServiceImple implements NoticeService {
+
 	@Autowired
 	private NoticeMapper mapper;
+	
+	@Autowired
+	private SqlSessionTemplate sqlSessionTemplate;
+	
+	@Override
+	public int noticeInsert(NoticeDTO dto) throws Exception {
+		int count = mapper.noticeInsert(dto);
+		return count;
+	}
+	
+	@Override
+	public List<NoticeDTO> getAllNotice() throws Exception {
+		return mapper.getAllNotices();
+	}
+	
+	@Override
+	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception {
+		int start = (cp - 1) * ls;
+		int end = ls;
+
+		Map<String, Integer> paramMap = new HashMap<>();
+		paramMap.put("start", start);
+		paramMap.put("end", end);
+
+		return sqlSessionTemplate.selectList("com.pm.mapper.NoticeMapper.getPmNotice", paramMap);
+	}
+
+	@Override
+	public int insertPmNotice(NoticeDTO dto) throws Exception {
+		return mapper.insertPmNotice(dto);
+	}
+
+    @Override
+    public int insertPmNoticePoto(NoticePotoDTO potoDto) throws Exception {
+        return mapper.insertPmNoticePoto(potoDto);
+    }
+
+	
+	@Override
+	public int getPmTotalCnt() {
+		int totalCnt = sqlSessionTemplate.selectOne("com.pm.mapper.NoticeMapper.getPmTotalCnt");
+		return totalCnt == 0 ? 1 : totalCnt;
+	}
+
+	@Override
+	public NoticeDTO getContent(int idx) {
+		NoticeDTO dto = sqlSessionTemplate.selectOne("com.pm.mapper.NoticeMapper.getContent", idx);
+		return dto;
+
+	}
 }

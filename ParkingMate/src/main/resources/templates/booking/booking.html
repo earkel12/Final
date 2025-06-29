@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주차장 예약하기</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .container { max-width: 800px; margin: auto; }
+    .section-title { font-size: 1.2em; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    td, th { padding: 10px; vertical-align: top; }
+    .input-group { margin-bottom: 10px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    select, input[type="text"], input[type="number"] { width: 100%; padding: 5px; }
+    .radio-group { display: flex; gap: 10px; margin-top: 5px; }
+    .summary-box { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+    .right-align { text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <h2>예약하기</h2>
+
+    <!-- 주차장 이름 표시 -->
+	<p th:text="'선택한 주차장: ' + ${session.pname}"></p>
+	
+	<!-- 사진 -->
+	<!--<img th:src="@{'/images/' + ${session.pIdx} + '.jpg'}" alt="주차장 사진" width="100%">-->
+	
+	<!-- 가격 -->
+	<p>기본 이용 금액 : <span id="basePrice" th:text="${session.price}">0</span>원</p>
+	<p>30분당 이용 금액 : <span id="per30min" th:text="${session.price2}">0</span>원</p>
+
+    <!-- 2. 예약 정보 입력 영역 -->
+    <form action="/booking/payment" method="post">
+      <select id="bookingcarnum" name="bookingcarnum">
+		  <option value="">-- 선택 --</option>
+		  <option th:each="car : ${carList}"
+		          th:value="${car.car_num}"
+		          th:text="${car.car_num + ' / ' + car.modelname}">차량명</option>
+		</select>
+
+      <div class="input-group">
+        <label for="entryTime">입차 시간 선택</label>
+        <input type="datetime-local" id="inTime" name="inTime">
+      </div>
+
+      <div class="input-group">
+        <label for="duration">예상 주차 시간 (시간)</label>
+        <input type="number" id="duration" name="duration" min="1" placeholder="예: 2">
+      </div>
+
+      <!-- 3. 선택사항 -->
+      <div class="input-group">
+        <label>발렛 유무</label>
+        <div class="radio-group">
+          <label><input type="radio" name="valet" value="1"> 있음</label>
+          <label><input type="radio" name="valet" value="0" checked> 없음</label>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>파킹메이트 유무</label>
+        <div class="radio-group">
+          <label><input type="radio" name="mate" value="1"> 있음</label>
+          <label><input type="radio" name="mate" value="0" checked> 없음</label>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>장애인 여부</label>
+        <div class="radio-group">
+          <label><input type="radio" name="handicap" value="1"> 해당</label>
+          <label><input type="radio" name="handicap" value="0" checked> 해당 없음</label>
+        </div>
+      </div>
+	   <div class="input-group">
+        <label>예상 금액</label>
+        <p id="estimate">0원</p>
+      </div>
+
+      <p style="font-size: 0.8em;">※ 주차비는 출차 시 결제됩니다</p>
+	  
+	  
+      <!-- 4. 결제 -->
+      <div class="right-align">
+        <p>결제 금액 : <span id="total">0</span>원</p>
+        <button type="submit">다음</button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <script>
+    const base = 2000;
+    const per30 = 1000;
+    const durationInput = document.getElementById("duration");
+    const estimateDisplay = document.getElementById("estimate");
+    const totalDisplay = document.getElementById("total");
+
+    durationInput.addEventListener("input", function () {
+      const hours = parseInt(this.value);
+      if (!isNaN(hours)) {
+        const timeCost = (hours * 2) * per30;
+        const total = base + timeCost;
+        estimateDisplay.textContent = total + "원";
+        totalDisplay.textContent = total;
+      }
+    });
+  </script>
+</body>
+</html>

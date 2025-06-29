@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="/communityWrite" method="post">
+	<h1>커뮤니티 글쓰기</h1>
+	<label for="title">제목</label><br> 
+	<input type="text" id="title" name="title" required><br>
+	<label for="content">내용</label><br>
+	<textarea id="content" name="content" rows="8" cols="50" required></textarea><br> 
+	<input type="reset" value="초기화"> 
+	<input type="submit" value="등록">
+</form>
+<a th:href="@{/comList}">뒤로 돌아가기</a>
+</body>
+</html>

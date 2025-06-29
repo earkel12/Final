@@ -3,12 +3,56 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pm.mapper.ParkingMateMapper">
+	<select id="getParkingMate" parameterType="String"
+		resultType="com.pm.pm.model.ParkingMateDTO">
+		select * from parkingmate where id=#{id}
+	</select>
+
 	<insert id="insertParkingMate"
 		parameterType="com.pm.pm.model.ParkingMateDTO">
 		insert into parkingmate (
-		license, history, picture, addr, bank, account, id
+		license, history, picture,
+		addr, bank, account, id
 		) values (
-		#{license}, #{history}, #{picture}, #{addr}, #{bank}, #{account}, #{id}
+		#{license}, #{history}, #{picture},
+		#{addr}, #{bank}, #{account}, #{id}
 		)
 	</insert>
+	<update id="updateParkingMate"
+		parameterType="com.pm.pm.model.ParkingMateDTO">
+		update parkingmate
+		set license = #{license},
+		history =
+		#{history},
+		picture = #{picture},
+		addr = #{addr},
+		bank = #{bank},
+		account
+		= #{account}
+		WHERE id = #{id}
+	</update>
+
+	<select id="getMatePayCheck" parameterType="map"
+		resultType="com.pm.pm.model.MatePayCheckDTO">
+		select * from mate_paycheck
+		where mid = #{mid}
+		<if test="startDate != null and startDate != ''">
+			and starttime &gt;= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and endtime &lt;= #{endDate}
+		</if>
+		order by starttime desc
+	</select>
+
+	<select id="totalPmWorklog" resultType="map">
+		select count(*) as
+		totalServiceCount,
+		coalesce(sum(price), 0) as totalPayCount
+		from
+		mate_paycheck
+		where mid = #{mid}
+		and status = '정산가능'
+	</select>
+
 </mapper>
