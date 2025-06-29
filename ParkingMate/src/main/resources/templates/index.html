@@ -5,8 +5,73 @@
   <title>ParkingMate 메인</title>
   <!-- ✅ 카카오 지도 SDK -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+ 
+ <style>
+  /* 메뉴바 스타일 */
+  #floatingNav {
+    display: none; /* 초기에는 숨김 */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width:80%;
+    height:30px;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 8px 20px;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  #floatingNav ul {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 40px; /* ✅ 항목 간 간격 (li 사이 간격) */
+  }
+
+  #floatingNav li {
+    margin: 0 15px;
+  }
+
+  #floatingNav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+
+  #floatingNav a:hover {
+    text-decoration: underline;
+  }
+</style>
+<script>
+  window.addEventListener('scroll', function () {
+    const header = document.querySelector('.header');
+    const nav = document.getElementById('floatingNav');
+
+    if (window.scrollY > header.offsetHeight) {
+      nav.style.display = 'block';
+    } else {
+      nav.style.display = 'none';
+    }
+  });
+</script>
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="company">회사소개</a></li>
+    <li><a href="reser">예약하기</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypage">마이페이지</a></li>
+  </ul>
+</nav>
 
 <!-- 로그인 상태 확인 -->
 <div th:if="${session.sname != null}">
@@ -83,6 +148,6 @@
       .catch(err => console.error(err));
   });
 </script>
-
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>
