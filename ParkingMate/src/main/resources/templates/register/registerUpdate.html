@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th = http://www.thymeleaf.org>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+let isIdAvailable = false; // 초기값: 사용 불가 상태
+
+function validateForm() {
+	const pwd = document.getElementById("pwd").value;
+	const repwd = document.getElementById("repwd").value;
+	
+	if(pwd!==repwd) {
+		alert("비밀번호가 일치하지 않습니다.");
+		return false;
+		document.getElementById("repwd").focus();
+
+	}
+
+    if (!isIdAvailable) {
+        alert("아이디를 확인하세요.");
+        document.getElementById("id").focus();
+        return false;
+    }
+	
+	return true;
+	
+}
+function checkId() {
+    const idInput = document.getElementById("id");
+    const id = idInput.value.trim();
+    const msgSpan = document.getElementById("id-check-msg");
+
+    if (id === "") {
+        msgSpan.textContent = "아이디를 입력하세요.";
+        msgSpan.style.color = "red";
+        return;
+    }
+
+    fetch("/checkId?id=" + encodeURIComponent(id))
+        .then(response => response.text())
+        .then(data => {
+            if (data.includes("사용 가능")) {
+                msgSpan.textContent = data;
+                msgSpan.style.color = "green";
+                isIdAvailable = true; // 사용 가능
+    
+            } else {
+                msgSpan.textContent = data;
+                msgSpan.style.color = "red";
+                isIdAvailable = false; // 중복됨
+       
+            }
+        })
+        .catch(error => {
+            msgSpan.textContent = "오류 발생: " + error;
+            msgSpan.style.color = "red";
+            isIdAvailable = false;
+            
+        });
+}
+function matchPwd() {
+	const pwdInput = document.getElementById("pwd");
+	const repwdInput = document.getElementById("repwd");
+	const msgSpan2 = document.getElementById("pwd-check-msg");
+	
+	if(pwdInput.value=="" && repwdInput.value=="") {
+		msgSpan2.textContent = "비밀번호를 입력하세요.";
+		msgSpan2.style.color = "red";
+	} else if(pwdInput.value==repwdInput.value) {
+		msgSpan2.textContent = "비밀번호가 일치합니다.";
+		msgSpan2.style.color = "green";
+	} else {
+		msgSpan2.textContent = "비밀번호가 일치하지 않습니다.";
+		msgSpan2.style.color = "red";
+	}
+	
+}
+function mergeResidentNum() {
+    const front = document.getElementById("resident_num1").value.replace(/[^0-9]/g, "");
+    const back = document.getElementById("resident_num2").value.replace(/[^0-9]/g, "");
+    const hiddenInput = document.getElementById("resident_num");
+
+    if (front.length <= 6 && back.length <= 7) {
+        hiddenInput.value = front+"-"+back;
+    }
+}
+</script>
+</head>
+<body>
+<h1>회 원 가 입</h1>
+<form name="registerFormUpdate" action="/registerFormUpdate" method="post">
+<fieldset>
+	<legend>회원정보수정</legend>
+	<table>
+		<tr>
+			<th>아이디:</th>
+			<td>
+   			<input type="text" id="id" name="id" th:value="${dto.id}" readonly>
+ 			</td>
+		</tr>
+		<tr>
+			<th>비밀번호:</th>
+			<td><input type="password" id="pwd" name="pwd" th:value="${dto.pwd}" placeholder="비밀번호입력"></td>
+		</tr>
+		<tr>
+			<th>비밀번호확인:</th>
+			<td><input type="password" id="repwd" name="repwd" th:value="${dto.pwd}" oninput="matchPwd()">
+			<span id="pwd-check-msg"></span></td>
+		</tr>
+		<tr>
+			<th>이름:</th>
+			<td><input type="text" name="name" th:value="${dto.name}" readonly></td>
+		</tr>
+		<tr>
+			<th>주민등록번호:</th>
+			<td><input type="text" id="resident_num1" maxlength="6" th:value="${resident1}" oninput="mergeResidentNum()" readonly>-
+			<input type="password" id="resident_num2" maxlength="7" th:value="${resident2}" oninput="mergeResidentNum()" readonly>
+			<input type="hidden" id="resident_num" name="resident_num">
+			</td>
+		</tr>
+		<tr>
+			<th>전화번호:</th>
+			<td><input type="text" name="tel" placeholder="-제외하고 입력하세요" th:value="${dto.tel}"></td>
+		</tr>
+		<tr>
+			<th>이메일:</th>
+			<td><input type="text" name="email" th:value="${dto.email}"></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="right">
+			<input type="submit" value="등록">
+			<input type="button" value="취소" onclick="window.location.href='/userInfo';">
+			</td>
+		</tr>
+	</table>
+</fieldset>
+</form>
+</body>
+</html>

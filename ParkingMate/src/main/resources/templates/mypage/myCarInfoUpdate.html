@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th = http://www.thymeleaf.org>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+    function selectGear(value) {
+        document.getElementById("gear").value = value;
+
+        // 선택된 버튼 강조 (css 클래스 토글)
+        document.getElementById("manualBtn").style.backgroundColor = (value === '수동') ? "#ccc" : "";
+        document.getElementById("autoBtn").style.backgroundColor = (value === '자동') ? "#ccc" : "";
+    }
+    function selectGas(value) {
+    	document.getElementById("gas_type").value = value;
+  
+    }
+    function openFindPopup(){
+    	window.open('/toFindCarPopup', '차량검색팝업', 'width=600, height=400');
+    }
+</script>
+</head>
+<body>
+<form name="updateMyCarInfo" action="/updateMyCarInfo" method="post">
+	<input type="hidden" name="originalCarNum" th:value="${dto.car_num}">
+	<input type="hidden" name="id" th:value="${session.sid}">
+	
+<fieldset>
+	<legend>차량정보수정</legend>
+	<table>
+		<tr>
+			<th>차량번호:</th>
+			<td><input type="text" id="car_num" name="car_num" th:value="${dto.car_num}" placeholder="ex.123가4567"></td>
+		</tr>
+		<tr>
+			<th>차량모델명:</th>
+			<td><input type="text" id="modelname" name="modelname" th:value="${dto.modelname}"></td>
+		</tr>
+		<tr>
+    		<td colspan="2" align="right">
+        	<input type="button" value="차량검색" onclick="openFindPopup()">
+    		</td>
+		</tr>
+		<tr>
+   			<td colspan="2">
+	        	<p>
+	            * 검색 시 원하는 차량이 없다면 직접입력<br>
+	            * 검색한 차량의 정보에 따라 하단의 정보는 자동입력<br>
+	            * 단, 직접입력 시 차량의 모든 정보를 입력해주세요
+	        	</p>
+    		</td>
+		</tr>
+		<tr>
+			<th>연식:</th>
+			<td><input type="text" id="model_year" name="model_year" th:value="${dto.model_year}"></td>
+		</tr>
+		<tr>
+			<th>유종:</th>
+			<td>
+			<!-- 실제 서버로 넘길 값 -->
+			<input type="hidden" id="gas_type" name="gas_type" th:value="${dto.gas_type}">
+			
+			휘발유<input type="radio" onclick="selectGas('휘발유')" id="gasoline_type" name="gas_type" th:checked="${dto.gas_type == '휘발유'}">
+			경유<input type="radio" onclick="selectGas('경유')" id="diesel_type" name="gas_type" th:checked="${dto.gas_type == '경유'}">
+			전기<input type="radio" onclick="selectGas('전기')" id="electric_type" name="gas_type" th:checked="${dto.gas_type == '전기'}">
+			그외<input type="radio" onclick="selectGas('그외')" id="etc_type" name="gas_type" th:checked="${dto.gas_type == '그외'}">
+			
+			</td>
+		</tr>
+		<tr>
+			<th>색상:</th>
+			<td><input type="text" id="color" name="color" th:value="${dto.color}"></td>
+		</tr>
+		<tr>
+		    <th>수동/자동</th>
+		    <td>
+		    	<!-- 실제 서버로 넘길 값 -->
+		        <input type="hidden" id="gear" name="gear" th:value="${dto.gear}">
+		
+		        <button type="button" onclick="selectGear('수동')" id="manualBtn" th:style="${dto.gear == '수동'} ? 'background-color:#ccc' : ''">수동</button>
+		        <button type="button" onclick="selectGear('자동')" id="autoBtn" th:style="${dto.gear == '자동'} ? 'background-color:#ccc' : ''">자동</button>
+		    </td>
+		</tr>
+		<div>
+			<tr>
+			<td colspan="2" align="right">
+			<input type="submit" value="완료">
+			<input type="button" value="취소" onclick="window.location.href='/myCarList';">
+			</td>
+			</tr>
+		</div>
+	</table>
+</fieldset>
+</form>
+</body>
+</html>

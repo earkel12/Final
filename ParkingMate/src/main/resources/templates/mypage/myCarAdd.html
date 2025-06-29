@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th = http://www.thymeleaf.org>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+    function selectGear(value) {
+        document.getElementById("gear").value = value;
+
+        // 선택된 버튼 강조 (css 클래스 토글)
+        document.getElementById("manualBtn").style.backgroundColor = (value === '수동') ? "#ccc" : "";
+        document.getElementById("autoBtn").style.backgroundColor = (value === '자동') ? "#ccc" : "";
+    }
+    function selectGas(value) {
+    	document.getElementById("gas_type").value = value;
+  
+    }
+    function openFindPopup(){
+    	window.open('/toFindCarPopup', '차량검색팝업', 'width=600, height=400');
+    }
+</script>
+</head>
+<body>
+<form name="carRegisterForm" action="/carRegisterForm" method="post">
+	<input type="hidden" id="id" name="id" th:value="${session.sid}">
+<fieldset>
+	<legend>유저차량등록</legend>
+	<table>
+		<tr>
+			<th>차량번호:</th>
+			<td><input type="text" id="car_num" name="car_num" placeholder="ex.123가4567"></td>
+		</tr>
+		<tr>
+			<th>차량모델명:</th>
+			<td><input type="text" id="modelname" name="modelname"></td>
+		</tr>
+		<tr>
+    		<td colspan="2" align="right">
+        	<input type="button" value="차량검색" onclick="openFindPopup()">
+    		</td>
+		</tr>
+		<tr>
+   			<td colspan="2">
+	        	<p>
+	            * 검색 시 원하는 차량이 없다면 직접입력<br>
+	            * 검색한 차량의 정보에 따라 하단의 정보는 자동입력<br>
+	            * 단, 직접입력 시 차량의 모든 정보를 입력해주세요
+	        	</p>
+    		</td>
+		</tr>
+		<tr>
+			<th>연식:</th>
+			<td><input type="text" id="model_year" name="model_year"></td>
+		</tr>
+		<tr>
+			<th>유종:</th>
+			<td>
+			<!-- 실제 서버로 넘길 값 -->
+			<input type="hidden" id="gas_type" name="gas_type">
+			
+			휘발유<input type="radio" onclick="selectGas('휘발유')" id="gasoline_type">
+			경유<input type="radio" onclick="selectGas('경유')" id="diesel_type">
+			전기<input type="radio" onclick="selectGas('전기')" id="electric_type">
+			그외<input type="radio" onclick="selectGas('그외')" id="etc_type">
+			
+			</td>
+		</tr>
+		<tr>
+			<th>색상:</th>
+			<td><input type="text" id="color" name="color"></td>
+		</tr>
+		<tr>
+		    <th>수동/자동</th>
+		    <td>
+		    	<!-- 실제 서버로 넘길 값 -->
+		        <input type="hidden" id="gear" name="gear">
+		
+		        <button type="button" onclick="selectGear('수동')" id="manualBtn">수동</button>
+		        <button type="button" onclick="selectGear('자동')" id="autoBtn">자동</button>
+		    </td>
+		</tr>
+		<div>
+			<tr>
+			<td colspan="2" align="right">
+			<input type="submit" value="차량등록">
+			<input type="button" value="취소" onclick="window.location.href='/mypageMain';">
+			</td>
+			</tr>
+		</div>
+	</table>
+</fieldset>
+</form>
+</body>
+</html>

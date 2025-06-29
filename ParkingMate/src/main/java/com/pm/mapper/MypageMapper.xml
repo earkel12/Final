@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pm.mapper.MypageMapper">
+	<!-- mybatis설정 -->
+	<insert id="carRegisterForm" parameterType="com.pm.mypage.model.User_CarsDTO">
+		insert into
+			user_cars
+		values(
+			#{car_num}, #{model_year}, #{gas_type}, #{color}, #{gear},
+			#{id}, #{modelname}
+		)
+	</insert>
+	<select id="limitAddCar" resultType="int">
+		select
+			count(*)
+		from
+			user_cars
+		where id = #{id}
+	</select>
+	<select id="showMyCarInfo" parameterType="String" resultType="com.pm.mypage.model.User_CarsDTO">
+		select
+			*
+		from
+			user_cars
+		where car_num = #{car_num}
+	</select>
+	<update id="updateMyCarInfo" parameterType="Map">
+		update user_cars
+    	set
+	        car_num = #{dto.car_num},
+	        model_year = #{dto.model_year},
+	        gas_type = #{dto.gas_type},
+	        color = #{dto.color},
+	        gear = #{dto.gear},
+	        modelname = #{dto.modelname}
+    	where car_num = #{originalCarNum}
+	</update>
+	<select id="checkCarNumExistsExceptOriginal" parameterType="map" resultType="int">
+		select 
+			count(*)
+		from
+			user_cars
+		where car_num = #{dto.car_num}
+			and car_num != #{originalCarNum}
+	</select>
+	<select id="findCarModelName" parameterType="Map" resultType="com.pm.mypage.model.Car_TypeDTO">
+		select
+			modelname, brandname
+		from
+			car_type
+		where ${fkey} like concat( '%', #{fvalue}, '%')	
+	</select>
+	<select id="checkCarNumExisets" resultType="int">
+		select
+			count(*)
+		from
+			user_cars
+		where car_num = #{car_num}
+	</select>
+	<select id="checkMyCarList" parameterType="String" resultType="com.pm.mypage.model.User_CarsDTO">
+		select
+			*
+		from
+			user_cars
+		where id = #{id}
+	</select>
+	<delete id="myCarDelete" parameterType="String">
+		delete from
+			user_cars
+		where car_num = #{car_num}
+	</delete>
+	<select id="myParkingHistoryList" parameterType="String" resultType="com.pm.mypage.model.ParkingMateDTO">
+		select
+		 	*
+		 from
+		 	parkinglot
+		 where id = #{id}
+		 and outtime is not null
+	</select>
+	
+	
+</mapper>

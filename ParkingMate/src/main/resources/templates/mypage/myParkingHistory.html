@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>주차장이용내역</title>
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border-bottom: 1px dotted #000;
+    text-align: center;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.tab {
+    background-color: #ddd;
+    border: 1px solid #aaa;
+    padding: 10px;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.tab.active {
+    background-color: #bbb;
+}
+</style>
+<script>
+function moveToDelegateHistory() {
+    window.location.href = '/delegateHistory';
+}
+</script>
+</head>
+<body>
+<div>
+    <div class="tab active">주차장이용내역</div>
+    <div class="tab" onclick="moveToDelegateHistory()">주차대행이용내역</div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>예약번호</th>
+            <th>예약일자</th>
+            <th>예약차량번호</th>
+            <th>입차시간</th>
+            <th>출차시간</th>
+            <th>발렛유무</th>
+            <th>대행유무</th>
+            <th>예약금액</th>
+            <th>예약상태구분</th>
+            <th>장애인여부</th>
+            <th>주차장이름</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="history : ${parkingHistoryList}">
+            <td th:text="${history.reservationNumber}"></td>
+            <td th:text="${history.reservationDate}"></td>
+            <td th:text="${history.carNumber}"></td>
+            <td th:text="${history.entryTime}"></td>
+            <td th:text="${history.exitTime}"></td>
+            <td th:text="${history.valet}"></td>
+            <td th:text="${history.delegate}"></td>
+            <td th:text="${history.amount}"></td>
+            <td th:text="${history.status}"></td>
+            <td th:text="${history.disabled}"></td>
+            <td th:text="${history.parkingName}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th = http://www.thymeleaf.org>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+let isIdAvailable = false; // 초기값: 사용 불가 상태
+
+function validateForm() {
+	const pwd = document.getElementById("pwd").value;
+	const repwd = document.getElementById("repwd").value;
+	
+	if(pwd!==repwd) {
+		alert("비밀번호가 일치하지 않습니다.");
+		return false;
+		document.getElementById("repwd").focus();
+
+	}
+
+	return true;
+}
+
+function matchPwd() {
+	const pwdInput = document.getElementById("pwd");
+	const repwdInput = document.getElementById("repwd");
+	const msgSpan2 = document.getElementById("pwd-check-msg");
+	
+	if(pwdInput.value=="" && repwdInput.value=="") {
+		msgSpan2.textContent = "비밀번호를 입력하세요.";
+		msgSpan2.style.color = "red";
+	} else if(pwdInput.value==repwdInput.value) {
+		msgSpan2.textContent = "비밀번호가 일치합니다.";
+		msgSpan2.style.color = "green";
+	} else {
+		msgSpan2.textContent = "비밀번호가 일치하지 않습니다.";
+		msgSpan2.style.color = "red";
+	}
+	
+}
+</script>
+</head>
+<body>
+<h1>회원정보</h1>
+<fieldset>
+	<table>
+		<tr>
+			<th>아이디:</th>
+			<td th:text="${dto.id}"></td>
+		</tr>
+		<tr>
+			<th>비밀번호:</th>
+			<td th:text="${dto.pwd}"></td>
+		</tr>
+		<tr>
+			<th>비밀번호확인:</th>
+			<td th:text="${dto.pwd}"></td>
+		</tr>
+		<tr>
+			<th>이름:</th>
+			<td th:text="${dto.name}"></td>
+		</tr>
+		<tr>
+			<th>주민등록번호:</th>
+			<td th:text="${#strings.concat(dto.resident_num.substring(0,8), '******')}"></td>
+		</tr>
+		<tr>
+			<th>전화번호:</th>
+			<td th:text="${dto.tel}"></td>
+		</tr>
+		<tr>
+			<th>이메일:</th>
+			<td th:text="${dto.email}"></td>
+		</tr>
+		<tr>
+			<td colspan="1" align="right">
+			<input type="button" value="수정" onclick="window.location.href='/registerUpdate';">
+			</td>
+		</tr>
+	</table>
+</fieldset>
+</body>
+</html>
