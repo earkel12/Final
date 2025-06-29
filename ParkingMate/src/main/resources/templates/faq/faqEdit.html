@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>자주하는 질문 수정</h1>
+<form name = "faqEdit" action = "faqEdit" method = "post">
+<input type = "hidden" name = "idx" th:value = "${dto.idx}">
+<label>제목</label>
+<input type = "text" name = "question" required th:value = "${dto.question}"><br>
+<label>내용</label>
+<textarea rows="8" cols="16" name = "answer" required th:text = "${dto.answer}"></textarea>
+<input type = "submit" value = "수정하기"><a href = "faq">취소</a>
+</form>
+</body>
+</html>

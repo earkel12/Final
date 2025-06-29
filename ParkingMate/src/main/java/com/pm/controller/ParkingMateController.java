@@ -1,18 +1,13 @@
 package com.pm.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.pm.notice.model.NoticeDTO;
-import com.pm.notice.service.NoticeService;
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
@@ -52,7 +47,7 @@ public class ParkingMateController {
 		   mav.setViewName("pm/pmMsg");
 		   return mav;
 		}
-		
+
 		dto.setId(userid);
 		int result = service.insertParkingMate(dto);
 		String msg = result > 0 ? "파킹메이트 등록에 성공하셨습니다." : "파킹메이트 등록에 실패하셨습니다.";
@@ -63,7 +58,7 @@ public class ParkingMateController {
 		mav.setViewName("pm/pmMsg");
 		return mav;
 	}
-	
+
 	@GetMapping("/pm/settlement")
 	public ModelAndView showPmSettlement(HttpSession session) throws Exception {
 		int listSize = 5;

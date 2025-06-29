@@ -11,10 +11,10 @@ import com.pm.pm.model.ParkingMateDTO;
 
 @Service
 public class ParkingMateServiceImple implements ParkingMateService {
-    
+
     @Autowired
     private ParkingMateMapper mapper;
-    
+
     @Override
     public int insertParkingMate(ParkingMateDTO dto) throws Exception{
         int count = mapper.insertParkingMate(dto);

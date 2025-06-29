@@ -1,7 +1,5 @@
 package com.pm.member.model;
 
-import java.sql.*;
-
 import groovy.transform.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

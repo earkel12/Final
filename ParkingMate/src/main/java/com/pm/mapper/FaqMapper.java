@@ -1,10 +1,13 @@
-package com.pm.faq.service;
+package com.pm.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.pm.faq.model.FaqDTO;
 
-public interface FaqService {
+@Mapper
+public interface FaqMapper {
 
 	public int faqInsert(FaqDTO dto) throws Exception;
 	public List<FaqDTO> faqSelect() throws Exception;

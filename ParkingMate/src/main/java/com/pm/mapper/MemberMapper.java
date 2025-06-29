@@ -1,10 +1,6 @@
 package com.pm.mapper;
 
-import java.util.*;
-
 import org.apache.ibatis.annotations.Mapper;
-
-import com.pm.member.model.MemberDTO;
 
 @Mapper
 public interface MemberMapper {

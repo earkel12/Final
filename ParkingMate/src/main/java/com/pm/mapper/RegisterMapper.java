@@ -8,7 +8,7 @@ import com.pm.member.model.MemberDTO;
 public interface RegisterMapper {
 
 	public int registerForm(MemberDTO dto) throws Exception;
-	
+
 	public String checkId(String id) throws Exception;
-	
+
 }
