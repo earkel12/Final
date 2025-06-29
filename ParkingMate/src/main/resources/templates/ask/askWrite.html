@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>문의작성</h1>
+<form name = "askWrite" action = "askWrite" method = "post">
+<input type = "hidden" th:value = "${userid}" name = "id">
+<div class = "categoryBox">
+	<label>문의유형</label>
+	<select name = "type" required>
+		<option value = "">문의 유형을 선택해주세요.</option>
+		<option value="주차장 이용">주차장 이용</option>
+	    <option value="결제 관련">결제 관련</option>
+	    <option value="예약 취소">예약 취소</option>
+	    <option value="기타">기타</option>
+	</select>
+</div>
+<div class = "titleBox">
+	<label>문의 제목: </label>
+	<input type = "text" name = "title">
+</div>
+<div class = "contentBox">
+	<label>문의 내용:</label>
+	<textarea rows="8" cols="80" name = "content"></textarea>
+</div>
+<div class = "writeSubmit">
+	<input type = "submit" value = "문의등록">
+</div>
+</form>
+</body>
+</html>

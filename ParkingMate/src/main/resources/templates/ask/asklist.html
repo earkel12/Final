@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+function alertShow() {
+	alert("로그인후 문의해주세요.");
+	location.href = "/member/join"; // 회원가입 페이지로 이동
+}
+</script>
+</head>
+<body>
+<h1>문의하기</h1>
+<table>
+	<thead>
+		<tr>
+			<th>번호</th>
+			<th>유형</th>
+			<th>문의제목</th>
+			<th>문의내용</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<td colspan = "3" align = "center" th:utext="${pageStr}"></td>
+			<td><a href="login" th:if="${userid == null}" onclick="alertShow()">문의작성</a>
+				<a href="askWrite" th:if="${userid != null}">문의작성</a>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+		<tr>
+			
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

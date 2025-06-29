@@ -1,6 +1,6 @@
 package com.pm.map.model;
 
-import java.sql.*;
+import java.sql.Date;
 
 import groovy.transform.ToString;
 import lombok.AllArgsConstructor;

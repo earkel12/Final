@@ -7,9 +7,13 @@ SELECT * FROM ask;
 SELECT * FROM PARKINGLOT;
 SELECT * FROM BOOKING;
 
-INSERT INTO user VALUES ('ROSAL', '1234', '김로사', 123, '12345', 'ㅇㄹㄷㅇ@BNA', 0, 0);
+insert into ask (id, type, title, content) values('asd123', '주차장', 'cex', 'asd');
+
+INSERT INTO user VALUES ('asd123', '1234', '김두원', 123, '12345', 'ㅇㄹㄷㅇ@BNA', 0, 0);
 
 INSERT INTO user(id, pwd, name, resident_num, tel, email) VALUES('ROSA1', '12341', '김로사1', 1231, '123451', 'ㅇㄹㄷ1ㅇ@BNA');
+
+INSERT INTO user(id, pwd, name, resident_num, tel, email) VALUES('admin', '1234', '관리자', 1231, '123451', 'ㅇㄹㄷ1ㅇ@BNA');
 
 #버전과 서버 확인
 SELECT VERSION();
@@ -38,10 +42,12 @@ CREATE TABLE ask (
 	title VARCHAR(50) NOT NULL,
 	content VARCHAR(1000) NOT NULL,
 	upload VARCHAR(200),
-	comment VARCHAR(200) NOT NULL,
+	comment VARCHAR(200),
 	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_ask_id foreign key(id) references user(id)
 );
+
+drop table ask;
 
 INSERT INTO parkinglot
   (name, addr, type, price, price2, time, latitude, longitude) VALUES
@@ -298,3 +304,32 @@ create table notice_poto (
     
     CONSTRAINT fk_notice_num foreign key(notice_num) references notice(idx)
 )ENGINE=InnoDB AUTO_INCREMENT=1;
+
+create table faq (
+	 idx int AUTO_INCREMENT PRIMARY KEY,
+     question varchar(100) NOT NULL,
+     answer varchar(1000) NOT NULL
+)ENGINE=InnoDB AUTO_INCREMENT=1;
+
+commit;
+
+select * from notice;
+
+select * from faq;
+
+delete from notice where idx = 7;
+
+update notice set title = '1', content = '1' where idx = 1;
+
+select count(*) from notice where division = 0;
+
+select max(ref) from notice where division = 0;
+
+
+		SELECT * FROM notice
+    	WHERE division = 0
+    	ORDER BY idx DESC
+    	LIMIT 0, 5;
+drop table faq;
+
+insert into notice (id, title, content, writedate, readnum, division) values ('관리자','8','8',now(),0,1)
