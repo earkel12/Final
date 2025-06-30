@@ -19,4 +19,5 @@ public class AskDTO {
 	private String content;
 	private String upload;
 	private String comment;
+	private int division;
 }

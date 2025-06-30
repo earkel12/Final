@@ -1,7 +1,7 @@
 package com.pm.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-
+import java.util.*;
 import com.pm.map.model.ParkingLotDTO;
 
 @Mapper

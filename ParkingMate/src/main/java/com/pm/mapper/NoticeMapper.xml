@@ -40,18 +40,6 @@
 	    <result column="poto_4" property="poto4"/>
 	</resultMap>
 
-	<insert id="noticeInsert"
-		parameterType="com.pm.notice.model.NoticeDTO">
-		insert into notice (id, title, content, writedate, readnum, division)
-		values(#{id}, #{title}, #{content}, now(), 0, 0)
-	</insert>
-	
-	<select id="getAllNotices"
-		resultType="com.pm.notice.model.NoticeDTO">
-		select * from notice order by idx desc
-	</select>
-	
-
 	<select id="getPmNotice"
 		resultType="com.pm.notice.model.NoticeDTO">
 		SELECT * FROM notice
