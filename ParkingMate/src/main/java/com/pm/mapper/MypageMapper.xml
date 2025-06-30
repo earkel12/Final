@@ -71,13 +71,13 @@
 			user_cars
 		where car_num = #{car_num}
 	</delete>
-	<select id="myParkingHistoryList" parameterType="String" resultType="com.pm.mypage.model.ParkingMateDTO">
+	<select id="myParkingHistoryList" parameterType="String" resultType="com.pm.booking.model.BookingDTO">
 		select
 		 	*
 		 from
 		 	parkinglot
 		 where id = #{id}
-		 and outtime is not null
+		 and status = '주차장 결제완료'
 	</select>
 	
 	

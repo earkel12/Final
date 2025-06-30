@@ -224,7 +224,7 @@ public class NoticeController {
 			e.printStackTrace();
 		}
 		return "/notice/edit";
-
+	}
 	 @Value("${upload-dir}")
 	 private String uploadDir;
 	 
