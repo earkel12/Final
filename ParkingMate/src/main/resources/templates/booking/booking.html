@@ -33,7 +33,7 @@
 	<p>30분당 이용 금액 : <span id="per30min" th:text="${session.price2}">0</span>원</p>
 
     <!-- 2. 예약 정보 입력 영역 -->
-    <form action="/booking/payment" method="post">
+    <form action="/booking/agree" method="post">
       <select id="bookingcarnum" name="bookingcarnum">
 		  <option value="">-- 선택 --</option>
 		  <option th:each="car : ${carList}"
@@ -86,6 +86,7 @@
       <!-- 4. 결제 -->
       <div class="right-align">
         <p>결제 금액 : <span id="total">0</span>원</p>
+        <input type="hidden" id="totalInput" name="total" value="0">
         <button type="submit">다음</button>
       </div>
 
@@ -100,7 +101,9 @@
 	  const estimateDisplay = document.getElementById("estimate");
 	  const totalDisplay = document.getElementById("total");
 	  const mateRadios = document.getElementsByName("mate");
-	
+	  
+	  
+	  
 	  let addMateFee = 0; // 파킹메이트 추가 요금
 	
 	  // 총 금액 계산 함수
@@ -111,6 +114,7 @@
 	      const total = base + timeCost;
 	      estimateDisplay.textContent = total + "원";
 	      totalDisplay.textContent = addMateFee;
+	      document.getElementById("totalInput").value = addMateFee;
 	    }
 	  }
 	
@@ -124,6 +128,9 @@
 	      calculateTotal(); // 선택 변경 시 다시 계산
 	    });
 	  });
+	  
+	  
+	  
 	</script>
 </body>
 </html>
