@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.pm.com.model.CommentDTO;
 import com.pm.com.model.CommunityDTO;
+import com.pm.com.model.ReviewDTO;
 
 @Mapper
 public interface CommunityMapper {
@@ -21,4 +22,5 @@ public interface CommunityMapper {
 	public int deleteCommunity(int idx) throws Exception;
 	public int deleteCommentsByCommunityIdx(int idx) throws Exception;
 	public List<CommentDTO> getCommentsByCommunityIdx(int idx) throws Exception;
+	public List<ReviewDTO> getReviewList(int cp, int ls) throws Exception;
 }

@@ -266,7 +266,7 @@ INSERT INTO `review` (
   `id`, `bookingnum`, `content`
 ) VALUES (
   'ROSA1',
-  'BKG0001',
+  '1',
   '예약 경험이 매우 만족스러웠습니다. 다시 이용할게요!'
 );
 
@@ -274,7 +274,7 @@ SELECT * FROM REVIEW;
 
 CREATE TABLE review (
 	id VARCHAR(50),
-	bookingnum VARCHAR(300),
+	bookingnum INT,
 	writedate DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	rating INT(2) DEFAULT 0 NOT NULL,
 	content VARCHAR(1000) NOT NULL,
