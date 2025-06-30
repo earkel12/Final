@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pm.com.model.CommentDTO;
 import com.pm.com.model.CommunityDTO;
+import com.pm.com.model.ReviewDTO;
 import com.pm.notice.model.NoticeDTO;
 
 public interface CommunityService {
@@ -18,4 +19,5 @@ public interface CommunityService {
 	public int deleteCommunity(int idx) throws Exception;
 	public int getTotalCnt();
 	public List<CommentDTO> getCommentsByCommunityIdx(int idx) throws Exception;
+	public List<ReviewDTO> getReviewList(int cp, int ls) throws Exception;
 }

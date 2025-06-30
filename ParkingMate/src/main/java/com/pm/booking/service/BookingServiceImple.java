@@ -28,4 +28,9 @@ public class BookingServiceImple implements BookingService {
 		
 		return mapper.carbyid(userid);
 	}
+	
+	@Override
+	public void updateStatus(String userid) throws Exception {
+		mapper.updateStatus(userid);
+	}
 }

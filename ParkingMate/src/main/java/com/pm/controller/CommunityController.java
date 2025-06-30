@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.com.model.CommentDTO;
 import com.pm.com.model.CommunityDTO;
+import com.pm.com.model.ReviewDTO;
 import com.pm.com.service.CommunityService;
 import com.pm.notice.model.NoticeDTO;
 import com.pm.notice.model.NoticePotoDTO;
@@ -182,6 +183,26 @@ public class CommunityController {
 
 	    return "redirect:/comment?idx=" + comment.getIdx();
 	}
+	
+	@GetMapping("/comReview")
+	public ModelAndView showReview(HttpSession session, @RequestParam(value = "cp", defaultValue = "1") int cp)
+			throws Exception {
 
+		int listSize = 5;
+		int pageSize = 5;
+		int totalCnt = service.getTotalCnt();
+
+		List<ReviewDTO> arr = service.getReviewList(cp, listSize);
+		String pageStr = PageModule.makePaging("/comReview", totalCnt, listSize, pageSize, cp);
+
+		ModelAndView mav = new ModelAndView();
+		String userid = (String) session.getAttribute("sid");
+		mav.addObject("arr", arr);
+		mav.addObject("userid", userid);
+		mav.addObject("pageStr", pageStr);
+		mav.setViewName("/com/comReview");
+
+		return mav;
+	}
 
 }
