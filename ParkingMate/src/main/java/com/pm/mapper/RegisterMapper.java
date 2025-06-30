@@ -10,10 +10,11 @@ import com.pm.member.model.MemberDTO;
 public interface RegisterMapper {
 
 	public int registerForm(MemberDTO dto) throws Exception;
-	
+
 	public String checkId(String id) throws Exception;
-	
+
 	public MemberDTO selectUserById(String id) throws Exception;
 	
 	public int registerFormUpdate(Map<String, Object> map) throws Exception;
+
 }

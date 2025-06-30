@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
@@ -71,6 +73,13 @@ public class ParkingMateController {
 		mav.setViewName("pm/pmMsg");
 		return mav;
 	}
+
+
+	@GetMapping("/pm/usagehistory")
+	public String showPmUsagehistory() {
+		return "pm/usagehistory";
+	}
+
 
 	@GetMapping("/pm/worklog")
 	public ModelAndView showWorklog(HttpSession session) throws Exception {
@@ -145,11 +154,6 @@ public class ParkingMateController {
 		mav.addObject("endDate", endDate);
 		mav.setViewName("pm/settlement");
 		return mav;
-	}
-
-	@GetMapping("/pm/usagehistory")
-	public String showPmUsagehistory() {
-		return "pm/usagehistory";
 	}
 
 }

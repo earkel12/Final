@@ -18,19 +18,20 @@ import com.pm.register.service.RegisterService;
 
 @Controller
 public class RegisterController {
-	
+
 	@Autowired
 	private RegisterService service;
-	
+
 	@GetMapping("/register")
 	public String register() {
 		return "register/termsofuse";
 	}
-	
+
 	@GetMapping("/choosetermsofuse")
 	public String accepttermsofuse() {
 		return "register/register";
 	}
+
 	
 	@GetMapping("/userInfo")
 	public String userInfo(@SessionAttribute("sid")String id, Model model) throws Exception {
@@ -55,18 +56,19 @@ public class RegisterController {
 	    return "register/registerUpdate";
 	}
 	
+
 	@GetMapping("/checkId")
 	@ResponseBody
 	public String checkId(@RequestParam("id") String id) throws Exception {
 	    boolean exists = service.checkId(id);
 	    return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
 	}
-	
+
 	@PostMapping("/registerForm")
 	public ModelAndView registerForm(MemberDTO dto) {
-		
+
 		System.out.println(dto.toString());
-		
+
 		String msg = null;
 		try {
 			int result = service.registerForm(dto);
@@ -74,12 +76,13 @@ public class RegisterController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("msg", msg);
 		mav.setViewName("register/registerMsg");
 		return mav;
 	}
+
  
 	@PostMapping("/registerFormUpdate")
 	public ModelAndView registerFormUpdate(MemberDTO dto,
@@ -106,6 +109,5 @@ public class RegisterController {
 		return mav;
 	}
 		
-		
-		
+
 }

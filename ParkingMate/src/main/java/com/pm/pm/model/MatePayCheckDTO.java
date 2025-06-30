@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatePayCheckDTO {
-	
+
 	private int idx;
 	private String id;
 	private Date starttime;

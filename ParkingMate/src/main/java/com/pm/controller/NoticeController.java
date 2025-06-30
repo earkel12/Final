@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,14 +18,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.notice.model.NoticeDTO;
@@ -43,6 +47,29 @@ public class NoticeController {
 	private NoticeService service;
 
 	@GetMapping("/notice")
+
+	public ModelAndView noticeForm(HttpSession session,
+			@RequestParam(value = "cp", defaultValue = "1") int cp) throws Exception{
+
+		int listSize = 5;
+		int pageSize = 5;
+		int totalCnt = service.getTotalCnt();
+
+		List<NoticeDTO> arr = service.getAllNotice(cp, listSize);
+		String pageStr = PageModule.makePaging("/notice", totalCnt, listSize, pageSize, cp);
+
+		ModelAndView mav = new ModelAndView();
+		String userid = (String) session.getAttribute("sid");
+		mav.addObject("arr", arr);
+		mav.addObject("userid", userid);
+		mav.addObject("pageStr", pageStr);
+		mav.setViewName("notice/list");
+
+		return mav;
+	}
+
+
+
 	public String noticeForm(Model model) {
 		try {
 			List<NoticeDTO> list = service.getAllNotice();
@@ -54,6 +81,7 @@ public class NoticeController {
 		}
 		return "/notice/list";
 	}
+
 
 	@GetMapping("/write")
 	public String wirteForm() {
@@ -80,8 +108,10 @@ public class NoticeController {
 	}
 
 	@GetMapping("/pm/notice")
+
 	public ModelAndView showPmNotice(HttpSession session, @RequestParam(value = "cp", defaultValue = "1") int cp)
 			throws Exception {
+
 
 		int listSize = 5;
 		int pageSize = 5;
@@ -148,6 +178,53 @@ public class NoticeController {
 		return mav;
 	}
 
+
+	@GetMapping("/content")
+	public ModelAndView contentSelect(int idx, HttpSession session) {
+			ModelAndView mav = new ModelAndView();
+			String userid = (String)session.getAttribute("sid");
+		try {
+			NoticeDTO dto = service.contentSelect(idx);
+			mav.addObject("userid",userid);
+			mav.addObject("dto", dto);
+			mav.setViewName("notice/content");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mav;
+	}
+
+	@GetMapping("/delete")
+	public ModelAndView noticeDelete(int idx) {
+		ModelAndView mav = new ModelAndView();
+		String msg = null;
+		String url = "/notice";
+		try {
+			int result = service.noticeDelete(idx);
+			msg = result > 0 ? "삭제 성공":"삭제 실패";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		mav.addObject("msg",msg);
+		mav.addObject("gourl", url);
+		mav.setViewName("notice/noticeMsg");
+		return mav;
+	}
+
+	@GetMapping("/edit")
+	public String eidtForm(int idx, Model model) {
+		try {
+			NoticeDTO dto = service.contentSelect(idx);
+			model.addAttribute("dto",dto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "/notice/edit";
+	}
 	 @Value("${upload-dir}")
 	 private String uploadDir;
 	 
@@ -185,6 +262,23 @@ public class NoticeController {
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
+
 	}
 
+	@PostMapping("/edit")
+	public ModelAndView edit(NoticeDTO dto) {
+		ModelAndView mav = new ModelAndView();
+		String msg = null;
+		try {
+			int result = service.noticeUpdate(dto);
+			msg = result > 0 ? "수정 성공":"수정 실패";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		mav = new ModelAndView();
+		mav.addObject("msg", msg);
+		mav.setViewName("notice/noticeMsg");
+		return mav;
+	}
 }

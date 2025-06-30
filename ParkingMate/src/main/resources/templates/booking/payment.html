@@ -1,10 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <title>결제 페이지</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      gap: 40px;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+    .section {
+      border: 1px solid #000;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      margin-top: 0;
+    }
+
+    .section input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    .payment-box {
+      width: 300px;
+      position: sticky;
+      top: 40px;
+      height: fit-content;
+      border: 1px solid #000;
+      padding: 20px;
+    }
+
+    .payment-box input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 6px;
+      text-align: right;
+    }
+
+    .btn-pay {
+      width: 100%;
+      padding: 10px;
+      background: #AAC4FF;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-pay:hover {
+      background: #B1B2FF;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- 왼쪽: 회원 + 예약 정보 -->
+  <div class="content">
+    <div class="section">
+      <h3>회원 정보</h3>
+      <input type="text" value="홍길동" readonly>
+      <input type="text" value="gildong@naver.com" readonly>
+      <input type="text" value="010-5050-4546" readonly>
+      <input type="text" value="이백만" readonly>
+      <input type="text" value="682 2008" readonly>
+    </div>
+
+    <div class="section">
+      <h3>예약 정보</h3>
+      <input type="text" value="강남역 주차장" readonly>
+      <input type="text" value="서울 강남구 테헤란로" readonly>
+      <input type="text" value="2025-07-01 14:00" readonly>
+      <input type="text" value="2시간" readonly>
+      <input type="text" value="3000원" readonly>
+      <input type="text" value="있음" readonly>
+      <input type="text" value="없음" readonly>
+    </div>
+  </div>
+
+  <!-- 오른쪽: 결제 요약 -->
+  <div class="payment-box">
+    <h4>결제 금액 내역</h4>
+    <input type="text" value="10000" readonly placeholder="발렛서비스">
+    <input type="text" value="3000" readonly placeholder="주차 요금">
+    <input type="text" value="0" readonly placeholder="장애인 할인">
+    <input type="text" value="0" readonly placeholder="추가 요금">
+    <input type="text" value="13000" readonly placeholder="총 결제 금액">
+    <button class="btn-pay">결제하기</button>
+  </div>
 
 </body>
 </html>

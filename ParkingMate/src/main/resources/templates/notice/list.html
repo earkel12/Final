@@ -17,20 +17,25 @@
 	</thead>
 	<tfoot>
 		<tr>
-			<td colspan = "3" align = "center">
-			페이징 자리
+			<td colspan = "3" align = "center" th:utext="${pageStr}">
+			
 			</td>
-			<td><a href = "write">글쓰기</a></td>
+			<td th:if="${userid == 'admin'}"><a href = "write">글쓰기</a></td>
 		</tr>
 	</tfoot>
 	<tbody>
-		<tr th:each = "notice : ${noticeList}">
+		<tr th:each = "notice : ${arr}">
 			<td th:text = "${notice.idx}"></td>
-			<td th:text = "${notice.title}"></td>
+			<td>
+				<a th:href = "@{/content(idx=${notice.idx})}"  th:text = ${notice.title}></a>
+			</td>
 			<td th:text = "${#dates.format(notice.writedate, 'yy-MM-dd HH:mm')}"></td>
 			<td th:text = "${notice.readnum}"></td>
+			<td th:if="${userid == 'admin'}" >
+			<a th:href="@{/delete(idx=${notice.idx})}" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+			</td>
 		</tr>
-		<tr th:if = "${noticeList == null}">
+		<tr th:if = "${arr == null}">
 			<td colspan = "4" align = "center">
 				공지사항을 등록해주세요.
 			</td>
