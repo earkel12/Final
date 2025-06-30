@@ -1,25 +1,19 @@
--- 단일 테이블 삭제
-DROP TABLE IF EXISTS user;
-
--- 여러 테이블을 한꺼번에 삭제
-DROP TABLE IF EXISTS
-  review,
-  mate_paycheck,
-  user_cars,
-  car_type,
-  comment,
-  community,
-  parkingmate,
-  booking,
-  parkinglot,
-  ask;
-
--- 시퀀스용 테이블 삭제
-DROP TABLE IF EXISTS
-  sq_comment_idx,
-  sq_community_idx,
-  sq_parkinglot_idx,
-  sq_mate_paycheck_idx,
-  sq_parkingmate_idx;
-  
+#테이블삭제
+-- 현재 모든 테이블 확인하기--
 SHOW TABLES;
+-- 단일 테이블 삭제--
+-- 순서대로 삭제하기--
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS mate_paycheck;
+DROP TABLE IF EXISTS user_cars;
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS community;
+DROP TABLE IF EXISTS ask;
+DROP TABLE IF EXISTS booking;
+DROP TABLE IF EXISTS parkingmate;
+DROP TABLE IF EXISTS parkinglot;
+DROP TABLE IF EXISTS car_type;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS notice_poto;
+DROP TABLE IF EXISTS notice;
+DROP TABLE IF EXISTS faq;
