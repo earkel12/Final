@@ -71,13 +71,30 @@
 			user_cars
 		where car_num = #{car_num}
 	</delete>
-	<select id="myParkingHistoryList" parameterType="String" resultType="com.pm.mypage.model.ParkingMateDTO">
+	<select id="checkMyParkingHistoryList" parameterType="String" resultType="map">
 		select
-		 	*
+		 	a.*,
+		 	b.name as parkinglot_name
 		 from
-		 	parkinglot
-		 where id = #{id}
-		 and outtime is not null
+		 	booking a
+		 join
+		 	parkinglot b on a.idx = b.idx
+		 where
+		 	a.id = #{id}
+		 and a.status = '주차장결제완료'
+	</select>
+	<select id="checkMyParkingMateHistoryList" parameterType="String" resultType="map">
+		select
+		 	a.*,
+		 	b.name as parkinglot_name
+		 from
+		 	booking a
+		 join
+		 	parkinglot b on a.idx = b.idx
+		 where
+		 	a.id = #{id}
+		 and a.status = '주차장결제완료'
+		 and a.instand = 1
 	</select>
 	
 	

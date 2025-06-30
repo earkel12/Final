@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.mypage.model.Car_TypeDTO;
 import com.pm.mypage.model.User_CarsDTO;
 
@@ -24,4 +25,7 @@ public interface MypageMapper {
 	public int updateMyCarInfo(Map<String, Object> map) throws Exception;
 	
 	public int myCarDelete(String car_num) throws Exception;
+	
+	public List<Map<String, Object>> checkMyParkingHistoryList(String id) throws Exception;
+	public List<Map<String, Object>> checkMyParkingMateHistoryList(String id) throws Exception;
 }

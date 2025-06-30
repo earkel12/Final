@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.mypage.model.Car_TypeDTO;
 import com.pm.mypage.model.User_CarsDTO;
 import com.pm.mypage.service.MypageService;
@@ -38,6 +39,38 @@ public class MypageController {
 	@GetMapping("/toFindCarPopup")
 	public String toFindCarPopup() {
 		return "mypage/toFindCarPopup";
+	}
+	
+	@GetMapping("/myParkingHistory")
+	public String checkMyParkingHistoryList(@SessionAttribute("sid")String id, Model model) {
+		
+		System.out.println("이용자ID:"+id);
+		
+		List<Map<String, Object>> bookingList = null;
+		
+		try {
+			bookingList=service.checkMyParkingHistoryList(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("bookingList", bookingList);
+		return "mypage/myParkingHistory";
+	}
+	
+	@GetMapping("/myParkingMateHistory")
+	public String checkMyParkingMateHistoryList(@SessionAttribute("sid")String id, Model model) {
+		
+		System.out.println("이용자ID:"+id);
+		
+		List<Map<String, Object>> bookingParkingMateList = null;
+		
+		try {
+			bookingParkingMateList=service.checkMyParkingMateHistoryList(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("bookingParkingMateList", bookingParkingMateList);
+		return "mypage/myParkingMateHistory";
 	}
 	
 	@GetMapping("/myCarInfoShow")
