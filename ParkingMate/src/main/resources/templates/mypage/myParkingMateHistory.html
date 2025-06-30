@@ -29,16 +29,16 @@ th {
 }
 </style>
 <script>
-function moveToMyParkingMateHistory() {
-    window.location.href = '/myParkingMateHistory';
+function moveToMyParkingHistory() {
+    window.location.href = '/myParkingHistory';
 }
 </script>
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
 <div>
-    <div class="tab active">주차장이용내역</div>
-    <div class="tab" onclick="moveToMyParkingMateHistory()">주차대행이용내역</div>
+    <div class="tab" onclick="moveToMyParkingHistory()">주차장이용내역</div>
+    <div class="tab active">주차대행이용내역</div>
 </div>
 
 <table>
@@ -58,23 +58,23 @@ function moveToMyParkingMateHistory() {
             <th></th>
         </tr>
     </thead>
-    <tr th:if="${#lists.isEmpty(bookingList)}">
+    <tr th:if="${#lists.isEmpty(bookingParkingMateList)}">
     	<td colspan="12" align="center">
     	이용한 주차장내역이 없습니다.
     	</td>
     <tbody>
-        <tr th:each="history : ${bookingList}">
-            <td th:text="${history.bookingnum}"></td>
-            <td th:text="${history.bookingdate}"></td>
-            <td th:text="${history.bookingcarnum}"></td>
-            <td th:text="${history.parkinglot_name}"></td>
-            <td th:text="${history.intime}"></td>
-            <td th:text="${history.outime}"></td>
-            <td th:text="${history.valet == 1 ? 'O' : 'X'}"></td>
-			<td th:text="${history.instand == 1 ? 'O' : 'X'}"></td>
-            <td th:text="${history.price}"></td>
-            <td th:text="${history.status}"></td>
-            <td th:text="${history.obstacle == 1 ? 'O' : 'X'}"></td>
+        <tr th:each="parkingMateHistory : ${bookingParkingMateList}">
+            <td th:text="${parkingMateHistory.bookingnum}"></td>
+            <td th:text="${parkingMateHistory.bookingdate}"></td>
+            <td th:text="${parkingMateHistory.bookingcarnum}"></td>
+            <td th:text="${parkingMateHistory.parkinglot_name}"></td>
+            <td th:text="${parkingMateHistory.intime}"></td>
+            <td th:text="${parkingMateHistory.outime}"></td>
+          	<td th:text="${parkingMateHistory.valet == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${parkingMateHistory.instand == 1 ? 'O' : 'X'}"></td>
+            <td th:text="${parkingMateHistory.price}"></td>
+            <td th:text="${parkingMateHistory.status}"></td>
+            <td th:text="${parkingMateHistory.obstacle == 1 ? 'O' : 'X'}"></td>
             <td><input type="button" value="리뷰쓰기" onclick="window.location.href='/myParkingHistoryReview';"></td>
         </tr>
     </tbody>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.mapper.MypageMapper;
 import com.pm.mypage.model.Car_TypeDTO;
 import com.pm.mypage.model.User_CarsDTO;
@@ -74,6 +75,20 @@ public class MypageServiceImple implements MypageService {
 		
 		int count = mapper.myCarDelete(car_num);
 		return count;
+	}
+	
+	@Override
+	public List<Map<String, Object>> checkMyParkingHistoryList(String id) throws Exception {
+		
+		List<Map<String, Object>> bookingList = mapper.checkMyParkingHistoryList(id);
+		return bookingList;
+	}
+	
+	@Override
+	public List<Map<String, Object>> checkMyParkingMateHistoryList(String id) throws Exception {
+		
+		List<Map<String, Object>> bookingParkingMateList = mapper.checkMyParkingMateHistoryList(id);
+		return bookingParkingMateList;
 	}
 
 

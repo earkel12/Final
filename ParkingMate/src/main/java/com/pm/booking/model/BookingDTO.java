@@ -24,5 +24,6 @@ public class BookingDTO {
 	private int obstacle;
 	private int idx;
 	private String id;
+	
 }
 
