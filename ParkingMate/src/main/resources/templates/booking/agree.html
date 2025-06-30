@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>약관 동의</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  <style>
+    .terms { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .terms-title { font-weight: bold; }
+    .flex { display: flex; justify-content: space-between; align-items: center; }
+    #payBtn { background-color: gray; color: white; padding: 10px; border: none; cursor: not-allowed; }
+    #payBtn.active { background-color: blue; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>약관 동의</h2>
+
+  <div class="terms">
+    <div class="flex">
+      <span class="terms-title">[필수] 서비스 이용약관 동의</span>
+      <label><input type="checkbox" class="agree" id="agree1"> 동의</label>
+    </div>
+  </div>
+
+  <div class="terms">
+    <div class="flex">
+      <span class="terms-title">[필수] 개인정보 수집 및 이용 동의</span>
+      <label><input type="checkbox" class="agree" id="agree2"> 동의</label>
+    </div>
+  </div>
+
+  <div class="terms">
+    <div class="flex">
+      <span class="terms-title">[필수] 위치정보 이용약관 동의</span>
+      <label><input type="checkbox" class="agree" id="agree3"> 동의</label>
+    </div>
+  </div>
+
+  <div class="terms">
+    <div class="flex">
+      <span class="terms-title">[선택] 마케팅 정보 수신 동의</span>
+      <label><input type="checkbox" id="agree4"> 동의</label>
+    </div>
+  </div>
+
+  <hr>
+
+  <div style="margin-bottom:10px;">
+    <label><input type="checkbox" id="checkAll"> 모두 동의</label>
+  </div>
+
+  <div class="flex" style="border-top: 1px dashed #888; padding-top: 10px;">
+    <div>결제 금액: <span id="finalPrice" th:text="${total}">0</span> 원</div>
+    <button id="payBtn" disabled>결제하기</button>
+  </div>
+
+  <script>
+    const agreeChecks = document.querySelectorAll('.agree');
+    const checkAll = document.getElementById('checkAll');
+    const payBtn = document.getElementById('payBtn');
+
+    // 모두 동의
+    checkAll.addEventListener('change', () => {
+      agreeChecks.forEach(chk => chk.checked = checkAll.checked);
+      togglePayButton();
+    });
+
+    // 각각 체크 변경 시
+    agreeChecks.forEach(chk => {
+      chk.addEventListener('change', () => {
+        checkAll.checked = [...agreeChecks].every(c => c.checked);
+        togglePayButton();
+      });
+    });
+
+    // 버튼 활성화 여부 판단
+    function togglePayButton() {
+      const allChecked = [...agreeChecks].every(c => c.checked);
+      if (allChecked) {
+        payBtn.disabled = false;
+        payBtn.classList.add("active");
+      } else {
+        payBtn.disabled = true;
+        payBtn.classList.remove("active");
+      }
+    }
+
+	// 결제 버튼 클릭 시
+	// === [⭐ 결제 로직] ===
+	payBtn.addEventListener("click", () => {
+	  const finalPrice = parseInt(document.getElementById('finalPrice').textContent.replace(/[^0-9]/g, '') || "0", 10);
+	  const IMP = window.IMP;
+	  IMP.init("imp84584038"); // 본인 imp 키로 대체
+	
+	  IMP.request_pay({
+	    pg: "kakaopay", 
+	    pay_method: "card",
+	    merchant_uid: "order_" + new Date().getTime(),
+	    name: "주차장 예약 결제",
+	    amount: finalPrice,
+	    buyer_email: "이수한@naver.com",
+	    buyer_name: "이수한",
+	    buyer_tel: "010-1234-5678",
+	    buyer_addr: "서울특별시",
+	    buyer_postcode: "12345"
+	  }, function (rsp) {
+	    if (rsp.success) {
+	        alert("결제 성공! imp_uid: " + rsp.imp_uid);
+	        
+	        // 🟢 Ajax로 컨트롤러에 결제 성공 알리기
+	        $.ajax({
+	          url: "/payment/success",  // 컨트롤러에 POST로 전송
+	          method: "POST",
+	          success: function() {
+	            location.href = "/";  // 성공하면 index로 이동
+	          },
+	          error: function() {
+	            alert("결제 처리 후 상태 업데이트 실패!");
+	          }
+	        });
+
+	      } else {
+	        alert("결제 실패: " + rsp.error_msg);
+	      }
+	    });
+	  });
+	</script>
+</body>
+</html>
