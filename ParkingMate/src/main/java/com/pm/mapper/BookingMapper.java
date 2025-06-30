@@ -11,4 +11,5 @@ import com.pm.booking.model.UserCarDTO;
 public interface BookingMapper {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
+	public void updateStatus(String userid) throws Exception;
 }

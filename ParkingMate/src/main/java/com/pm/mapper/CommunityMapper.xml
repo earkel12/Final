@@ -59,5 +59,11 @@
     SELECT * FROM comment WHERE idx = #{idx}
     ORDER BY ref ASC, sunbun ASC
 	</select>
-
+	
+	<select id="getReviewList"
+		resultType="com.pm.com.model.ReviewDTO">
+		select * from review
+		order by bookingnum desc
+		limit #{start}, #{end}
+	</select>
 </mapper>

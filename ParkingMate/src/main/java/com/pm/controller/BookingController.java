@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.UserCarDTO;
@@ -36,10 +37,11 @@ public class BookingController {
 	    return "booking/booking"; 
 	}
 	
-	@PostMapping("/booking/payment")
+	@PostMapping("/booking/agree")
 	public String confirmReservation(@ModelAttribute BookingDTO booking,
 	                                 HttpSession session, Model model,
-	                                 @RequestParam("duration") int duration) throws Exception {
+	                                 @RequestParam("duration") int duration,
+	                                 @RequestParam("total") int total) throws Exception {
 	    // 1. 세션에서 사용자 정보와 주차장 번호 가져오기
 	    String userId = (String) session.getAttribute("sid");
 	    Integer pIdx = (Integer) session.getAttribute("pidx");
@@ -59,17 +61,26 @@ public class BookingController {
 	    booking.setStatus("예약접수");
 
 	    // 5. 가격 계산
-	    int base = 2000;
-	    int per30 = 1000;
-	    int timeCost = duration * 2 * per30;
-	    booking.setPrice(base + timeCost);
-
+	    booking.setPrice(total);
+	    
 	    // 6. insert 호출
 	    service.insertBooking(booking);
-
+	    
+	    model.addAttribute("total", total);
 	    model.addAttribute("message", "예약이 완료되었습니다.");
-	    return "booking/payment";
+	    
+	    return "booking/agree";
 	}
 	
-	
+	@PostMapping("/payment/success")
+	@ResponseBody
+	public String updateBookingAfterPayment(HttpSession session) {
+	    String userId = (String) session.getAttribute("sid");
+	    try {
+	        service.updateStatus(userId);  // 최신 예약 1건의 status를 예약접수로 변경
+	        return "OK";
+	    } catch (Exception e) {
+	        return "FAIL";
+	    }
+	}
 }
