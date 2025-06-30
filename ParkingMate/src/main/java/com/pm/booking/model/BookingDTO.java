@@ -16,7 +16,7 @@ public class BookingDTO {
 	private LocalDateTime bookingdate;
 	private String bookingcarnum;
 	private LocalDateTime intime;
-	private LocalDateTime outime;
+	private LocalDateTime outtime;
 	private int valet;
 	private int instand;
 	private int price;

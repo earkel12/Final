@@ -110,7 +110,7 @@
 	        
 	        // 🟢 Ajax로 컨트롤러에 결제 성공 알리기
 	        $.ajax({
-	          url: "/payment/success",  // 컨트롤러에 POST로 전송
+	          url: "/payment",  // 컨트롤러에 POST로 전송
 	          method: "POST",
 	          success: function() {
 	            location.href = "/";  // 성공하면 index로 이동
