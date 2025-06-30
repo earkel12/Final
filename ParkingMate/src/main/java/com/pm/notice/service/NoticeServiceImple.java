@@ -57,7 +57,12 @@ public class NoticeServiceImple implements NoticeService {
 		int count = mapper.noticeUpdate(dto);
 		return count;
 	}
-
+	
+	@Override
+	public List<NoticeDTO> getAllNotice() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception {

@@ -14,7 +14,7 @@ function alertShow() {
 <h1>문의하기</h1>
 <table>
 	<thead>
-		<tr>
+		<tr th:if = "${userid == 'admin'}">
 			<th>번호</th>
 			<th>유형</th>
 			<th>문의제목</th>
@@ -30,8 +30,11 @@ function alertShow() {
 		</tr>
 	</tfoot>
 	<tbody>
-		<tr>
-			
+		<tr th:if = "${userid == 'admin'}">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
 		</tr>
 	</tbody>
 </table>

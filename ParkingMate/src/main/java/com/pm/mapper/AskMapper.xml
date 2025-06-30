@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace = "com.pm.mapper.AskMapper">
 	  <insert id = "askInsert" parameterType="com.pm.ask.model.AskDTO">
-	  	insert into ask (id, type, title, content) values (#{id}, #{type}, #{title}, #{content})
+	  	insert into ask (id, type, title, content, division) values (#{id}, #{type}, #{title}, #{content}, 0)
 	  </insert>
+	 
   </mapper>

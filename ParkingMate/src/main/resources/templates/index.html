@@ -73,18 +73,15 @@
   </ul>
 </nav>
 
-<!-- 로그인 상태 확인 -->
-<div th:if="${session.sname != null}">
-  <p th:text="${session.sname} + '님 로그인 중'"></p> | <a href="logout">로그아웃</a>
-</div>
-<div th:if="${session.sname == null}">
-  <a href="login">로그인</a>
-</div>
+
 
 
 <hr>
 
 <!-- 내비게이션 -->
+<a href="notice">공지사항</a><br>
+<a href="faq">자주하는 질문</a><br>
+<a href="ask">문의하기</a><br>
 <a href="notice">공지사항</a><br>
 <a href="register">회원가입</a><br>
 <a href="parkingmate">파킹메이트</a><br>
