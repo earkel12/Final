@@ -20,4 +20,5 @@ public interface CommunityService {
 	public int getTotalCnt();
 	public List<CommentDTO> getCommentsByCommunityIdx(int idx) throws Exception;
 	public List<ReviewDTO> getReviewList(int cp, int ls) throws Exception;
+	public int insertReview(ReviewDTO dto) throws Exception;
 }

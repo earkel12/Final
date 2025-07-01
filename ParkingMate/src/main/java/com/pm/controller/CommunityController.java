@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -204,5 +205,33 @@ public class CommunityController {
 
 		return mav;
 	}
+	
+	@GetMapping("/reviewWrite")
+	public String reviewForm(HttpSession session, @RequestParam("bookingnum") int bookingnum,
+							@RequestParam("bookingdate") String bookingdate,
+				            @RequestParam("parkinglot_name") String parkinglotName) {
+	    session.setAttribute("bnum", bookingnum);
+	    session.setAttribute("bdate", bookingdate);
+	    session.setAttribute("pname", parkinglotName);
+	    
+	    return "/com/reviewWrite";
+	}
+	
+	@PostMapping("/reviewWrite")
+	public ModelAndView submitReview(HttpSession session, @ModelAttribute ReviewDTO dto) throws Exception {
+		String userid = (String) session.getAttribute("sid");
+		int bookingnum=(Integer) session.getAttribute("bnum");
+				
+		dto.setId(userid);
+		dto.setBookingnum(bookingnum);
 
+		int result = service.insertReview(dto);
+		String msg = result > 0 ? "리뷰 글쓰기 성공" : "리뷰 글쓰기 실패";
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("msg", msg);
+		mav.addObject("gourl", "/myParkingHistory");
+		mav.setViewName("com/comMsg");
+		return mav;
+	}
 }

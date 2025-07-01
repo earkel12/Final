@@ -79,9 +79,9 @@ CREATE TABLE parkinglot (
 ) ENGINE=InnoDB AUTO_INCREMENT=200;
 
 INSERT INTO `booking` (
-  `bookingnum`, `bookingdate`, `bookingcarnum`, `outime`, `idx`, `id`
+  `bookingdate`, `bookingcarnum`, `outime`, `idx`, `id`
 ) VALUES (
-  'BKG0001', '2025-06-18', '12가1234', '2025-06-18 14:30:00',
+  '2025-06-18', '12가1234', '2025-06-18 14:30:00',
 200, 'ROSA1'
 );
 
@@ -93,7 +93,7 @@ CREATE TABLE booking (
 	bookingdate	DATETIME NOT NULL,
 	bookingcarnum VARCHAR(300)	NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	outime DATETIME NOT NULL,
+	outtime DATETIME NOT NULL,
 	valet INT(50) DEFAULT 0 NOT NULL,
 	instand	INT(50) DEFAULT 0 NOT NULL,
 	price INT(100) DEFAULT 0 NOT NULL,
@@ -101,6 +101,10 @@ CREATE TABLE booking (
 	obstacle INT(5) DEFAULT 0 NOT NULL,
 	idx	INT(100),
 	id VARCHAR(50),
+	ulatitude double DEFAULT 0,
+    ulongitude double DEFAULT 0,
+    pmlatitude double DEFAULT 0,
+    pmlongitude double DEFAULT 0
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)

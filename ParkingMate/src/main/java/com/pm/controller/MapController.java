@@ -29,9 +29,9 @@ public class MapController {
     }
     
     @ResponseBody
-    @PostMapping("/list")
-    public List<ParkingLotDTO> getParkingList(@RequestParam("sname") String name) throws Exception {
-        return service.searchPl(name);  // 전체 주차장 목록 JSON 응답
+    @GetMapping("/search")
+    public List<ParkingLotDTO> searchParking(@RequestParam("name") String name) throws Exception {
+        return service.searchPl(name);
     }
     
     // AJAX 호출 응답용

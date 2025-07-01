@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 <!-- ✅ 카카오 지도 SDK -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
 
@@ -52,6 +53,7 @@
     background: #fff;
   }
   </style>
+  
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
@@ -74,6 +76,9 @@
 		</div>
 		<!-- ✅ 예약 버튼 (스크롤 아래에 보이도록 위치) -->
 		  <div style="text-align:center; padding: 20px;">
+		  	<button onclick="location.href='/search'" style="padding: 10px 20px; background-color: #3b82f6; color: white; border: none; cursor: pointer;">
+		      전체보기
+		    </button>
 		    <button id="reserveBtn" style="padding: 10px 20px; background-color: #3b82f6; color: white; border: none; cursor: pointer;">
 		      예약하기
 		    </button>
@@ -102,69 +107,68 @@
     }
 
     function loadParkings(searchName = "") {
-      const url = '/map/list';
-      const options = searchName
-        ? {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'sname=' + encodeURIComponent(searchName)
-          }
-        : {};
+    	  //searchName이 있다면 map/search, 없다면 map/list
+    	  const url = searchName
+    	    ? `/map/search?name=${encodeURIComponent(searchName)}`
+    	    : '/map/list';
 
-      fetch(url, options)
-        .then(response => response.json())
-        .then(data => {
-          const listContainer = document.getElementById('listContainer');
-          listContainer.innerHTML = ''; // 기존 리스트 초기화
-          clearMarkers(); // 마커 초기화
+    	  fetch(url)
+    	    .then(response => response.json())
+    	    .then(data => {
+    	      const listContainer = document.getElementById('listContainer');
+    	      listContainer.innerHTML = '';
+    	      clearMarkers();
 
-          data.forEach(parking => {
-            const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
-            const marker = new kakao.maps.Marker({
-              map: map,
-              position: position,
-              title: parking.name
-            });
-            markers.push(marker);
+    	      data.forEach(parking => {
+    	        const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+    	        //마커 표시
+    	        const marker = new kakao.maps.Marker({
+    	          map: map,
+    	          position: position,
+    	          title: parking.name
+    	        });
+    	        markers.push(marker);
 
-            // 리스트 항목 생성
-            const item = document.createElement('div');
-            item.className = 'parking-item';
-            item.innerHTML = `<strong>${parking.name}</strong><br>주소: ${parking.addr} / 가격: ${parking.price}원`;
-            listContainer.appendChild(item);
+    	        const item = document.createElement('div');
+    	        item.className = 'parking-item';
+    	        item.innerHTML = `<strong>${parking.name}</strong><br>주소: ${parking.addr} / 가격: ${parking.price}원`;
+    	        listContainer.appendChild(item);
 
-            // 클릭 이벤트 - 리스트
-            item.addEventListener('click', function () {
-              const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
-              infowindow.setContent(content);
-              infowindow.open(map, marker);
-              map.setCenter(position);
+    	        item.addEventListener('click', function () {
+    	          const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+    	          infowindow.setContent(content);
+    	          infowindow.open(map, marker);
+    	          map.setCenter(position);
+    	          fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
+    	            .then(res => console.log("Session 저장 완료"));
+    	          document.getElementById('name').innerText = parking.name;
+    	        });
 
-              // 서버에 세션 저장
-              fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
-                .then(res => console.log("Session 저장 완료"));
+    	        kakao.maps.event.addListener(marker, 'click', function () {
+    	          item.click();
+    	        });
+    	      });
+    	    })
+    	    .catch(err => console.error(err));
+    	}
 
-              document.getElementById('name').innerText = parking.name;
-            });
 
-            // 마커 클릭 -> 리스트 클릭 효과
-            kakao.maps.event.addListener(marker, 'click', function () {
-              item.click();
-            });
-          });
-        })
-        .catch(err => console.error(err));
+    // URL 파라미터 keyword 가져와 검색창에 표시하고 검색
+    const params = new URLSearchParams(window.location.search);
+    const keyword = params.get('keyword');
+    if (keyword) {
+      document.getElementById('searchInput').value = keyword;
+      loadParkings(keyword);
+    } else {
+      loadParkings();
     }
-
-    // 초기 전체 목록 로딩
-    loadParkings();
 
     // 검색 버튼 클릭 이벤트
     document.getElementById('searchBtn').addEventListener('click', () => {
       const keyword = document.getElementById('searchInput').value.trim();
-      loadParkings(keyword);
+      if (keyword !== "") {
+        window.location.href = `/search?keyword=${encodeURIComponent(keyword)}`;
+      }
     });
 
     // 예약 버튼 클릭

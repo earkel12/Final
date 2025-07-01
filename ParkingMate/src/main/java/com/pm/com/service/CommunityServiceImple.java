@@ -104,4 +104,10 @@ public class CommunityServiceImple implements CommunityService {
 
 		return sqlSessionTemplate.selectList("com.pm.mapper.CommunityMapper.getReviewList", paramMap);
 	}
+	
+	@Override
+	public int insertReview(ReviewDTO dto) throws Exception {
+		
+		return mapper.insertReview(dto);
+	}
 }
