@@ -96,7 +96,7 @@ public class CommunityServiceImple implements CommunityService {
 	public int insertReview(ReviewDTO dto) throws Exception {
 		
 		return mapper.insertReview(dto);
-
+	}
 	@Override
 	public int getSearchCount(String type, String keyword) {
 	    Map<String, String> paramMap = new HashMap<>();
