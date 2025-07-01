@@ -1,22 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>파킹메이트</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+  body {
+    font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+    background-color: #eef2f7; /* 은은한 연회색 배경 */
+    margin: 40px 20px;
+    color: #2c3e50;
+  }
+  header h1 {
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+  .card-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .card {
+    flex: 1 1 18%;
+    min-width: 160px;
+    background-color: #ffffff; /* 카드 배경은 완전 흰색 */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+  .card div.icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .card div.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #34495e;
+  }
+  .card a {
+    margin-top: 15px;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 600;
+    color: #6C72FF;
+    transition: color 0.3s ease;
+  }
+  .card a:hover {
+    color: #4a52d1;
+  }
+</style>
 </head>
 <body>
-	<header>
-		<h1>파킹메이트 메인</h1>
-	</header>
-	<nav>
-		<ul>
-			<li><a th:href="@{/pm/register}">파킹메이트 등록</a></li>
-			<li><a th:href="@{/pm/worklog}">근무관리</a></li>
-			<li><a th:href="@{/pm/notice}">공지사항</a></li>
-			<li><a th:href="@{/pm/settlement}">정산내역</a></li>
-			<li><a th:href="@{/pm/usagehistory}">이용현황</a></li>
-		</ul>
-	</nav>
-	<a th:href="@{/}">뒤로 돌아가기</a><br>
+  <header>
+    <h1>파킹메이트 메인</h1>
+  </header>
+
+  <div class="card-container">
+
+    <div class="card" th:onclick="|location.href='@{/pm/worklog}'|">
+      <div class="icon">📝</div>
+      <div class="title">근무관리</div>
+      <a th:href="@{/pm/worklog}">바로가기</a>
+    </div>
+
+    <div class="card" th:onclick="|location.href='@{/pm/notice}'|">
+      <div class="icon">📢</div>
+      <div class="title">공지사항</div>
+      <a th:href="@{/pm/notice}">바로가기</a>
+    </div>
+
+    <div class="card" th:onclick="|location.href='@{/pm/settlement}'|">
+      <div class="icon">💰</div>
+      <div class="title">정산내역</div>
+      <a th:href="@{/pm/settlement}">바로가기</a>
+    </div>
+
+    <div class="card" th:onclick="|location.href='@{/pm/usagehistory}'|">
+      <div class="icon">📊</div>
+      <div class="title">이용현황</div>
+      <a th:href="@{/pm/usagehistory}">바로가기</a>
+    </div>
+
+    <div class="card" th:onclick="|location.href='@{/pm/matching}'|">
+      <div class="icon">🤝</div>
+      <div class="title">파킹메이트 매칭</div>
+      <a th:href="@{/pm/matching}">바로가기</a>
+    </div>
+
+  </div>
+
+  <br>
+  <a th:href="@{/}">뒤로 돌아가기</a><br>
+
 </body>
+<th:block th:include="@{/footer}"></th:block>
 </html>

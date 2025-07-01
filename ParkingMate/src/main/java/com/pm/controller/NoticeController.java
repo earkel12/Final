@@ -225,7 +225,7 @@ public class NoticeController {
 		}
 		return "/notice/edit";
 	}
-	 @Value("${upload-dir}")
+	 @Value("${file.upload-dir}")
 	 private String uploadDir;
 	 
 	// 파일 업로드 메서드
