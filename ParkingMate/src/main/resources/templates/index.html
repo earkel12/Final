@@ -88,12 +88,11 @@ function showLoginCheck() {
 <a href="faq">자주하는 질문</a><br>
 <a th:if="${session.sid == null}" th:href="@{/login}" onclick = "showLoginCheck()">문의하기</a>
 <a th:if="${session.sid != null and session.sid == 'admin'}" th:href="@{/ask}">문의하기</a>
-<a th:if="${session.sid != null and session.sid != 'admin'}" th:href="@{/askWrite}">문의하기</a>
-<br>
+<a th:if="${session.sid != null and session.sid != 'admin'}" th:href="@{/askWrite}">문의하기</a><br>
 <a href="register">회원가입</a><br>
 <a href="parkingmate">파킹메이트</a><br>
 <a href="community">커뮤니티</a><br>
-
+<a th:if = "${session.sid == 'admin'}" href = "parkingLotRegister">주차장 등록</a>
 <hr>
 
 <!-- ✅ 지도 섹션 -->
