@@ -1,47 +1,178 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>커뮤니티</title>
+<meta charset="UTF-8" />
+<title>커뮤니티 목록</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #2c3e50;
+}
+
+main {
+	max-width: 1000px;
+	margin: 40px auto;
+	padding: 0 20px;
+}
+
+h1 {
+	font-size: 28px;
+	margin-bottom: 25px;
+	border-left: 5px solid #B1B2FF;
+	padding-left: 15px;
+}
+
+table.community-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+table.community-table thead {
+	background-color: #B1B2FF;
+	color: white;
+}
+
+table.community-table th, table.community-table td {
+	padding: 14px 16px;
+	text-align: center;
+	border-bottom: 1px solid #e2e2e2;
+}
+
+table.community-table tbody tr:hover {
+	background-color: #f0f4ff;
+}
+
+table.community-table a {
+	color: #2c3e50;
+	text-decoration: none;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+table.community-table a:hover {
+	text-decoration: underline;
+}
+
+.table-wrapper {
+	margin-top: 20px;
+}
+
+.write-button-wrapper {
+	text-align: right;
+	margin-top: 12px;
+}
+
+.write-button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #6C72FF;
+	color: white;
+	border-radius: 6px;
+	text-decoration: none;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+.write-button:hover {
+	background-color: #555bff;
+}
+
+.paging {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 14px;
+}
+
+.paging a, .paging span {
+	display: inline-block;
+	margin: 0 5px;
+	padding: 6px 12px;
+	color: #6C72FF;
+	text-decoration: none;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+}
+
+.paging a:hover {
+	background-color: #6C72FF;
+	color: white;
+	border-color: #555bff;
+}
+
+.paging .current {
+	background-color: #555bff;
+	color: white;
+	border-color: #555bff;
+	cursor: default;
+}
+</style>
 </head>
 <body>
-	<h1>커뮤니티</h1>
-	<form th:action="@{/comList}" method="post">
-		<table border="1" cellspacing="0" width="550">
-			<thead>
-				<tr>
-					<th>번호</th>
-					<th>제목</th>
-					<th>작성자</th>
-					<th>조회수</th>
-					<th>추천수</th>
-					<th>작성일</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:if="${#lists.isEmpty(arr)}">
-					<td colspan="5" align="center">등록된 게시글이 없습니다.</td>
-				</tr>
-				<tr th:each="dto : ${arr}">
-					<td th:text="${dto.idx}">번호</td>
-					<td><a th:href="@{'/comment'(idx=${dto.idx})}"
-						th:text="${dto.title}">제목</a></td>
-					<td th:text="${dto.id}">작성자</td>
-					<td th:text="${dto.readnum}">조회수</td>
-					<td th:text="${dto.good}">0</td>
-					<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">2025-06-20</td>
-				</tr>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="5" align="center" th:utext="${pageStr}"></td>
-					<td><a th:href="@{communityWrite}">글쓰기</a></td>
-				</tr>
-			</tfoot>
-		</table>
-	</form>
-	
-	<p> 검색 기능(개발예정) </p>
+	<main>
+		<div
+			style="display: flex; justify-content: space-between; align-items: flex-end;">
+			<h1>커뮤니티</h1>
+
+			<form th:action="@{/comList}" method="get"
+				style="display: flex; gap: 8px;">
+				<select name="type" th:value="${type}"
+					style="padding: 6px 8px; font-size: 14px;">
+					<option value="title" th:selected="${type == 'title'}">제목</option>
+					<option value="id" th:selected="${type == 'id'}">작성자</option>
+				</select> <input type="text" name="keyword" th:value="${keyword}"
+					placeholder="검색어 입력"
+					style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" />
+				<button type="submit"
+					style="padding: 6px 12px; background-color: #6C72FF; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+					검색</button>
+			</form>
+		</div>
+
+		<div class="table-wrapper">
+			<table class="community-table">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>조회수</th>
+						<th>작성일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${#lists.isEmpty(arr)}">
+						<td colspan="5">등록된 게시글이 없습니다.</td>
+					</tr>
+					<tr th:each="dto : ${arr}">
+						<td th:text="${dto.idx}">번호</td>
+						<td><a th:href="@{'/comment'(idx=${dto.idx})}"
+							th:text="${dto.title}">제목</a></td>
+						<td th:text="${dto.id}">작성자</td>
+						<td th:text="${dto.readnum}">조회수</td>
+						<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">작성일</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="paging" th:utext="${pageStr}"></div>
+		</div>
+		<div class="write-button-wrapper" th:if="${userid != null}">
+			<a href="/communityWrite" class="write-button">글쓰기</a>
+		</div>
+	</main>
 	<a th:href="@{/community}">커뮤니티 메인</a>
+	<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

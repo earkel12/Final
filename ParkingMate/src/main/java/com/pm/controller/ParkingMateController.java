@@ -5,12 +5,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.booking.model.BookingDTO;
+import com.pm.booking.service.BookingService;
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
@@ -18,14 +21,16 @@ import com.pm.pm.service.ParkingMateService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
+
 
 @Controller
 public class ParkingMateController {
 
 	private final NoticeServiceImple noticeServiceImple;
-
+	
+	@Autowired
+	private BookingService bookingservice;
+	
 	@Autowired
 	private ParkingMateService service;
 
@@ -35,39 +40,40 @@ public class ParkingMateController {
 
 	@GetMapping("/pm/main")
 	public ModelAndView pmMain(HttpSession session) throws Exception {
-	    String userid = (String) session.getAttribute("sid");
+		String userid = (String) session.getAttribute("sid");
 
-	    if (userid == null || userid.isEmpty()) {
-	        return new ModelAndView("redirect:/login");
-	    }
+		if (userid == null || userid.isEmpty()) {
+			return new ModelAndView("redirect:/login");
+		}
 
-	    ParkingMateDTO dto = service.getParkingMate(userid);
-	    if (dto == null) {
-	        return new ModelAndView("redirect:/pm/register");
-	    }
+		ParkingMateDTO dto = service.getParkingMate(userid);
+		if (dto == null) {
+			return new ModelAndView("redirect:/pm/register");
+		}
 
-	    ModelAndView mav = new ModelAndView("pm/main");
-	    return mav;
+		ModelAndView mav = new ModelAndView("pm/main");
+		return mav;
 	}
 
 	@GetMapping("/parkingmate")
 	public String redirectToPmMain() {
-	    return "redirect:/pm/main";
+		return "redirect:/pm/main";
 	}
+
 	@GetMapping("/pm/register")
 	public ModelAndView GetPmRegister(HttpSession session) throws Exception {
-	    String userid = (String) session.getAttribute("sid");
+		String userid = (String) session.getAttribute("sid");
 
-	    if (userid == null || userid.isEmpty()) {
-	        return new ModelAndView("redirect:/login");
-	    }
+		if (userid == null || userid.isEmpty()) {
+			return new ModelAndView("redirect:/login");
+		}
 
-	    ParkingMateDTO dto = service.getParkingMate(userid);
-	    if (dto != null) {
-	        return new ModelAndView("redirect:/pm/main");
-	    }
+		ParkingMateDTO dto = service.getParkingMate(userid);
+		if (dto != null) {
+			return new ModelAndView("redirect:/pm/main");
+		}
 
-	    return new ModelAndView("pm/register");
+		return new ModelAndView("pm/register");
 	}
 
 	@Value("${file.upload-dir}")
@@ -188,7 +194,7 @@ public class ParkingMateController {
 				extension = originalFilename.substring(dotIndex);
 			}
 
-			File uploadPath = new File(uploadDir); // uploadDir 변수는 서버의 저장 경로 (절대경로 권장)
+			File uploadPath = new File(uploadDir);
 			if (!uploadPath.exists()) {
 				uploadPath.mkdirs();
 			}
@@ -205,6 +211,13 @@ public class ParkingMateController {
 
 			pictureFile.transferTo(dest);
 			dto.setPicture(savedFileName);
+		} else {
+			ParkingMateDTO existing = service.getParkingMate(dto.getId());
+			if (existing != null && existing.getPicture() != null) {
+				dto.setPicture(existing.getPicture());
+			} else {
+				throw new IllegalArgumentException("운전면허증 이미지는 반드시 등록해야 합니다.");
+			}
 		}
 
 		int result = service.updateParkingMate(dto);
@@ -240,8 +253,8 @@ public class ParkingMateController {
 	}
 
 	@GetMapping("/pm/matching")
-	public String showMatching() {
-		return "/pm/matching";
+	public String showMatching(Model model) throws Exception {
+	    return "/pm/matching";
 	}
 
 }

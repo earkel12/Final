@@ -3,15 +3,228 @@
 <head>
   <meta charset="UTF-8" />
   <title>글 수정</title>
+  <th:block th:include="@{/header}"></th:block>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+      background-color: #f5f7fa;
+      color: #2c3e50;
+    }
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 30px 40px 50px 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      max-width: 900px;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 30px;
+      border-left: 6px solid #6C72FF;
+      padding-left: 20px;
+      font-weight: 700;
+      color: #4a4a9e;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .writer-info {
+      font-size: 14px;
+      color: #666;
+      font-style: italic;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 18px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus {
+      border-color: #6C72FF;
+      outline: none;
+      box-shadow: none;
+    }
+    label[for="contentEditable"] {
+      font-weight: 700;
+      font-size: 16px;
+      margin: 24px 0 6px 0;
+      display: block;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      border: 1.5px solid #ccc;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      background-color: #fafafa;
+      padding: 6px 12px;
+      user-select: none;
+    }
+    .toolbar button {
+      background: none;
+      border: none;
+      color: #555;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: color 0.2s ease;
+      line-height: 1;
+      user-select: none;
+    }
+    .toolbar button:hover {
+      color: #6C72FF;
+      background-color: #e5e7ff;
+    }
+    .toolbar button:focus {
+      outline: none;
+      color: #3f45d8;
+      background-color: #d3d7ff;
+    }
+    #contentEditable {
+      min-height: 220px;
+      padding: 14px 16px;
+      border: 1.5px solid #ccc;
+      border-radius: 0 0 8px 8px;
+      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      outline: none;
+      resize: vertical;
+      overflow-y: auto;
+      background-color: white;
+    }
+    #contentEditable:focus {
+      border-color: #6C72FF;
+      box-shadow: none;
+    }
+    .form-buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+    input[type="submit"], input[type="reset"], .back-button {
+      cursor: pointer;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      color: white;
+      background-color: #6C72FF;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      box-shadow: none;
+    }
+    input[type="reset"] {
+      background-color: #aaa;
+      color: #fff;
+    }
+    input[type="submit"]:hover, .back-button:hover {
+      background-color: #555bff;
+    }
+    input[type="reset"]:hover {
+      background-color: #777;
+    }
+    .back-button {
+      background-color: #999;
+      padding: 12px 28px;
+      line-height: 36px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-  <h1>글 수정</h1>
-  <form th:action="@{/community/edit}" method="post">
-    <input type="hidden" name="idx" th:value="${dto.idx}" />
-    <p>제목: <input type="text" name="title" th:value="${dto.title}" required/></p>
-    <p>내용: <textarea name="content" rows="10" cols="50" th:text="${dto.content}" required></textarea></p>
-    <button type="submit">수정 완료</button>
-    <a th:href="@{/comment(idx=${dto.idx})}">취소</a>
-  </form>
+  <main>
+    <h1>글 수정</h1>
+    <form th:action="@{/community/edit}" method="post" onsubmit="return submitForm()">
+      <input type="hidden" name="idx" th:value="${dto.idx}" />
+
+      <div class="header-row">
+        <label for="title">제목</label>
+        <div class="writer-info" th:if="${userid != null}">
+          작성자: <span th:text="${userid}">userid</span>
+        </div>
+      </div>
+      <input type="text" id="title" name="title" required th:value="${dto.title}" />
+
+      <label for="contentEditable">내용</label>
+
+      <div class="toolbar" role="toolbar" aria-label="텍스트 서식">
+        <button type="button" onclick="execCmd('bold')" title="굵게 (Ctrl+B)" aria-label="굵게"><b>B</b></button>
+        <button type="button" onclick="execCmd('italic')" title="기울임 (Ctrl+I)" aria-label="기울임"><i>I</i></button>
+        <button type="button" onclick="execCmd('underline')" title="밑줄 (Ctrl+U)" aria-label="밑줄"><u>U</u></button>
+        <button type="button" onclick="execCmd('insertUnorderedList')" title="글머리 기호" aria-label="글머리 기호">•</button>
+        <button type="button" onclick="execCmd('insertOrderedList')" title="번호 매기기" aria-label="번호 매기기">1.</button>
+      </div>
+
+      <div id="contentEditable" contenteditable="true" spellcheck="true" aria-label="내용 입력 영역"
+           th:utext="${dto.content}"></div>
+
+      <input type="hidden" name="content" id="content" />
+
+      <div class="form-buttons">
+        <input type="reset" value="초기화" onclick="clearEditor()" />
+        <input type="submit" value="수정 완료" />
+        <a th:href="@{/comment(idx=${dto.idx})}" class="back-button">취소</a>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    function execCmd(command) {
+      const editor = document.getElementById('contentEditable');
+      editor.focus();
+
+      if (command === 'insertUnorderedList' || command === 'insertOrderedList') {
+        document.execCommand(command);
+      } else {
+        document.execCommand(command);
+      }
+    }
+
+    function clearEditor() {
+      const editor = document.getElementById('contentEditable');
+      editor.innerHTML = '';
+      document.getElementById('content').value = '';
+    }
+
+    function submitForm() {
+      const editor = document.getElementById('contentEditable');
+      const hiddenInput = document.getElementById('content');
+
+      const text = editor.innerText.trim();
+      if (text === '') {
+        alert('내용을 입력해주세요.');
+        editor.focus();
+        return false;
+      }
+
+      hiddenInput.value = editor.innerHTML;
+      return true;
+    }
+
+    window.onload = () => {
+      const editor = document.getElementById('contentEditable');
+      const hiddenInput = document.getElementById('content');
+      hiddenInput.value = editor.innerHTML;
+    };
+  </script>
+  <th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

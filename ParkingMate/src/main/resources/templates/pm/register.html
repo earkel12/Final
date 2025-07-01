@@ -143,24 +143,24 @@ button:hover {
 			enctype="multipart/form-data">
 			<table>
 				<tr>
-					<th><label for="license">차량 번호</label></th>
+					<th><label for="license">운전면허증 일련번호</label></th>
 					<td><input type="text" id="license" name="license" required
-						placeholder="예: 12가3456 또는 123가4567"
-						pattern="^\d{2,3}[가-힣]{1}\d{4}$"
-						title="예: 12가3456 또는 123가4567 형태로 입력하세요." /></td>
+						placeholder="예: 01-23-456789-00"
+						pattern="^\d{2}-\d{2}-\d{6}-\d{2}$"
+						title="예: 01-23-456789-00 형태로 입력하세요." /></td>
 				</tr>
 				<tr>
-					<th><label for="history">차량 이력</label></th>
-					<td><textarea id="history" name="history" rows="3"
-							style="width: 100%;"></textarea></td>
-				</tr>
-				<tr>
-					<th><label for="picture">차량 사진</label></th>
+					<th><label for="picture">운전면허증 업로드</label></th>
 					<td><input type="file" id="picture" name="pictureFile"
 						accept="image/*" onchange="previewImage(event)" /> <br /> <img
 						id="preview"
 						style="display: none; margin-top: 10px; max-width: 300px; border: 1px solid #ccc; border-radius: 6px;"
 						alt="미리보기" /></td>
+				</tr>
+				<tr>
+					<th><label for="history">차량 이력</label></th>
+					<td><textarea id="history" name="history" rows="3"
+							style="width: 100%;"></textarea></td>
 				</tr>
 				<tr>
 					<th><label for="addr">주소</label></th>

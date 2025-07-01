@@ -1,6 +1,5 @@
 package com.pm.booking.model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +23,5 @@ public class BookingDTO {
 	private int obstacle;
 	private int idx;
 	private String id;
-	
 }
 
