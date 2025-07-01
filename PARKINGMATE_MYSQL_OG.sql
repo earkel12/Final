@@ -37,16 +37,17 @@ insert into ask values('ROSA1', '문의', 'ㅇㅇ', 'ㅇㅇㅇ', '', 'ㅇㅇ');
 
 #문의테이블
 CREATE TABLE ask (
+	idx int AUTO_INCREMENT PRIMARY KEY,
 	id VARCHAR(50),
 	type VARCHAR(50) NOT NULL,
 	title VARCHAR(50) NOT NULL,
 	content VARCHAR(1000) NOT NULL,
 	upload VARCHAR(200),
 	comment VARCHAR(200),
-    division int(1)
+    division int(1),
 	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_ask_id foreign key(id) references user(id)
-);
+)ENGINE=InnoDB AUTO_INCREMENT=1;
 
 drop table ask;
 
@@ -285,8 +286,10 @@ CREATE TABLE review (
 	CONSTRAINT fk_review_bookingnum foreign key(bookingnum) references booking(bookingnum) 
 );
 
+
+
 create table notice (
-   idx int AUTO_INCREMENT primary key,
+  　idx int AUTO_INCREMENT primary key,
     id varchar(50) not null,
     title varchar(100) NOT NULL,
     content varchar(1000) NOT NULL,

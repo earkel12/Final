@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>답변하기(관리자)</h1>
+<form name = "comment" action = "comment" method = "post">
+<fieldset th:each = "ask : ${askComment}">
+<input type = "hidden" name = "idx" th:value = "${ask.idx}">
+<div class = "userid">
+<label>문의자ID</label>
+<label th:text = "${ask.id}"></label>
+</div>
+<div class = "askType">
+<label>문의 유형</label>
+<label th:text = "${ask.type}"></label>
+</div>
+<div class = "askTitle">
+<label>문의 제목</label>
+<label th:text = "${ask.title}"></label>
+</div>
+<div>
+<label>문의 내용</label>
+<label th:text = "${ask.content}"></label>
+</div>
+<br>
+<textarea rows="8" cols="10" name = "comment"></textarea>
+<br>
+<input type = "submit" value = "답변하기">
+</fieldset>
+</form>
+</body>
+</html>

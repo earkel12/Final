@@ -5,8 +5,8 @@
     <title>문의 목록 (관리자 전용)</title>
 </head>
 <body>
-<a href = "result">문의 처리 결과</a>
-<h1>고객 문의 목록</h1>
+<h1>문의 처리 결과</h1>
+<a href = "ask">돌아가기</a>
 <table border="1" width="100%" cellspacing="0" cellpadding="5">
     <thead>
         <tr>
@@ -15,7 +15,7 @@
             <th>제목</th>
             <th>작성자</th>
             <th>답변상태</th>
-            <th>답변버튼</th>
+            <th>확인하기</th>
         </tr>
     </thead>
 
@@ -28,7 +28,7 @@
             <td th:text= "${ask.title}">제목</td>
             <td th:text= "${ask.id}">작성자</td>
             <td th:text= "${ask.comment != null ? '답변완료' : '미답변'}">상태</td>
-            <td><a th:href = "@{/askComment(idx = ${ask.idx})}" th:text = "답변하기">답변버튼</a></td>
+            <td><a th:href = "@{/resultContent(idx = ${ask.idx})}" th:text = "확인하기">확인버튼</a></td>
         </tr>
     </tbody>
 
