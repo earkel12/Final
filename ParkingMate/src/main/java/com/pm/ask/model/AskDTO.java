@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AskDTO {
 
+	private int idx;
 	private String id;
 	private String type;
 	private String title;

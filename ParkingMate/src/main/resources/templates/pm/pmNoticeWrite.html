@@ -1,21 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="UTF-8" />
+<title>공지사항 쓰기 - Parking Mate</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+body {
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #2c3e50;
+	margin: 40px auto;
+}
+
+h1 {
+	font-size: 28px;
+	margin-bottom: 25px;
+	border-left: 5px solid #B1B2FF;
+	padding-left: 15px;
+	color: #1a1a1a;
+}
+
+form {
+	background-color: white;
+	padding: 30px 40px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 600;
+	color: #444;
+	margin-top: 20px;
+}
+
+input[type="text"], textarea {
+	width: 100%;
+	padding: 12px 15px;
+	border: 1.5px solid #ccc;
+	border-radius: 6px;
+	font-size: 15px;
+	resize: vertical;
+	transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus {
+	outline: none;
+	border-color: #6C72FF;
+	box-shadow: 0 0 6px #aab2ff88;
+}
+
+input[type="file"] {
+	margin-top: 8px;
+	font-size: 14px;
+}
+
+.button-group {
+	margin-top: 30px;
+	text-align: right;
+}
+
+input[type="reset"], input[type="submit"], input[type="button"] {
+	padding: 10px 25px;
+	font-weight: 600;
+	font-size: 15px;
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin-left: 12px;
+}
+
+input[type="reset"] {
+	background-color: #B1B2FF;
+	color: #1a1a1a;
+	border: none;
+	transition: background-color 0.3s ease;
+}
+
+input[type="reset"]:hover {
+	background-color: #6C72FF;
+	color: white;
+}
+
+input[type="submit"] {
+	background-color: #6C72FF;
+	color: white;
+	border: none;
+	transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+	background-color: #555bff;
+}
+
+input[type="button"] {
+	background-color: #AAC4FF;
+	color: #1a1a1a;
+	border: none;
+	transition: background-color 0.3s ease;
+}
+
+input[type="button"]:hover {
+	background-color: #B1B2FF;
+	color: #1a1a1a;
+}
+</style>
 </head>
 <body>
-	<form action="/pm/pmNoticeWrite" method="post" enctype="multipart/form-data">
-		<h1>공지사항 쓰기</h1>
-		<label for="title">제목</label><br> 
-		<input type="text" id="title" name="title"><br>
-		<label for="content">내용</label><br>
-		<textarea id="content" name="content" rows="8" cols="50"></textarea><br> 
-  		<label>사진 업로드 (최대 4개)</label><br>
-  		<input type="file" name="photos" multiple><br><br>
-		<input type="reset" value="초기화"> 
-		<input type="submit" value="등록">
-	</form>
-	<a th:href="@{/pm/notice}">뒤로 돌아가기</a>
+
+	<main>
+		<form action="/pm/pmNoticeWrite" method="post"
+			enctype="multipart/form-data">
+			<h1>공지사항 쓰기</h1>
+
+			<label for="title">제목</label> <input type="text" id="title"
+				name="title" required /> <label for="content">내용</label>
+			<textarea id="content" name="content" rows="8" required></textarea>
+
+			<label>사진 업로드 (최대 4개)</label> <input type="file" name="photos"
+				accept="image/*" multiple />
+
+			<div class="button-group">
+				<input type="reset" value="초기화" /> <input type="submit" value="등록" />
+				<input type="button" value="취소" id="cancel-button" />
+			</div>
+		</form>
+	</main>
+
 </body>
+<script>
+	document.getElementById('cancel-button').addEventListener('click',
+			function() {
+				window.location.href = /*[[${'/pm/notice'}]]*/'/pm/notice';
+			});
+</script>
+<th:block th:include="@{/footer}"></th:block>
 </html>

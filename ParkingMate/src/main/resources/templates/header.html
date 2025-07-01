@@ -49,11 +49,11 @@
 	
     <!-- 로그인 상태 확인 -->
 <div th:if="${session.sname != null}">
-  <a href = "logout">Sign Out</a> | <a href="mypageMain">Mypage</a>
-</div>
-<div th:if="${session.sname == null}">
-  <a href="login">Sign In</a> | <a href = "register">Sign Up</a>
-</div>
+    <a th:href="@{/logout}">Sign Out</a> | <a th:href="@{/mypageMain}">Mypage</a>
+  </div>
+  <div th:if="${session.sname == null}">
+    <a th:href="@{/login}">Sign In</a> | <a th:href="@{/register}">Sign Up</a>
+  </div>
   </header>
 </body>
 </html>
