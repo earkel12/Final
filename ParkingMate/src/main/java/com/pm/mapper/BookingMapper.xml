@@ -4,18 +4,14 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pm.mapper.BookingMapper">
 	<!-- mybatis설정 -->
-	<insert id="insertBooking"
-		parameterType="com.pm.booking.model.BookingDTO">
-		INSERT INTO booking (bookingdate, bookingcarnum, intime,
-		outime, valet,
-		instand, price, status, obstacle, idx, id)
-		VALUES
-		(#{bookingdate}, #{bookingcarnum}, #{intime}, #{outime}, #{valet},
-		#{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id})
-	</insert>
-	<select id="carbyid" parameterType="String"
-		resultType="com.pm.booking.model.UserCarDTO">
-		SELECT car_num, modelname from user_cars where id=#{id}
+
+	<insert id="insertBooking" parameterType="com.pm.booking.model.BookingDTO">
+        INSERT INTO booking (bookingdate, bookingcarnum, intime, outtime, valet, instand, price, status, obstacle, idx, id)
+        VALUES (#{bookingdate}, #{bookingcarnum}, #{intime}, #{outtime}, #{valet}, #{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id})
+    </insert>
+	<select id="carbyid" parameterType="String" resultType="com.pm.booking.model.UserCarDTO">
+		SELECT car_num, modelname from user_cars where id=#{id} 
+
 	</select>
 	<update id="updateStatus" parameterType="String">
 		UPDATE booking

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>리뷰 작성</title>
+<style>
+  #myform input[type="radio"] {
+    display: none;
+  }
+
+  #myform label {
+    font-size: 2em;
+    color: transparent;
+    text-shadow: 0 0 0 #ccc; /* 회색 기본 별 */
+    cursor: pointer;
+  }
+
+  /* 선택 시 왼쪽부터 채워짐 */
+  #myform input[type="radio"]:checked ~ label {
+    text-shadow: 0 0 0 #ccc;
+  }
+
+  #myform label:has(~ input[type="radio"]:checked),
+  #myform input[type="radio"]:checked + label {
+    text-shadow: 0 0 0 gold;
+  }
+</style>
+</head>
+<body>
+<th:block th:include = "@{/header}"></th:block>
+<h1>리뷰 쓰기</h1>
+
+<form action="/reviewWrite" method="post">
+	<table>
+		<!-- ✅ 첫 줄: 아이디와 예약일자 -->
+		<tr>
+			<td>아이디: <span th:text="${session.sid}">아이디</span></td>
+			<td>예약일자: <span th:text="${session.bdate}">2025-06-18</span></td>
+		</tr>
+
+		<!-- ✅ 둘째 줄: 주차장이름, 별점 -->
+		<tr>
+			<td>주차장: <span th:text="${session.pname}">OO주차장</span></td>
+			<td>
+				<label for="rating">별점:</label>
+				<span id="myform">
+
+					<input type="radio" name="rating" value="1" id="rate1">
+					<label for="rate1">★</label>
+					
+					<input type="radio" name="rating" value="2" id="rate2">
+					<label for="rate2">★</label>
+					
+					<input type="radio" name="rating" value="3" id="rate3">
+					<label for="rate3">★</label>
+					
+					<input type="radio" name="rating" value="4" id="rate4">
+					<label for="rate4">★</label>
+					
+					<input type="radio" name="rating" value="5" id="rate5">
+					<label for="rate5">★</label>
+				</span>
+			</td>			
+		</tr>
+		<tr>
+        </tr>                    
+		<!-- ✅ 셋째 줄: 리뷰 내용 -->
+		<tr>
+			<td colspan="2">
+				<label for="content">내용</label><br>
+				<textarea id="content" name="content" rows="8" cols="60" required></textarea>
+			</td>
+		</tr>
+
+		<!-- ✅ 넷째 줄: 버튼 -->
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<input type="reset" value="초기화">
+				<input type="submit" value="등록">
+			</td>
+		</tr>
+	</table>
+</form>
+
+<th:block th:include = "@{/footer}"></th:block>
+</body>
+</html>
