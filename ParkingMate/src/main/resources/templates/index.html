@@ -59,6 +59,11 @@
       nav.style.display = 'none';
     }
   });
+  
+function showLoginCheck() {
+	alert('문의하기는 로그인 후 이용해주세요.');
+	location.href = 'login';
+}
 </script>
 </head>
 <body>
@@ -81,8 +86,10 @@
 <!-- 내비게이션 -->
 <a href="notice">공지사항</a><br>
 <a href="faq">자주하는 질문</a><br>
-<a href="ask">문의하기</a><br>
-<a href="notice">공지사항</a><br>
+<a th:if="${session.sid == null}" th:href="@{/login}" onclick = "showLoginCheck()">문의하기</a>
+<a th:if="${session.sid != null and session.sid == 'admin'}" th:href="@{/ask}">문의하기</a>
+<a th:if="${session.sid != null and session.sid != 'admin'}" th:href="@{/askWrite}">문의하기</a>
+<br>
 <a href="register">회원가입</a><br>
 <a href="parkingmate">파킹메이트</a><br>
 <a href="community">커뮤니티</a><br>
