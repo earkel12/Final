@@ -91,9 +91,7 @@ public class BookingController {
 	        return "FAIL";
 	    }
 	}
-	
-<<<<<<< HEAD
-=======
+
 	
 	
 	
@@ -174,6 +172,4 @@ public class BookingController {
 	    return "redirect:/mateUsagesStatus";
 	}
 	
-	
->>>>>>> e9064c3ae755ff524c0d05e67674937599450347
 }

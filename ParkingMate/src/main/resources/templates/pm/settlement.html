@@ -1,104 +1,173 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>파킹메이트 이용현황</title>
-  <th:block th:include="@{/header}"></th:block>
-  <!-- Kakao 지도 API -->
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&autoload=false"></script>
+<meta charset="UTF-8">
+<title>파킹메이트</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+  body {
+    font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 40px 20px;
+  }
 
-  <style>
-    body {
-      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
-      background-color: #f5f7fa;
-      color: #2c3e50;
-      margin: 0;
-      padding: 40px 20px;
+  h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    border-left: 5px solid #B1B2FF;
+    padding-left: 15px;
+    color: #1a1a1a;
+  }
+
+  form.filter-form {
+    max-width: 900px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  form.filter-form label {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+
+  form.filter-form input[type="date"] {
+    padding: 6px 10px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+
+  form.filter-form input[type="date"]:focus {
+    border-color: #6C72FF;
+    outline: none;
+    box-shadow: 0 0 6px #aab2ff88;
+  }
+
+  form.filter-form button {
+    background-color: #6C72FF;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 7px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  form.filter-form button:hover {
+    background-color: #555bff;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  thead tr {
+    background-color: #f0f1ff;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e1e4f0;
+    word-break: break-word;
+  }
+
+  th {
+    color: #555;
+  }
+
+  tbody tr:hover {
+    background-color: #f9faff;
+  }
+
+  tbody tr td[colspan="8"] {
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+    color: #999;
+  }
+
+  a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #6C72FF;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: #555bff;
+  }
+
+  /* 반응형을 위해 가로 여백 조정 */
+  @media (max-width: 600px) {
+    th, td {
+      padding: 8px 6px;
+      font-size: 12px;
     }
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 30px;
-      border-left: 5px solid #B1B2FF;
-      padding-left: 15px;
-      color: #1a1a1a;
+    form.filter-form {
+      justify-content: center;
     }
-
-    #map {
-      width: 100%;
-      height: 400px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 10px;
-      color: #6C72FF;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    a:hover {
-      color: #555bff;
-    }
-
-    @media (max-width: 600px) {
-      #map {
-        height: 300px;
-      }
-    }
-  </style>
-
-  <!-- usageList를 JS에 주입 -->
-  <script th:inline="javascript">
-    const usageList = /*[[${usageList}]]*/ [];
-  </script>
+  }
+</style>
 </head>
-
 <body>
-  <h1>파킹메이트 이용현황</h1>
-  <div id="map"></div>
-
-  <script>
-    kakao.maps.load(function () {
-      const mapContainer = document.getElementById('map');
-      const mapOption = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 5
-      };
-
-      const map = new kakao.maps.Map(mapContainer, mapOption);
-      const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-
-      if (usageList.length === 0) {
-        alert("예약 중인 주차장이 없습니다.");
-        return;
-      }
-
-      usageList.forEach(entry => {
-        const position = new kakao.maps.LatLng(entry.latitude, entry.longitude);
-
-        const marker = new kakao.maps.Marker({
-          map: map,
-          position: position,
-          title: entry.lotName || entry.addr || "예약 주차장"
-        });
-
-        kakao.maps.event.addListener(marker, 'click', function () {
-          const content = `<div style="padding:5px;"><b>${entry.lotName ?? "예약 주차장"}</b><br>${entry.addr}</div>`;
-          infowindow.setContent(content);
-          infowindow.open(map, marker);
-        });
-      });
-
-      map.setCenter(new kakao.maps.LatLng(usageList[0].latitude, usageList[0].longitude));
-    });
-  </script>
-
-  <a th:href="@{/parkingmate}">파킹메이트 메인</a>
-  <th:block th:include="@{/footer}"></th:block>
+  <h1>파킹메이트 정산내역</h1>
+  <form action="/pm/settlement" method="get" class="filter-form">
+    <label for="startDate">시작일:</label>
+    <input type="date" id="startDate" name="startDate" th:value="${startDate}">
+    <label for="endDate">종료일:</label>
+    <input type="date" id="endDate" name="endDate" th:value="${endDate}">
+    <button type="submit">조회</button>
+  </form>
+  <form action="/pm/settlement" method="get">
+    <table border="1" cellspacing="0">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>요청자ID</th>
+          <th>시작일시</th>
+          <th>종료일시</th>
+          <th>상태구분</th>
+          <th>금액</th>
+          <th>메이트ID</th>
+          <th>차량번호</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:if="${#lists.isEmpty(arr)}">
+          <td colspan="8" align="center">정산내역이 없습니다.</td>
+        </tr>
+        <tr th:each="dto : ${arr}">
+          <td th:text="${dto.idx}">번호</td>
+          <td th:text="${dto.id}">요청자ID</td>
+          <td th:text="${#dates.format(dto.starttime, 'yyyy-MM-dd')}">시작일시</td>
+          <td th:text="${#dates.format(dto.endtime, 'yyyy-MM-dd')}">종료일시</td>
+          <td th:text="${dto.status}">상태구분</td>
+          <td th:text="${dto.price}">금액</td>
+          <td th:text="${dto.mid}">메이트ID</td>
+          <td th:text="${dto.car_num}">차량번호</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+  </form>
 </body>
+<a th:href="@{/parkingmate}">파킹메이트 메인</a>
+<th:block th:include="@{/footer}"></th:block>
 </html>
