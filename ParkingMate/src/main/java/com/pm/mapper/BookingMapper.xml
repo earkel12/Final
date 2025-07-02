@@ -26,4 +26,59 @@
 		ON booking.bookingnum = sub2.bookingnum
 		SET booking.status = '파킹메이트결제완료';
 	</update>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 메이트이용현황관련 -->
+	<select id="showMatebookingList" parameterType="String" resultType="map" >
+		select
+			a.*,
+			b.name as parkinglot_name
+		from
+			booking a
+		join
+			parkinglot b on a.idx = b.idx
+		where
+			a.id = #{id}
+		and a.status = '파킹메이트결제완료'
+		and instand = 1
+	</select>
+	<select id="findParkinglotByName" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
+		select
+			*
+		from
+			parkinglot
+		where
+			name = #{name}
+	</select>
+	<select id="findMatcingMate" resultType="map">
+		select
+			m1.*,
+			m2.name AS mate_name,
+			m2.tel AS mate_tel
+		from
+			mate_paycheck m1
+		join
+			user m2 
+		on 
+			m1.mid = m2.id
+		where
+			m1.id = #{id}
+		and m1.mid is not null
+		and m1.car_num = #{car_num}
+		and m2.mate_use = 1
+	</select>
+	<update id="updateOuttime" parameterType="int">
+    	update
+    		booking
+    	SET
+    		outtime = NOW()
+    	WHERE
+    		bookingnum = #{bookingnum}
+</update>
+	
 </mapper>

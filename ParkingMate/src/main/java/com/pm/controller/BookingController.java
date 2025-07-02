@@ -2,6 +2,7 @@ package com.pm.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.ui.Model;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.UserCarDTO;
 import com.pm.booking.service.BookingService;
+import com.pm.map.model.ParkingLotDTO;
+import com.pm.pm.model.MatePayCheckDTO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -55,7 +59,7 @@ public class BookingController {
 	    booking.setIntime(now);  // 입차 시간도 현재로 설정
 
 	    // 3. 출차 시간 = 입차 + duration (단위: 시간)
-	    booking.setOutime(now.plusHours(duration));
+	    booking.setOuttime(now.plusHours(duration));
 
 	    // 4. 기타 정보
 	    booking.setStatus("예약접수");
@@ -83,4 +87,86 @@ public class BookingController {
 	        return "FAIL";
 	    }
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//메이트이용현황 관련
+	@GetMapping("/mateUsagesStatus")
+	public String mateUsagesStatus(@SessionAttribute("sid")String id, Model model) {
+		
+		System.out.println("사용자ID:"+ id);
+		
+		List<Map<String, Object>> mateBookingList = null;
+		
+		try {
+			mateBookingList = service.showMatebookingList(id);
+		} catch (Exception e) {
+			System.out.println("메이트이용현황 오류발생! 고객센터에 연락바랍니다.");
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("mateBookingList", mateBookingList);
+		
+		String parkinglotName = null;
+		if(mateBookingList!=null && !mateBookingList.isEmpty()) {
+			parkinglotName = (String)mateBookingList.get(0).get("parkinglot_name");
+		}
+		
+		ParkingLotDTO parkinglotdto = null;
+		if(parkinglotName!=null) {
+			try {
+				parkinglotdto = service.findParkinglotByName(parkinglotName);
+			} catch (Exception e) {
+				System.out.println("주차장 정보 조회 중 오류 발생");
+	            e.printStackTrace();
+			}
+		}
+		model.addAttribute("parkinglotdto", parkinglotdto);
+		
+		//지도위도, 경도추가
+		if (mateBookingList != null && !mateBookingList.isEmpty()) {
+		    Map<String, Object> booking = mateBookingList.get(0);
+
+		    model.addAttribute("ulatitude", booking.get("ulatitude"));
+		    model.addAttribute("ulongitude", booking.get("ulongitude"));
+		    model.addAttribute("pmlatitude", booking.get("pmlatitude"));
+		    model.addAttribute("pmlongitude", booking.get("pmlongitude"));
+		}
+		
+		List<Map<String, Object>> findMate = null;
+		
+		if(mateBookingList!=null && !mateBookingList.isEmpty()) {
+			String car_num = (String)mateBookingList.get(0).get("bookingcarnum");
+		
+			try {
+				findMate = service.findMatcingMate(id, car_num);
+			} catch (Exception e) {
+				System.out.println("메이트 정보 조회 중 오류 발생");
+	            e.printStackTrace();
+			}
+		}
+		model.addAttribute("findMate", findMate);
+		
+		return "booking/mateUsagesStatus";
+	}
+	
+	@PostMapping("/booking/updateOuttime")
+	public String updateOuttime(@RequestParam("bookingnum") int bookingnum) {
+	    try {
+	        service.updateOuttime(bookingnum); // service → mapper → SQL update 수행
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return "redirect:/mateUsagesStatus";
+	}
+	
+	
 }

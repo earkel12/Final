@@ -34,7 +34,7 @@ CREATE TABLE parkinglot (
 	type VARCHAR(100) NOT NULL,
 	price INT NOT NULL,
 	price2 INT NOT NULL,
-	time DATE NOT NULL,
+	time DATETIME NOT NULL,
 	valet INT DEFAULT 0 NOT NULL,
     maxnum INT DEFAULT 0 NOT NULL,
 	obstacle INT DEFAULT 0 NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE parkinglot (
 #예약내역테이블
 CREATE TABLE booking (
 	bookingnum INT AUTO_INCREMENT PRIMARY KEY,
-	bookingdate	DATE NOT NULL,
+	bookingdate	DATETIME NOT NULL,
 	bookingcarnum VARCHAR(300) NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	outtime DATETIME NOT NULL,
@@ -59,6 +59,10 @@ CREATE TABLE booking (
 	obstacle INT DEFAULT 0 NOT NULL,
 	idx	INT,
 	id VARCHAR(50),
+	ulatitude DOUBLE DEFAULT 0,
+    ulongitude DOUBLE DEFAULT 0,
+    pmlatitude DOUBLE DEFAULT 0,
+    pmlongitude DOUBLE DEFAULT 0,
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
@@ -151,6 +155,7 @@ CREATE TABLE mate_paycheck (
 	CONSTRAINT fk_mate_paycheck_car_num foreign key(car_num) references user_cars(car_num)	
 ) ENGINE=InnoDB AUTO_INCREMENT=100;
 
+#리뷰테이블
 CREATE TABLE review (
 	id VARCHAR(50),
 	bookingnum INT,
@@ -167,12 +172,14 @@ CREATE TABLE review (
 #공지사항테이블
 create table notice (
 	idx INT AUTO_INCREMENT primary key,
-    id VARCHAR(50) not null,
+    id VARCHAR(50),
     title VARCHAR(100) NOT NULL,
     content VARCHAR(1000) NOT NULL,
     writedate DATETIME NOT NULL,
     readnum INT NOT NULL,
-    division INT NOT NULL
+    division INT NOT NULL,
+    -- FOREIGN KEY 설정 (id -> user 테이블의 id 참조)--
+	CONSTRAINT fk_notice_id foreign key(id) references user(id)
 )ENGINE=InnoDB AUTO_INCREMENT=1;
 
 #공지사항관련 사진업로드테이블

@@ -8,11 +8,15 @@
 <script>
 window.alert('[[${msg}]]');
 let msg='[[${msg}]]';
-if (msg == "회원정보수정성공") {
-    location.href = '/userInfo';
-  }else{
-	location.href = '/registerUpdate';
-  }
+if (msg == "회원가입 축하드립니다.") {
+		location.href = '/';
+	} else if((msg == "회원가입에 실패하셨습니다.")) {
+		location.href = '/register';
+  	}else if(msg == "회원정보수정성공"){
+	  location.href = '/userInfo';
+  	} else if(msg == "회원정보수정실패") {
+	  location.href = '/registerUpdate';
+  	}
 </script>
 </body>
 </html>
