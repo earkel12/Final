@@ -29,6 +29,11 @@ public class BookingParkingDTO {
     private double pmlatitude;
     private double pmlongitude;
 
+    private Double latitude;
+    private Double longitude;
+    private String name;
+    private String addr;
+    
     private int lotIdx;
     private String lotName;
     private String lotAddr;

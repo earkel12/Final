@@ -1,7 +1,9 @@
 package com.pm.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,17 +272,24 @@ public class ParkingMateController {
 
 	@GetMapping("/pm/matching")
 	public ModelAndView showMatching(HttpSession session) throws Exception {
-		ModelAndView mav = new ModelAndView();
-		List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
+	    ModelAndView mav = new ModelAndView();
 
-		List<Integer> rejected = (List<Integer>) session.getAttribute("rejectedBookings");
-		if (rejected != null && !rejected.isEmpty()) {
-			list.removeIf(item -> rejected.contains(item.getBookingnum()));
-		}
+	    List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
 
-		mav.addObject("instadList", list);
-		mav.setViewName("pm/matching");
-		return mav;
+	    String sid = (String) session.getAttribute("sid");
+
+	    Map<String, List<Integer>> rejectedMap =
+	        (Map<String, List<Integer>>) session.getAttribute("rejectedBookingsMap");
+
+	    List<Integer> rejected = (rejectedMap != null && rejectedMap.containsKey(sid))
+	            ? rejectedMap.get(sid)
+	            : Collections.emptyList(); 
+
+	    list.removeIf(item -> rejected.contains(Integer.parseInt(item.getBookingnum())));
+	    
+	    mav.addObject("instadList", list);
+	    mav.setViewName("pm/matching");
+	    return mav;
 	}
 
 	@PostMapping("/pm/matching/accept")
@@ -301,7 +310,7 @@ public class ParkingMateController {
 		dto.setCar_num(booking.getBookingcarnum());
 		dto.setStarttime(starttime);
 		dto.setEndtime(endtime);
-		dto.setStatus("파킹메이트결제완료");
+		dto.setStatus("정산대기");
 		dto.setPrice(booking.getPrice());
 
 		service.insertMatePayCheck(dto);
@@ -311,12 +320,44 @@ public class ParkingMateController {
 
 	@PostMapping("/pm/matching/reject")
 	public String reject(@RequestParam int bookingnum, HttpSession session) {
-		List<Integer> rejected = (List<Integer>) session.getAttribute("rejectedBookings");
-		if (rejected == null)
-			rejected = new ArrayList<>();
-		rejected.add(bookingnum);
-		session.setAttribute("rejectedBookings", rejected);
-		return "redirect:/pm/matching";
-	}
+	    String sid = (String) session.getAttribute("sid");  // 로그인된 사용자 ID
 
+	    Map<String, List<Integer>> rejectedMap =
+	        (Map<String, List<Integer>>) session.getAttribute("rejectedBookingsMap");
+
+	    if (rejectedMap == null) {
+	        rejectedMap = new HashMap<>();
+	    }
+	    
+	    List<Integer> rejectedList = rejectedMap.getOrDefault(sid, new ArrayList<>());
+
+	    if (!rejectedList.contains(bookingnum)) {
+	        rejectedList.add(bookingnum);
+	    }
+
+	    rejectedMap.put(sid, rejectedList);  // 다시 저장
+	    session.setAttribute("rejectedBookingsMap", rejectedMap);
+
+	    return "redirect:/pm/matching";
+	}
+	
+	@GetMapping("mylocation")
+	public String mylocation() {
+	    return "/pm/mylocation";
+	}
+	
+	@GetMapping("parking")
+	public ModelAndView showParking(HttpSession session) throws Exception {
+		String mateId = (String) session.getAttribute("sid");
+
+		if (mateId == null || mateId.isEmpty()) {
+			return new ModelAndView("redirect:/login");
+		}
+
+		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
+
+		ModelAndView mav = new ModelAndView("pm/parking");
+		mav.addObject("usageList", usageList);
+		return mav;
+	}
 }

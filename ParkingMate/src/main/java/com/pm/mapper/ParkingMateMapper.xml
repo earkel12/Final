@@ -54,6 +54,7 @@
 		where mid = #{mid}
 		and status = '정산가능'
 	</select>
+	
 	<insert id="insertMatePayCheck"
 		parameterType="com.pm.pm.model.MatePayCheckDTO"
 		useGeneratedKeys="true" keyProperty="idx">
