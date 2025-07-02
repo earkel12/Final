@@ -80,30 +80,26 @@ CREATE TABLE booking (
 	bookingcarnum VARCHAR(300) NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	outtime DATETIME NOT NULL,
+
 	valet INT(50) DEFAULT 0 NOT NULL,
 	instand	INT(50) DEFAULT 0 NOT NULL,
 	price INT(100) DEFAULT 0 NOT NULL,
+
 	status VARCHAR(100) DEFAULT '예약접수' NOT NULL,
 	obstacle INT DEFAULT 0 NOT NULL,
 	idx	INT,
 	id VARCHAR(50),
-<<<<<<< HEAD
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 	ulatitude double DEFAULT 0,
 	ulongitude double DEFAULT 0,
 	pmlatitude double DEFAULT 0,
 	pmlongitude double DEFAULT 0
-=======
-=======
->>>>>>> origin/feat/developusagestatus
+=========
 	ulatitude DOUBLE DEFAULT 0,
     ulongitude DOUBLE DEFAULT 0,
     pmlatitude DOUBLE DEFAULT 0,
     pmlongitude DOUBLE DEFAULT 0,
-<<<<<<< HEAD
->>>>>>> e9064c3ae755ff524c0d05e67674937599450347
-=======
->>>>>>> origin/feat/developusagestatus
+>>>>>>>>> Temporary merge branch 2
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)

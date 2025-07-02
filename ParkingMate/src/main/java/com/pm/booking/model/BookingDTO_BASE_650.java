@@ -27,15 +27,9 @@ public class BookingDTO {
 	private double ulongitude;
 	private double pmlatitude;
 	private double pmlongitude;
-<<<<<<< HEAD
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 }
-=======
+=========
 }	
->>>>>>> e9064c3ae755ff524c0d05e67674937599450347
-=======
-  
-}	
-
->>>>>>> origin/feat/developusagestatus
+>>>>>>>>> Temporary merge branch 2
 
