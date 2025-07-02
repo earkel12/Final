@@ -68,14 +68,13 @@
 	</select>
 	<update id="updateStatusToReserved">
 		UPDATE booking
-		SET status = '예약중'
+		SET status = '파킹메이트결제완료'
 		WHERE bookingnum = #{bookingnum}
 	</update>
 	<select id="getBookingByNum"
 		resultType="com.pm.booking.model.BookingDTO">
 		SELECT * FROM booking WHERE bookingnum = #{bookingnum}
 	</select>
-
 	<select id="showMatebookingList" parameterType="String"
 		resultType="map">
 		select
@@ -86,8 +85,7 @@
 		join
 		parkinglot b on a.idx = b.idx
 		where
-		a.id = #{id}
-		and a.status = '파킹메이트결제완료'
+		a.status = '파킹메이트결제완료'
 		and instand = 1
 	</select>
 	<select id="findParkinglotByName" parameterType="String"

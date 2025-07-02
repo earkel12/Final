@@ -87,23 +87,12 @@ CREATE TABLE booking (
 	obstacle INT DEFAULT 0 NOT NULL,
 	idx	INT,
 	id VARCHAR(50),
-<<<<<<< HEAD
-<<<<<<< HEAD
-	ulatitude double DEFAULT 0,
-	ulongitude double DEFAULT 0,
-	pmlatitude double DEFAULT 0,
-	pmlongitude double DEFAULT 0
-=======
-=======
->>>>>>> origin/feat/developusagestatus
+
 	ulatitude DOUBLE DEFAULT 0,
-    ulongitude DOUBLE DEFAULT 0,
-    pmlatitude DOUBLE DEFAULT 0,
-    pmlongitude DOUBLE DEFAULT 0,
-<<<<<<< HEAD
->>>>>>> e9064c3ae755ff524c0d05e67674937599450347
-=======
->>>>>>> origin/feat/developusagestatus
+    	ulongitude DOUBLE DEFAULT 0,
+    	pmlatitude DOUBLE DEFAULT 0,
+    	pmlongitude DOUBLE DEFAULT 0,
+
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)

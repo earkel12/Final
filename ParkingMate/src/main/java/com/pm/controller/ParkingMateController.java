@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.booking.model.BookingDTO;
+import com.pm.booking.model.BookingParkingDTO;
 import com.pm.booking.model.BookingDTO;
 import com.pm.booking.service.BookingService;
 import com.pm.notice.service.NoticeServiceImple;
@@ -270,7 +271,7 @@ public class ParkingMateController {
 	@GetMapping("/pm/matching")
 	public ModelAndView showMatching(HttpSession session) throws Exception {
 		ModelAndView mav = new ModelAndView();
-		List<BookingDTO> list = bookingservice.getActiveInstadBookings();
+		List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
 
 		List<Integer> rejected = (List<Integer>) session.getAttribute("rejectedBookings");
 		if (rejected != null && !rejected.isEmpty()) {
@@ -300,7 +301,7 @@ public class ParkingMateController {
 		dto.setCar_num(booking.getBookingcarnum());
 		dto.setStarttime(starttime);
 		dto.setEndtime(endtime);
-		dto.setStatus("진행중");
+		dto.setStatus("파킹메이트결제완료");
 		dto.setPrice(booking.getPrice());
 
 		service.insertMatePayCheck(dto);
