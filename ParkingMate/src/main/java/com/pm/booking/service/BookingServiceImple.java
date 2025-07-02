@@ -79,4 +79,8 @@ public class BookingServiceImple implements BookingService {
 	public List<BookingParkingDTO> getActiveInstadBookings() {
 		return mapper.selectActiveInstadBookings();
 	}
+	@Override
+	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
+		return mapper.getBookingParkingListByMateId(mateId);
+	}
 }

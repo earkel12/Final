@@ -146,7 +146,7 @@ public class ParkingMateController {
 			return new ModelAndView("redirect:/login");
 		}
 
-		List<MatePayCheckDTO> usageList = service.getMateUsageList(mateId);
+		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
 
 		ModelAndView mav = new ModelAndView("pm/usagehistory");
 		mav.addObject("usageList", usageList);

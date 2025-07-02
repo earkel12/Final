@@ -1,7 +1,6 @@
 package com.pm.booking.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

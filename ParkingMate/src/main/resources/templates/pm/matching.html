@@ -7,6 +7,7 @@
 </head>
 <body>
 	<h1>파킹메이트 매칭</h1>
+	<p th:text="'총 ' + ${instadList.size()} + '건의 예약 요청이 있습니다.'"></p>
 	<table>
 		<thead>
 			<tr>
@@ -16,20 +17,29 @@
 				<th>입차시간</th>
 				<th>출차시간</th>
 				<th>주차장</th>
-				<th>위치</th>
+				<th>주차장 위치</th>
 				<th>요금</th>
+				<th>사용자 위치</th>
+				<th>파킹메이트 위치</th>
+				<th>처리</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="item : ${instadList}">
 				<td th:text="${item.bookingnum}"></td>
-				<td th:text="${#dates.format(item.bookingdate, 'yyyy-MM-dd')}"></td>
+				<td
+					th:text="${item.bookingdate?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
 				<td th:text="${item.bookingcarnum}"></td>
-				<td th:text="${#dates.format(item.intime, 'yyyy-MM-dd HH:mm')}"></td>
-				<td th:text="${#dates.format(item.outtime, 'yyyy-MM-dd HH:mm')}"></td>
+				<td
+					th:text="${item.intime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
+				<td
+					th:text="${item.outtime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
 				<td th:text="${item.lotName}"></td>
 				<td th:text="${item.lotAddr}"></td>
 				<td th:text="${item.lotPrice}"></td>
+				<td th:text="|(${item.ulatitude}, ${item.ulongitude})|"></td>
+				<td th:text="|(${item.pmlatitude}, ${item.pmlongitude})|"></td>
+
 				<td>
 					<form th:action="@{/pm/matching/accept}" method="post"
 						style="display: inline;">
