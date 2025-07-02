@@ -56,14 +56,13 @@ public class RegisterController {
 	    return "register/registerUpdate";
 	}
 	
-
 	@GetMapping("/checkId")
 	@ResponseBody
 	public String checkId(@RequestParam("id") String id) throws Exception {
 	    boolean exists = service.checkId(id);
 	    return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
 	}
-
+	
 	@PostMapping("/registerForm")
 	public ModelAndView registerForm(MemberDTO dto) {
 

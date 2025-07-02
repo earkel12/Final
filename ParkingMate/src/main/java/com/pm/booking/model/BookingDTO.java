@@ -27,5 +27,9 @@ public class BookingDTO {
 	private double ulongitude;
 	private double pmlatitude;
 	private double pmlongitude;
+<<<<<<< HEAD
 }
+=======
+}	
+>>>>>>> e9064c3ae755ff524c0d05e67674937599450347
 

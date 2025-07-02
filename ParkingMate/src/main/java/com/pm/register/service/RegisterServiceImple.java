@@ -17,7 +17,6 @@ public class RegisterServiceImple implements RegisterService {
 
 	@Override
 	public int registerForm(MemberDTO dto) throws Exception {
-
 		int count = mapper.registerForm(dto);
 		return count;
 	}
