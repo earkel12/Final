@@ -54,5 +54,24 @@
 		where mid = #{mid}
 		and status = '정산가능'
 	</select>
+<insert id="insertMatePayCheck" parameterType="com.pm.pm.model.MatePayCheckDTO" useGeneratedKeys="true" keyProperty="idx">
+    INSERT INTO mate_paycheck (id, starttime, endtime, status, price, mid, car_num)
+    VALUES (#{id}, #{starttime}, #{endtime}, #{status}, #{price}, #{mid}, #{car_num})
+</insert>
 
+<select id="selectMateUsageList" resultType="com.pm.pm.model.MatePayCheckDTO">
+  SELECT 
+    idx,
+    id,
+    intime AS starttime,
+    outtime AS endtime,
+    status,
+    price,
+    bookingnum AS mid,
+    bookingcarnum AS car_num
+  FROM booking
+  WHERE id = #{mateId}
+    AND status = '예약중'
+  ORDER BY intime DESC
+</select>
 </mapper>

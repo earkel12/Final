@@ -12,4 +12,6 @@ public interface ParkingMateService {
 	public int updateParkingMate(ParkingMateDTO dto) throws Exception;
 	public List<MatePayCheckDTO> getMatePayCheck(String userid, String startDate, String endDate) throws Exception;
 	public Map<String, Object> getTotalPmWorklog(String mid) throws Exception;
+	public int insertMatePayCheck(MatePayCheckDTO dto);
+	public List<MatePayCheckDTO> getMateUsageList(String mid);
 }

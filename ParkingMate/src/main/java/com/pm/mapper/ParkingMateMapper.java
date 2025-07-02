@@ -15,4 +15,6 @@ public interface ParkingMateMapper {
 	public int updateParkingMate(ParkingMateDTO dto) throws Exception;
 	public List<MatePayCheckDTO> getMatePayCheck(Map<String, Object> params) throws Exception;
 	public Map<String, Object> totalPmWorklog(String mid) throws Exception;
+	public int insertMatePayCheck(MatePayCheckDTO dto);
+	public List<MatePayCheckDTO> selectMateUsageList(String mid);
 }

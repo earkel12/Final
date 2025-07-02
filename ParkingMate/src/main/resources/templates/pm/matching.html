@@ -1,13 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="UTF-8" />
+<title>파킹메이트 매칭</title>
 <th:block th:include="@{/header}"></th:block>
 </head>
 <body>
-<h1>파킹메이트 매칭</h1>
-<p><a th:href="@{/parkingmate}">파킹메이트 메인</a></p>
+	<h1>파킹메이트 매칭</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>예약번호</th>
+				<th>예약일자</th>
+				<th>차량번호</th>
+				<th>입차시간</th>
+				<th>출차시간</th>
+				<th>주차장</th>
+				<th>위치</th>
+				<th>요금</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="item : ${instadList}">
+				<td th:text="${item.bookingnum}"></td>
+				<td th:text="${#dates.format(item.bookingdate, 'yyyy-MM-dd')}"></td>
+				<td th:text="${item.bookingcarnum}"></td>
+				<td th:text="${#dates.format(item.intime, 'yyyy-MM-dd HH:mm')}"></td>
+				<td th:text="${#dates.format(item.outtime, 'yyyy-MM-dd HH:mm')}"></td>
+				<td th:text="${item.lotName}"></td>
+				<td th:text="${item.lotAddr}"></td>
+				<td th:text="${item.lotPrice}"></td>
+				<td>
+					<form th:action="@{/pm/matching/accept}" method="post"
+						style="display: inline;">
+						<input type="hidden" name="bookingnum"
+							th:value="${item.bookingnum}" /> <input type="submit" value="수락" />
+					</form>
+
+					<form th:action="@{/pm/matching/reject}" method="post"
+						style="display: inline;">
+						<input type="hidden" name="bookingnum"
+							th:value="${item.bookingnum}" /> <input type="submit" value="거절" />
+					</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>
+		<a th:href="@{/parkingmate}">파킹메이트 메인</a>
+	</p>
+	<th:block th:include="@{/footer}"></th:block>
 </body>
-<th:block th:include="@{/footer}"></th:block>
 </html>

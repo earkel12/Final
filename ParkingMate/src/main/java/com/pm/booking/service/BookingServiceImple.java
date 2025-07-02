@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pm.booking.model.BookingDTO;
+import com.pm.booking.model.BookingParkingDTO;
 import com.pm.booking.model.UserCarDTO;
 import com.pm.mapper.BookingMapper;
 
@@ -32,5 +33,17 @@ public class BookingServiceImple implements BookingService {
 	@Override
 	public void updateStatus(String userid) throws Exception {
 		mapper.updateStatus(userid);
+	}
+	@Override
+	public List<BookingParkingDTO> getActiveInstadBookings() {
+		return mapper.selectActiveInstadBookings();
+	}
+	@Override
+	public void updateStatusToReserved(int bookingnum) {
+		 mapper.updateStatusToReserved(bookingnum);
+	}
+	@Override
+	public BookingDTO getBookingByNum(int bookingnum) {
+		return mapper.getBookingByNum(bookingnum);
 	}
 }

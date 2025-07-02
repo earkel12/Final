@@ -1,5 +1,7 @@
 package com.pm.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pm.booking.model.BookingDTO;
+import com.pm.booking.model.BookingParkingDTO;
 import com.pm.booking.service.BookingService;
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
@@ -21,16 +24,17 @@ import com.pm.pm.service.ParkingMateService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Controller
 public class ParkingMateController {
 
 	private final NoticeServiceImple noticeServiceImple;
-	
+
 	@Autowired
 	private BookingService bookingservice;
-	
+
 	@Autowired
 	private ParkingMateService service;
 
@@ -117,7 +121,7 @@ public class ParkingMateController {
 			}
 
 			pictureFile.transferTo(dest);
-			dto.setPicture("/upload/" + savedFileName);
+			dto.setPicture(savedFileName);
 		}
 
 		dto.setId(userid);
@@ -134,8 +138,18 @@ public class ParkingMateController {
 	}
 
 	@GetMapping("/pm/usagehistory")
-	public String showPmUsagehistory() {
-		return "pm/usagehistory";
+	public ModelAndView showPmUsagehistory(HttpSession session) throws Exception {
+		String mateId = (String) session.getAttribute("sid");
+
+		if (mateId == null || mateId.isEmpty()) {
+			return new ModelAndView("redirect:/login");
+		}
+
+		List<MatePayCheckDTO> usageList = service.getMateUsageList(mateId);
+
+		ModelAndView mav = new ModelAndView("pm/usagehistory");
+		mav.addObject("usageList", usageList);
+		return mav;
 	}
 
 	@GetMapping("/pm/worklog")
@@ -150,18 +164,19 @@ public class ParkingMateController {
 			return mav;
 		}
 
-		ParkingMateDTO dto = service.getParkingMate(userid);
-
-		if (dto == null) {
+		ParkingMateDTO parkingMate = service.getParkingMate(userid);
+		if (parkingMate == null) {
 			ModelAndView mav = new ModelAndView();
 			mav.addObject("msg", "파킹메이트 등록 후 이용 가능합니다.");
 			mav.addObject("gourl", "/parkingmate");
 			mav.setViewName("pm/pmMsg");
 			return mav;
 		}
+
 		Map<String, Object> summary = service.getTotalPmWorklog(userid);
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("worklog", dto);
+		mav.addObject("worklog", parkingMate);
+		mav.addObject("parkingMate", parkingMate);
 		mav.addObject("totalServiceCount", summary.get("totalServiceCount"));
 		mav.addObject("totalPayCount", summary.get("totalPayCount"));
 		mav.setViewName("pm/worklog");
@@ -253,8 +268,54 @@ public class ParkingMateController {
 	}
 
 	@GetMapping("/pm/matching")
-	public String showMatching(Model model) throws Exception {
-	    return "/pm/matching";
+	public ModelAndView showMatching(HttpSession session) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
+
+		List<Integer> rejected = (List<Integer>) session.getAttribute("rejectedBookings");
+		if (rejected != null && !rejected.isEmpty()) {
+			list.removeIf(item -> rejected.contains(item.getBookingnum()));
+		}
+
+		mav.addObject("instadList", list);
+		mav.setViewName("pm/matching");
+		return mav;
+	}
+
+	@PostMapping("/pm/matching/accept")
+	public String accept(@RequestParam int bookingnum, HttpSession session) {
+		String mateId = (String) session.getAttribute("sid");
+
+		bookingservice.updateStatusToReserved(bookingnum);
+		BookingDTO booking = bookingservice.getBookingByNum(bookingnum);
+
+		LocalDateTime intime = booking.getIntime();
+		LocalDateTime outtime = booking.getOuttime();
+		Date starttime = Date.from(intime.atZone(ZoneId.systemDefault()).toInstant());
+		Date endtime = Date.from(outtime.atZone(ZoneId.systemDefault()).toInstant());
+
+		MatePayCheckDTO dto = new MatePayCheckDTO();
+		dto.setId(booking.getId());
+		dto.setMid(mateId);
+		dto.setCar_num(booking.getBookingcarnum());
+		dto.setStarttime(starttime);
+		dto.setEndtime(endtime);
+		dto.setStatus("진행중");
+		dto.setPrice(booking.getPrice());
+
+		service.insertMatePayCheck(dto);
+
+		return "redirect:/pm/matching";
+	}
+
+	@PostMapping("/pm/matching/reject")
+	public String reject(@RequestParam int bookingnum, HttpSession session) {
+		List<Integer> rejected = (List<Integer>) session.getAttribute("rejectedBookings");
+		if (rejected == null)
+			rejected = new ArrayList<>();
+		rejected.add(bookingnum);
+		session.setAttribute("rejectedBookings", rejected);
+		return "redirect:/pm/matching";
 	}
 
 }
