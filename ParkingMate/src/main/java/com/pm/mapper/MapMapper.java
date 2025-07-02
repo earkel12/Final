@@ -10,4 +10,5 @@ import com.pm.map.model.ParkingLotDTO;
 public interface MapMapper {
 	public List<ParkingLotDTO> plInfo() throws Exception;
 	public ParkingLotDTO plbyname(String name) throws Exception;
+	public List<ParkingLotDTO> searchPl(String name) throws Exception;
 }

@@ -1,6 +1,5 @@
 package com.pm.booking.model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -28,5 +27,7 @@ public class BookingDTO {
 	private double ulongitude;
 	private double pmlatitude;
 	private double pmlongitude;
+  
 }	
+
 

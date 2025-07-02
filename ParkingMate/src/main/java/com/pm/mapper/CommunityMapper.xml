@@ -8,62 +8,114 @@
 		resultType="com.pm.com.model.CommunityDTO">
 		select * from community
 		order by idx desc
-		limit #{start}, #{end}
+		limit #{start},
+		#{end}
 	</select>
-	
-	<insert id="insertCommunity" parameterType="com.pm.com.model.CommunityDTO" useGeneratedKeys="true" keyProperty="idx">
-    INSERT INTO community (id, title, content, writedate, readnum, good, bad)
-    VALUES (#{id}, #{title}, #{content}, now(), 0, 0, 0)
+
+	<insert id="insertCommunity"
+		parameterType="com.pm.com.model.CommunityDTO" useGeneratedKeys="true"
+		keyProperty="idx">
+		INSERT INTO community (id, title, content, writedate,
+		readnum, good, bad)
+		VALUES (#{id}, #{title}, #{content}, now(), 0, 0,
+		0)
 	</insert>
-	
-	<insert id="insertComment" parameterType="com.pm.com.model.CommentDTO">
-    INSERT INTO comment (idx, id, content, ref, lev, sunbun)
-    VALUES (#{idx}, #{id}, #{content}, #{ref}, #{lev}, #{sunbun})
+
+	<insert id="insertComment"
+		parameterType="com.pm.com.model.CommentDTO">
+		INSERT INTO comment (idx, id, content, ref, lev, sunbun)
+		VALUES (#{idx}, #{id}, #{content}, #{ref}, #{lev}, #{sunbun})
 	</insert>
-	
+
 	<select id="getTotalCnt" resultType="int">
-		select count(*) from community
+		select count(*) from
+		community
 	</select>
-	
-	<select id="getCommunityIdx" parameterType="int" resultType="com.pm.com.model.CommunityDTO">
-    SELECT * FROM community WHERE idx = #{idx}
+
+	<select id="getCommunityIdx" parameterType="int"
+		resultType="com.pm.com.model.CommunityDTO">
+		SELECT * FROM community WHERE idx = #{idx}
 	</select>
-	
+
 	<update id="updateReadnum" parameterType="int">
-    UPDATE community SET readnum = readnum + 1 WHERE idx = #{idx}
+		UPDATE community SET
+		readnum = readnum + 1 WHERE idx = #{idx}
 	</update>
-	
+
 	<update id="increaseGood">
-    UPDATE community SET good = good + 1 WHERE idx = #{idx}
+		UPDATE community SET good = good + 1 WHERE idx =
+		#{idx}
 	</update>
 
 	<update id="increaseBad">
-    UPDATE community SET bad = bad + 1 WHERE idx = #{idx}
+		UPDATE community SET bad = bad + 1 WHERE idx = #{idx}
 	</update>
-	
-	<update id="updateCommunity" parameterType="com.pm.com.model.CommunityDTO">
-    UPDATE community
-    SET title = #{title}, content = #{content}
-    WHERE idx = #{idx}
+
+	<update id="updateCommunity"
+		parameterType="com.pm.com.model.CommunityDTO">
+		UPDATE community
+		SET title = #{title}, content =
+		#{content}
+		WHERE idx = #{idx}
 	</update>
 
 	<delete id="deleteCommentsByCommunityIdx" parameterType="int">
-    DELETE FROM comment WHERE idx = #{idx}
+		DELETE
+		FROM comment WHERE idx = #{idx}
 	</delete>
 
 	<delete id="deleteCommunity" parameterType="int">
-    DELETE FROM community WHERE idx = #{idx}
+		DELETE FROM community
+		WHERE idx = #{idx}
 	</delete>
-	
-	<select id="getCommentsByCommunityIdx" resultType="com.pm.com.model.CommentDTO">
-    SELECT * FROM comment WHERE idx = #{idx}
-    ORDER BY ref ASC, sunbun ASC
+
+	<select id="getCommentsByCommunityIdx"
+		resultType="com.pm.com.model.CommentDTO">
+		SELECT * FROM comment WHERE idx = #{idx}
+		ORDER BY ref ASC,
+		sunbun ASC
 	</select>
-	
+
 	<select id="getReviewList"
 		resultType="com.pm.com.model.ReviewDTO">
 		select * from review
 		order by bookingnum desc
-		limit #{start}, #{end}
+		limit #{start},
+		#{end}
 	</select>
+	<select id="getSearchCount" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM community
+		<where>
+			<choose>
+				<when test="type == 'title'">
+					title LIKE #{keyword}
+				</when>
+				<when test="type == 'id'">
+					id LIKE #{keyword}
+				</when>
+			</choose>
+		</where>
+	</select>
+	<select id="searchCommunity"
+		resultType="com.pm.com.model.CommunityDTO" parameterType="map">
+		SELECT * FROM community
+		<where>
+			<choose>
+				<when test="type == 'title'">
+					title LIKE #{keyword}
+				</when>
+				<when test="type == 'id'">
+					id LIKE #{keyword}
+				</when>
+			</choose>
+		</where>
+		ORDER BY idx DESC
+		LIMIT #{start}, #{end}
+	</select>
+	
+	<insert id="insertReview" parameterType="com.pm.com.model.ReviewDTO">
+    INSERT INTO review (id, bookingnum, writedate, rating, content, upload)
+    VALUES (#{id}, #{bookingnum}, now(), #{rating}, #{content}, #{upload})
+	</insert>
+	
 </mapper>

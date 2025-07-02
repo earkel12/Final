@@ -36,21 +36,7 @@ public class CommunityServiceImple implements CommunityService {
 	
 	@Override
 	public int insertCommunity(CommunityDTO dto) throws Exception {
-		int result = mapper.insertCommunity(dto);
-
-	    if (result > 0) {
-	        int newIdx = dto.getIdx();
-	        CommentDTO comment = new CommentDTO();
-	        comment.setIdx(newIdx); 
-	        comment.setId(dto.getId());
-	        comment.setContent("게시글 등록 성공"); 
-	        comment.setRef(0);
-	        comment.setLev(0);
-	        comment.setSunbun(0);
-	        mapper.insertComment(comment);
-	    }
-
-	    return result;
+	    return mapper.insertCommunity(dto);
 	}
 	@Override
 	public int insertComment(CommentDTO comment) throws Exception {
@@ -103,5 +89,35 @@ public class CommunityServiceImple implements CommunityService {
 		paramMap.put("end", end);
 
 		return sqlSessionTemplate.selectList("com.pm.mapper.CommunityMapper.getReviewList", paramMap);
+	}
+
+	
+	@Override
+	public int insertReview(ReviewDTO dto) throws Exception {
+		
+		return mapper.insertReview(dto);
+	}
+	@Override
+	public int getSearchCount(String type, String keyword) {
+	    Map<String, String> paramMap = new HashMap<>();
+	    paramMap.put("type", type);
+	    paramMap.put("keyword", "%" + keyword + "%");
+
+	    return sqlSessionTemplate.selectOne("com.pm.mapper.CommunityMapper.getSearchCount", paramMap);
+	}
+
+	@Override
+	public List<CommunityDTO> searchCommunity(String type, String keyword, int cp, int ls) {
+	    int start = (cp - 1) * ls;
+	    int end = ls;
+
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("type", type);
+	    paramMap.put("keyword", "%" + keyword + "%");
+	    paramMap.put("start", start);
+	    paramMap.put("end", end);
+
+	    return sqlSessionTemplate.selectList("com.pm.mapper.CommunityMapper.searchCommunity", paramMap);
+
 	}
 }

@@ -23,4 +23,10 @@ public interface CommunityMapper {
 	public int deleteCommentsByCommunityIdx(int idx) throws Exception;
 	public List<CommentDTO> getCommentsByCommunityIdx(int idx) throws Exception;
 	public List<ReviewDTO> getReviewList(int cp, int ls) throws Exception;
+
+	public int insertReview(ReviewDTO dto) throws Exception;
+
+	public int getSearchCount(String type, String keyword);
+	public List<CommunityDTO> searchCommunity(String type, String keyword, int cp, int listSize);
+
 }

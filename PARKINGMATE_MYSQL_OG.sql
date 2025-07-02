@@ -14,6 +14,7 @@ CREATE TABLE user (
 
 #문의테이블
 CREATE TABLE ask (
+
 	idx INT AUTO_INCREMENT PRIMARY KEY,
 	id VARCHAR(50),
 	type VARCHAR(50) NOT NULL,
@@ -21,10 +22,27 @@ CREATE TABLE ask (
 	content VARCHAR(1000) NOT NULL,
 	upload VARCHAR(200),
 	comment VARCHAR(200),
+
+    division int(1),
+	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
+	CONSTRAINT fk_ask_id foreign key(id) references user(id)
+)ENGINE=InnoDB AUTO_INCREMENT=1;
+
+drop table ask;
+
+INSERT INTO parkinglot
+  (name, addr, type, price, price2, time, latitude, longitude) VALUES
+  ('주차장A','서울시 강남구','실내',3000,5000,'2025-06-18',37.5665, 126.9780);
+
+#시퀀스용확인쿼리문
+SELECT LAST_INSERT_ID() AS parkinglot_idx;
+
+SELECT * FROM parkinglot;
     division INT,
 	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_ask_id foreign key(id) references user(id)
 )ENGINE=InnoDB AUTO_INCREMENT=1;
+
 
 #주차장테이블
 CREATE TABLE parkinglot (
@@ -45,6 +63,16 @@ CREATE TABLE parkinglot (
     longitude double DEFAULT 0 NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=200;
 
+
+INSERT INTO `booking` (
+  `bookingdate`, `bookingcarnum`, `outime`, `idx`, `id`
+) VALUES (
+  '2025-06-18', '12가1234', '2025-06-18 14:30:00',
+200, 'ROSA1'
+);
+
+SELECT * FROM BOOKING;
+
 #예약내역테이블
 CREATE TABLE booking (
 	bookingnum INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,9 +80,9 @@ CREATE TABLE booking (
 	bookingcarnum VARCHAR(300) NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	outtime DATETIME NOT NULL,
-	valet INT DEFAULT 0 NOT NULL,
-	instand	INT DEFAULT 0 NOT NULL,
-	price INT DEFAULT 0 NOT NULL,
+	valet INT(50) DEFAULT 0 NOT NULL,
+	instand	INT(50) DEFAULT 0 NOT NULL,
+	price INT(100) DEFAULT 0 NOT NULL,
 	status VARCHAR(100) DEFAULT '예약접수' NOT NULL,
 	obstacle INT DEFAULT 0 NOT NULL,
 	idx	INT,

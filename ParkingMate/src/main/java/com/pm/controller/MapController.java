@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +26,12 @@ public class MapController {
     @GetMapping("/list")
     public List<ParkingLotDTO> getParkingList() throws Exception {
         return service.plInfo();  // 전체 주차장 목록 JSON 응답
+    }
+    
+    @ResponseBody
+    @GetMapping("/search")
+    public List<ParkingLotDTO> searchParking(@RequestParam("name") String name) throws Exception {
+        return service.searchPl(name);
     }
     
     // AJAX 호출 응답용
@@ -52,4 +59,6 @@ public class MapController {
     public String mapView() {
         return "map/mapAPI";  // templates/map/mapAPI.html
     }
+    
+    
 }

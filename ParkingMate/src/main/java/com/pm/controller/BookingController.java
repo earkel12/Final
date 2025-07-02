@@ -32,6 +32,11 @@ public class BookingController {
 	@Autowired
 	private BookingService service;
 	
+	@GetMapping("/search")
+	public String searchForm() throws Exception {
+		
+		return "booking/search";
+	}
 	@GetMapping("/booking")
 	public String bookingForm(HttpSession session, Model model) throws Exception {
 	    String userId = (String) session.getAttribute("sid"); // 세션에서 사용자 ID 추출
@@ -71,12 +76,11 @@ public class BookingController {
 	    service.insertBooking(booking);
 	    
 	    model.addAttribute("total", total);
-	    model.addAttribute("message", "예약이 완료되었습니다.");
 	    
 	    return "booking/agree";
 	}
 	
-	@PostMapping("/payment/success")
+	@PostMapping("/payment")
 	@ResponseBody
 	public String updateBookingAfterPayment(HttpSession session) {
 	    String userId = (String) session.getAttribute("sid");

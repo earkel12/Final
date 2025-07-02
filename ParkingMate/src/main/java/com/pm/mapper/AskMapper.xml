@@ -6,5 +6,32 @@
 	  <insert id = "askInsert" parameterType="com.pm.ask.model.AskDTO">
 	  	insert into ask (id, type, title, content, division) values (#{id}, #{type}, #{title}, #{content}, 0)
 	  </insert>
-	 
+	  
+	  <select id = "getAskList" parameterType="map" resultType="com.pm.ask.model.AskDTO">
+	  	select * from ask where division = 0 order by idx asc limit #{start}, #{end}
+	  </select>
+	  
+	  <select id = "getAskComment" parameterType="int" resultType="com.pm.ask.model.AskDTO">
+	  	select * from ask where idx = #{idx}
+	  </select>
+	  
+	  <update id = "askUpdate" parameterType="com.pm.ask.model.AskDTO">
+	  	update ask set comment = #{comment}, division = 1 where idx = #{idx}
+	  </update>
+	  
+	  <select id = "accomplishedAskList" resultType="com.pm.ask.model.AskDTO">
+	  	select * from ask where division = 1 order by idx desc
+	  </select>
+	  
+	  <select id = "resultContent" parameterType="int" resultType="com.pm.ask.model.AskDTO">
+	  	select * from ask where division = 1 and idx = #{idx} 
+	  </select>
+	  
+	   <select id = "getTotalCnt" resultType="int">
+  		select count(*) from ask where division = 0 order by idx desc 
+  	   </select>
+  	   
+  	   <select id = "getTotalCnt2" resultType="int">
+  		select count(*) from ask where division = 1 order by idx desc
+  	   </select>
   </mapper>

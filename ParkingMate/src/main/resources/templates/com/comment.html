@@ -1,44 +1,210 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>커뮤니티 글 상세</title>
+<meta charset="UTF-8" />
+<title>커뮤니티 글 상세</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+main {
+	margin: 40px auto;
+	background: white;
+	padding: 30px 40px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body {
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #333;
+	margin: 0;
+	padding: 30px;
+}
+
+.container {
+	max-width: 900px;
+	margin: auto;
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 30px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.back-link {
+	font-size: 14px;
+	color: #6c72ff;
+	text-decoration: none;
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+.post-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 20px;
+}
+
+.post-title {
+	font-size: 26px;
+	font-weight: bold;
+	margin: 0;
+	color: #333;
+}
+
+.post-meta {
+	font-size: 14px;
+	color: #777;
+	margin-bottom: 30px;
+}
+.content {
+	margin-bottom: 100px;
+}
+.action-buttons a {
+	margin-left: 10px;
+	font-size: 14px;
+	color: #999;
+	text-decoration: none;
+}
+
+.post-content {
+	border: 1px solid #e0e0e0;
+	background-color: #fdfdfd;
+	padding: 20px;
+	border-radius: 8px;
+	margin-bottom: 30px;
+	line-height: 1.6;
+	white-space: pre-wrap;
+}
+
+.recommend-box {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	margin-bottom: 40px;
+}
+
+.recommend-box button {
+	padding: 10px 20px;
+	font-size: 14px;
+	background-color: #6c72ff;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.recommend-box button:hover {
+	background-color: #555bff;
+}
+
+.comments-section {
+	margin-top: 40px;
+}
+
+.comment-card {
+	background-color: #f9f9fc;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 14px 16px;
+	margin-bottom: 16px;
+}
+
+.comment-meta {
+	font-weight: bold;
+	font-size: 14px;
+	margin-bottom: 6px;
+}
+
+.comment-form {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+[contenteditable] {
+	min-height: 80px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 14px;
+	background-color: white;
+}
+
+[contenteditable]:empty:before {
+	content: attr(data-placeholder);
+	color: #aaa;
+}
+
+.comment-form button {
+	align-self: flex-end;
+	padding: 8px 18px;
+	background-color: #6c72ff;
+	color: white;
+	font-weight: bold;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.comment-form button:hover {
+	background-color: #555bff;
+}
+</style>
 </head>
 <body>
-	
-	<h1>제목: <span th:text="${dto.title}"></span></h1>
-  	<p>작성자: <span th:text="${dto.id}">작성자</span></p>
-  	<p>작성일: <span th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd HH:mm')}">2025-06-20</span></p>
-  	<p>조회수: <span th:text="${dto.readnum}">0</span></p>
-  	<div th:text="${dto.content}">글 내용</div><br>
-  	<button type="button"
-        th:onclick="|location.href='@{/community/good(idx=${dto.idx})}'|">
-    추천 (<span th:text="${dto.good}">0</span>)
-	</button>
+	<main>
+		<a href="/comList" class="back-link">← 목록으로</a>
+		<div class="post-header">
+			<div>
+				<h1 class="post-title" th:text="${dto.title}">게시글 제목</h1>
+				<div class="post-meta">
+					작성자: <span th:text="${dto.id}">작성자</span> | 작성일: <span
+						th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd HH:mm')}">날짜</span>
+					| 조회수: <span th:text="${dto.readnum}">0</span>
+				</div>
+			</div>
+			<div class="action-buttons">
+				<a th:href="@{/community/edit(idx=${dto.idx})}">수정</a> <a
+					th:href="@{/community/delete(idx=${dto.idx})}"
+					onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+			</div>
+		</div>
 
-	<button type="button"
-        th:onclick="|location.href='@{/community/bad(idx=${dto.idx})}'|">
-    비추천 (<span th:text="${dto.bad}">0</span>)
-	</button>
-	<br>
-	<a th:href="@{/community/edit(idx=${dto.idx})}">수정</a>
-	<a th:href="@{/community/delete(idx=${dto.idx})}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-  	
-  	<h4>댓글 목록</h4>
-	<ul>
-		 <li th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</li>
-		 <li th:each="c : ${comments}">
-		   <strong th:text="${c.id}">작성자</strong> : 
-		   <span th:text="${c.content}">내용</span>
-		 </li>
-	</ul>
+		<div class="content" th:utext="${dto.content}">내용</div>
 
-	<h4>댓글 작성</h4>
-	<form th:action="@{/comment/write}" method="post">
-	  <input type="hidden" name="idx" th:value="${dto.idx}" />
-	  <textarea name="content" rows="3" cols="50" placeholder="댓글을 입력하세요"></textarea><br>
-	  <button type="submit">댓글 작성</button>
-	</form>
-  	<a th:href="@{/comList}">목록으로 돌아가기</a>
+		<div class="recommend-box">
+			<button type="button"
+				th:onclick="|location.href='@{/community/good(idx=${dto.idx})}'|">
+				추천 (<span th:text="${dto.good}">0</span>)
+			</button>
+			<button type="button"
+				th:onclick="|location.href='@{/community/bad(idx=${dto.idx})}'|">
+				비추천 (<span th:text="${dto.bad}">0</span>)
+			</button>
+		</div>
+		<div class="comments-section">
+			<h3>댓글</h3>
+			<div th:if="${#lists.isEmpty(comments)}">아직 댓글이 없습니다.</div>
+
+			<div th:each="c : ${comments}" class="comment-card">
+				<div class="comment-meta" th:text="${c.id}">작성자</div>
+				<div th:text="${c.content}">댓글 내용</div>
+			</div>
+
+			<form class="comment-form" th:action="@{/comment/write}"
+				method="post">
+				<input type="hidden" name="idx" th:value="${dto.idx}" />
+				<textarea name="content" placeholder="댓글을 입력하세요" rows="5"
+					style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
+				<button type="submit">댓글 작성</button>
+			</form>
+		</div>
+	</main>
+	<th:block th:include="@{/footer}"></th:block>
 </body>
+
 </html>
