@@ -69,16 +69,37 @@ function moveToMyParkingMateHistory() {
             <td th:text="${history.bookingcarnum}"></td>
             <td th:text="${history.parkinglot_name}"></td>
             <td th:text="${history.intime}"></td>
-            <td th:text="${history.outime}"></td>
+            <td th:text="${history.outtime}"></td>
             <td th:text="${history.valet == 1 ? 'O' : 'X'}"></td>
 			<td th:text="${history.instand == 1 ? 'O' : 'X'}"></td>
             <td th:text="${history.price}"></td>
             <td th:text="${history.status}"></td>
             <td th:text="${history.obstacle == 1 ? 'O' : 'X'}"></td>
-            <td><input type="button" value="리뷰쓰기" onclick="window.location.href='/myParkingHistoryReview';"></td>
+			<td>
+			  <input type="button" value="리뷰쓰기"
+			         class="review-btn"
+			         th:data-bookingnum="${history.bookingnum}"
+			         th:data-bookingdate="${history.bookingdate}"
+			         th:data-parkinglot_name="${history.parkinglot_name}">
+			</td>
         </tr>
     </tbody>
 </table>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".review-btn");
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const num = btn.dataset.bookingnum;
+        const date = encodeURIComponent(btn.dataset.bookingdate);
+        const name = encodeURIComponent(btn.dataset.parkinglot_name);
+
+        window.location.href = `/reviewWrite?bookingnum=${num}&bookingdate=${date}&parkinglot_name=${name}`;
+      });
+    });
+  });
+</script>
 <th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.pm.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.pm.member.service.MemberService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -21,7 +23,18 @@ public class MemberController {
 
 
 	@GetMapping("/login")
-	public String loginForm() {
+	public String loginForm(HttpServletRequest request, Model model) {
+		String saveid = null;
+		Cookie[] ck = request.getCookies();
+		if(ck != null)	 {
+			for(Cookie c : ck) {
+				if(c.getName().equals("saveid")) {
+					saveid = c.getValue();
+					break;
+				}
+			}
+		}
+		model.addAttribute("saveid", saveid);
 		return "member/login";
 	}
 

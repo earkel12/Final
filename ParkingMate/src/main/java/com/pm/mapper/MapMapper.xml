@@ -9,4 +9,8 @@
   	<select id = "plbyname" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
   		select * from parkinglot where name = #{name}
   	</select>
+  	<select id="searchPl" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
+	  SELECT * FROM parkinglot
+	  WHERE name LIKE CONCAT('%', #{name}, '%')
+	</select>
   </mapper>

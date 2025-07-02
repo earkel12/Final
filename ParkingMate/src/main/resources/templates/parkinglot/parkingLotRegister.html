@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ParkingMate 메인</title>
+  <!-- ✅ 카카오 지도 SDK -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+ 
+ <style>
+  /* 메뉴바 스타일 */
+  #floatingNav {
+    display: none; /* 초기에는 숨김 */
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width:80%;
+    height:30px;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 8px 20px;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  #floatingNav ul {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 40px; /* ✅ 항목 간 간격 (li 사이 간격) */
+  }
+
+  #floatingNav li {
+    margin: 0 15px;
+  }
+
+  #floatingNav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+
+  #floatingNav a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<th:block th:include = "@{/header}"></th:block>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="company">회사소개</a></li>
+    <li><a href="reser">예약하기</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+<!-- ✅ 지도 섹션 -->
+<h2>주차장 등록(관리자)</h2>
+<div id="map" style="width:100%; height:600px;"></div>
+<p><em>지도를 클릭해주세요!</em></p>
+<table border="1" style="margin-top:20px;" id="infoTable">
+  <tr><th>이름</th><td id="name"><input type = "text" name = "name"></td></tr>
+  <tr><th>주소</th><td id="addr"><input type = "text" name = "addr"></td></tr>
+  <tr><th>종류</th><td id="type"><input type = "text" name = "type"></td></tr>
+  <tr><th>최소금액</th><td id="price"><input type = "text" name = "price"></td></tr>
+  <tr><th>주차장금액(30분당)</th><td id="price2"><input type = "text" name = "price2"></td></tr>
+  <tr><th>주차장운영시간</th><td id="price2"><input type = "text" name = "time"></td></tr>
+  <tr><th>발렛유무</th><td id="price2"><input type = "text" name = "valet"></td></tr>
+  <tr><th>주차총 가능대수</th><td id="price2"><input type = "text" name = "maxnum"></td></tr>
+  <tr><th>장애인자리유무</th><td id="price2"><input type = "text" name = "obstacle"></td></tr>
+  <tr><th>제한높이</th><td id="price2"><input type = "text" name = "maxheight"></td></tr>
+  <tr><th>제한넓이</th><td id="price2"><input type = "text" name = "maxwidth"></td></tr>
+  <tr><th>제한중량</th><td id="price2"><input type = "text" name = "maxweight"></td></tr>
+  <tr><th>위도</th><td id="price2"><input type = "text" name = "latitude" id = "latitude"></td></tr>
+  <tr><th>경도</th><td id="price2"><input type = "text" name = "longitude" id = "longitude"></td></tr>
+</table>
+<a href="#">등록하기</a>
+<a href = "#">삭제하기</a>
+<a href = "#">수정하기</a><br>
+<div id="clickLatlng"></div>
+<script>
+  kakao.maps.load(function () {
+    const mapContainer = document.getElementById('map');
+    const mapOption = {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 5
+    };
+
+    const map = new kakao.maps.Map(mapContainer, mapOption);
+    const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+    const marker = new kakao.maps.Marker({
+      position: map.getCenter()
+    });
+    marker.setMap(map);
+
+    // 지도 클릭 이벤트: 위도/경도 input에 채워넣기
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+      const latlng = mouseEvent.latLng;
+      marker.setPosition(latlng);
+      document.getElementById('latitude').value = latlng.getLat();
+      document.getElementById('longitude').value = latlng.getLng();
+      document.getElementById('clickLatlng').innerText =
+        `클릭한 위치의 위도는 ${latlng.getLat()} 이고, 경도는 ${latlng.getLng()} 입니다.`;
+    });
+
+    // ✅ 주차장 목록 마커 추가
+    fetch('/map/list')
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(parking => {
+          const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+          const pMarker = new kakao.maps.Marker({
+            map: map,
+            position: position,
+            title: parking.name
+          });
+
+          kakao.maps.event.addListener(pMarker, 'click', function () {
+            const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+            infowindow.setContent(content);
+            infowindow.open(map, pMarker);
+
+            fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
+              .then(res => console.log("Session 저장 완료"));
+
+            document.querySelector('#name input').value = parking.name;
+            document.querySelector('#addr input').value = parking.addr;
+            document.querySelector('#type input').value = parking.type;
+            document.querySelector('#price input').value = parking.price;
+            document.querySelector('#price2 input').value = parking.price2;
+            document.querySelector('#valet input').value = parking.valet === 1 ? '가능' : '불가능';
+          });
+        });
+      })
+      .catch(err => console.error(err));
+  });
+</script>
+<th:block th:include = "@{/footer}"></th:block>
+</body>
+</html>
