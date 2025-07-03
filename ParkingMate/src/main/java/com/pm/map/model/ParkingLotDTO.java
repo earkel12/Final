@@ -27,7 +27,7 @@ public class ParkingLotDTO {
 	private int obstacle;
 	private int maxheight;
 	private int maxwidth;
-	private int weight;
+	private int maxweight;
 	private double latitude;
 	private double longitude;
 }
