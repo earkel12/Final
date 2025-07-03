@@ -54,13 +54,15 @@
 		where mid = #{mid}
 		and status = '정산가능'
 	</select>
-	
+
 	<insert id="insertMatePayCheck"
 		parameterType="com.pm.pm.model.MatePayCheckDTO"
 		useGeneratedKeys="true" keyProperty="idx">
-		INSERT INTO mate_paycheck (id, starttime, endtime, status, price, mid,
+		INSERT INTO mate_paycheck (id,
+		starttime, endtime, status, price, mid,
 		car_num)
-		VALUES (#{id}, #{starttime}, #{endtime}, #{status}, #{price}, #{mid},
+		VALUES (#{id},
+		#{starttime}, #{endtime}, #{status}, #{price}, #{mid},
 		#{car_num})
 	</insert>
 
@@ -79,5 +81,12 @@
 		WHERE id = #{mateId}
 		AND status = '예약중'
 		ORDER BY intime DESC
+	</select>
+
+	<select id="getSettlementWaitingCount" parameterType="string"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM mate_paycheck m
+		WHERE mid = #{mid} AND m.status = '정산대기'
 	</select>
 </mapper>

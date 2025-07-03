@@ -140,6 +140,23 @@ td[colspan="2"] {
 	text-align: center;
 	padding-top: 20px;
 }
+
+.address-row {
+	display: flex;
+	gap: 8px; /* 요소 간 간격 */
+	align-items: center;
+}
+
+.address-row input[type="text"] {
+	flex: 1; /* 가능한 공간 나눠가짐 */
+	max-width: 250px;
+}
+
+.address-row button {
+	white-space: nowrap;
+	padding: 10px 16px;
+	font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -189,8 +206,13 @@ td[colspan="2"] {
 				</tr>
 				<tr>
 					<th><label for="addr">주소</label></th>
-					<td><input type="text" id="addr" name="addr"
-						th:value="${worklog.addr}"></td>
+					<td>
+						<div class="address-row">
+							<input type="text" id="addr" name="addr" th:value="${mainAddr}" readonly />
+							<input type="text" id="addrDetail" placeholder="상세주소 입력" th:value="${addrDetail}" />
+							<button type="button" onclick="execDaumPostcode()">주소 검색</button>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<th><label for="bank">은행명</label></th>
@@ -221,7 +243,7 @@ td[colspan="2"] {
 				<tr>
 					<th><label for="account">계좌번호</label></th>
 					<td><input type="text" id="account" name="account"
-						th:value="${worklog.account}" maxlength="20"
+						th:value="${worklog.account}" minlength="8" maxlength="16"
 						placeholder="계좌번호를 입력하세요" oninput="formatAccountNumber(this)" />
 					</td>
 				</tr>
@@ -237,23 +259,32 @@ td[colspan="2"] {
 	</form>
 	<br>
 </body>
+<script
+	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
-function previewImage(event) {
-	  const file = event.target.files[0];
-	  const preview = document.getElementById('preview');
+	function execDaumPostcode() {
+		new daum.Postcode({
+			oncomplete : function(data) {
+				document.getElementById('addr').value = data.roadAddress;
+			}
+		}).open();
+	}
+	function previewImage(event) {
+		const file = event.target.files[0];
+		const preview = document.getElementById('preview');
 
-	  if (file && file.type.startsWith('image/')) {
-	    const reader = new FileReader();
-	    reader.onload = function(e) {
-	      preview.src = e.target.result;    // 기존 이미지 src 교체
-	      preview.style.display = 'block'; // 혹시 display:none이면 보이도록
-	    };
-	    reader.readAsDataURL(file);
-	  } else {
-	    preview.src = '#';
-	    preview.style.display = 'none';   // 이미지가 아니면 숨기기
-	  }
+		if (file && file.type.startsWith('image/')) {
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				preview.src = e.target.result; // 기존 이미지 src 교체
+				preview.style.display = 'block'; // 혹시 display:none이면 보이도록
+			};
+			reader.readAsDataURL(file);
+		} else {
+			preview.src = '#';
+			preview.style.display = 'none'; // 이미지가 아니면 숨기기
+		}
 	}
 	function formatLicenseNumber(input) {
 		let value = input.value.replace(/\D/g, '');
@@ -285,7 +316,9 @@ function previewImage(event) {
 		} else if (value.length <= 10) {
 			formatted = value.slice(0, 3) + '-' + value.slice(3, 5) + '-'
 					+ value.slice(5);
-		} else {
+		}else if (value.length <= 12) {
+	        formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6); 
+		}else {
 			formatted = value;
 		}
 
@@ -303,9 +336,16 @@ function previewImage(event) {
 			formatAccountNumber(accountInput);
 		}
 	});
-	document.querySelector('form[name="worklog"]').addEventListener('submit',
+	document.querySelector('form[name="worklog"]').addEventListener(
+			'submit',
 			function(e) {
+				const addrInput = document.getElementById('addr');
+				const addrDetailInput = document.getElementById('addrDetail');
+				const fullAddress = addrInput.value.trim()
+						+ (addrDetailInput.value.trim() ? ' '
+								+ addrDetailInput.value.trim() : '');
 
+				addrInput.value = fullAddress;
 				const licenseInput = document.getElementById('license');
 				licenseInput.value = licenseInput.value.replace(/-/g, '');
 

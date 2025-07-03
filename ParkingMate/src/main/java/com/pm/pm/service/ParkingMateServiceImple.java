@@ -52,5 +52,9 @@ public class ParkingMateServiceImple implements ParkingMateService {
     public List<MatePayCheckDTO> getMateUsageList(String mid) {
     	return mapper.selectMateUsageList(mid);
     }
+    @Override
+    public int getSettlementWaitingCount(String mid) {
+    	return mapper.getSettlementWaitingCount(mid);
+    }
 }
 

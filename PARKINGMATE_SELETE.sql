@@ -18,10 +18,15 @@ SELECT * FROM notice_poto;
 SELECT * FROM faq;
 
 
-SELECT b.*, p.*, pl.*
-		FROM booking b
-		JOIN mate_paycheck p ON
-		b.bookingcarnum = p.car_num
-		JOIN parkinglot pl ON b.idx = pl.idx
-		WHERE
-		p.status = '정산대기';
+SELECT m.*, b.*, pl.*
+FROM mate_paycheck m
+JOIN booking b ON m.car_num = b.bookingcarnum
+JOIN parkinglot pl ON b.idx = pl.idx
+WHERE m.mid = 'user2';
+
+
+SELECT m.*, b.*, pl.*
+    FROM mate_paycheck m
+    JOIN booking b ON m.car_num = b.bookingcarnum
+    JOIN parkinglot pl ON b.idx = pl.idx
+    WHERE m.mid = #{mateId} AND m.status = '정산대기';

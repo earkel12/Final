@@ -7,7 +7,7 @@
 <style>
   body {
     font-family: 'Segoe UI', '맑은 고딕', sans-serif;
-    background-color: #eef2f7; /* 은은한 연회색 배경 */
+    background-color: #eef2f7;
     margin: 40px 20px;
     color: #2c3e50;
   }
@@ -60,47 +60,41 @@
 </style>
 </head>
 <body>
-  <header>
-    <h1>파킹메이트 메인</h1>
-  </header>
-
-  <div class="card-container">
-
-    <div class="card" th:onclick="|location.href='@{/pm/worklog}'|">
-      <div class="icon">📝</div>
-      <div class="title">근무관리</div>
-      <a th:href="@{/pm/worklog}">바로가기</a>
-    </div>
-
-    <div class="card" th:onclick="|location.href='@{/pm/notice}'|">
-      <div class="icon">📢</div>
-      <div class="title">공지사항</div>
-      <a th:href="@{/pm/notice}">바로가기</a>
-    </div>
-
-    <div class="card" th:onclick="|location.href='@{/pm/settlement}'|">
-      <div class="icon">💰</div>
-      <div class="title">정산내역</div>
-      <a th:href="@{/pm/settlement}">바로가기</a>
-    </div>
-
-    <div class="card" th:onclick="|location.href='@{/pm/usagehistory}'|">
-      <div class="icon">📊</div>
-      <div class="title">이용현황</div>
-      <a th:href="@{/pm/usagehistory}">바로가기</a>
-    </div>
-
-    <div class="card" th:onclick="|location.href='@{/pm/matching}'|">
-      <div class="icon">🤝</div>
-      <div class="title">파킹메이트 매칭</div>
-      <a th:href="@{/pm/matching}">바로가기</a>
-    </div>
-
-  </div>
+<header><h1>파킹메이트 메인</h1></header>
+  	<div class="card-container">
+	    <div class="card" th:onclick="|location.href='@{/pm/worklog}'|">
+	      <div class="icon">📝</div>
+	      <div class="title">근무관리</div>
+	      <a th:href="@{/pm/worklog}">바로가기</a>
+	    </div>
 	
+	    <div class="card" th:onclick="|location.href='@{/pm/notice}'|">
+	      <div class="icon">📢</div>
+	      <div class="title">공지사항</div>
+	      <a th:href="@{/pm/notice}">바로가기</a>
+	    </div>
+	
+	    <div class="card" th:onclick="|location.href='@{/pm/settlement}'|">
+	      <div class="icon">💰</div>
+	      <div class="title">정산내역</div>
+	      <a th:href="@{/pm/settlement}">바로가기</a>
+	    </div>
+	    
+	    <div class="card" th:onclick="|location.href='@{/pm/usagehistory}'|">
+	      <div class="icon">📊</div>
+	      <div class="title">이용현황</div>
+	      <a th:href="@{/pm/usagehistory}">바로가기</a>
+	    </div>
+	    
+	    <div class="card" th:onclick="|location.href='@{/pm/matching}'|">
+	      <div class="icon">🤝</div>
+	      <div class="title">파킹메이트 매칭</div>
+	      <a th:href="@{/pm/matching}">바로가기</a>
+	    </div>
+  	</div>
   <br>
-  <a th:href="@{/}">뒤로 돌아가기</a><br>
-	<a th:href="@{/mylocation}">내 위치 보기</a>
+<a th:href="@{/}">뒤로 돌아가기</a><br>
+<a th:href="@{/mylocation}">내 위치 보기</a>
 </body>
 <th:block th:include="@{/footer}"></th:block>
 </html>

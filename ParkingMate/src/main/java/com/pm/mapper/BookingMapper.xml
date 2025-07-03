@@ -88,7 +88,7 @@
     FROM mate_paycheck m
     JOIN booking b ON m.car_num = b.bookingcarnum
     JOIN parkinglot pl ON b.idx = pl.idx
-    WHERE m.mid = #{mateId}
+    WHERE m.mid = #{mateId} AND m.status = '정산대기';
 	</select>
 
 	<update id="updateStatusToReserved">

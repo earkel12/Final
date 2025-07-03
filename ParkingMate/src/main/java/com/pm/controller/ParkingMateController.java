@@ -158,9 +158,8 @@ public class ParkingMateController {
 	@GetMapping("/pm/worklog")
 	public ModelAndView showWorklog(HttpSession session) throws Exception {
 		String userid = (String) session.getAttribute("sid");
-
+		ModelAndView mav = new ModelAndView();
 		if (userid == null || userid.isEmpty()) {
-			ModelAndView mav = new ModelAndView();
 			mav.addObject("msg", "로그인 후 이용 가능합니다.");
 			mav.addObject("gourl", "/login");
 			mav.setViewName("pm/pmMsg");
@@ -169,15 +168,29 @@ public class ParkingMateController {
 
 		ParkingMateDTO parkingMate = service.getParkingMate(userid);
 		if (parkingMate == null) {
-			ModelAndView mav = new ModelAndView();
 			mav.addObject("msg", "파킹메이트 등록 후 이용 가능합니다.");
 			mav.addObject("gourl", "/parkingmate");
 			mav.setViewName("pm/pmMsg");
 			return mav;
 		}
+		String addr = parkingMate.getAddr();
 
+		if (addr != null && !addr.isBlank()) {
+			 String[] parts = addr.split(" ", 5); 
+			    if (parts.length >= 4) {
+			        String mainAddr = String.join(" ", parts[0], parts[1], parts[2], parts[3]); // "서울특별시 강남구 테헤란로"
+			        String detailAddr = addr.replace(mainAddr, "").trim(); 
+
+			        mav.addObject("mainAddr", mainAddr); 
+			        mav.addObject("addrDetail", detailAddr);
+			    } else {
+			    	mav.addObject("mainAddr", addr);
+			    	mav.addObject("addrDetail", "");
+			    }
+		}
+		
 		Map<String, Object> summary = service.getTotalPmWorklog(userid);
-		ModelAndView mav = new ModelAndView();
+		
 		mav.addObject("worklog", parkingMate);
 		mav.addObject("parkingMate", parkingMate);
 		mav.addObject("totalServiceCount", summary.get("totalServiceCount"));
@@ -273,13 +286,11 @@ public class ParkingMateController {
 	@GetMapping("/pm/matching")
 	public ModelAndView showMatching(HttpSession session) throws Exception {
 	    ModelAndView mav = new ModelAndView();
-
-	    List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
-
 	    String sid = (String) session.getAttribute("sid");
-
-	    Map<String, List<Integer>> rejectedMap =
-	        (Map<String, List<Integer>>) session.getAttribute("rejectedBookingsMap");
+	    
+	    List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
+	    
+	    Map<String, List<Integer>> rejectedMap = (Map<String, List<Integer>>) session.getAttribute("rejectedBookingsMap");
 
 	    List<Integer> rejected = (rejectedMap != null && rejectedMap.containsKey(sid))
 	            ? rejectedMap.get(sid)
@@ -293,9 +304,17 @@ public class ParkingMateController {
 	}
 
 	@PostMapping("/pm/matching/accept")
-	public String accept(@RequestParam int bookingnum, HttpSession session) {
+	public ModelAndView accept(@RequestParam int bookingnum, HttpSession session) {
 		String mateId = (String) session.getAttribute("sid");
-
+		ModelAndView mav = new ModelAndView("pm/pmMsg");
+		
+		int waitingCount = service.getSettlementWaitingCount(mateId);
+	    if (waitingCount >= 1) {
+	        mav.addObject("msg", "정산대기 상태의 예약이 2건 이상 있어 수락할 수 없습니다. 먼저 정산을 완료해주세요.");
+	        mav.addObject("gourl", "/pm/matching");
+	        return mav;
+	    }
+		
 		bookingservice.updateStatusToReserved(bookingnum);
 		BookingDTO booking = bookingservice.getBookingByNum(bookingnum);
 
@@ -312,10 +331,11 @@ public class ParkingMateController {
 		dto.setEndtime(endtime);
 		dto.setStatus("정산대기");
 		dto.setPrice(booking.getPrice());
-
+		
 		service.insertMatePayCheck(dto);
-
-		return "redirect:/pm/matching";
+		
+		mav.setViewName("redirect:/pm/matching");
+	    return mav;
 	}
 
 	@PostMapping("/pm/matching/reject")

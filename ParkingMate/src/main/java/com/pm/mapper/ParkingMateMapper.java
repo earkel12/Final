@@ -17,4 +17,5 @@ public interface ParkingMateMapper {
 	public Map<String, Object> totalPmWorklog(String mid) throws Exception;
 	public int insertMatePayCheck(MatePayCheckDTO dto);
 	public List<MatePayCheckDTO> selectMateUsageList(String mid);
+	public int getSettlementWaitingCount(String mid);
 }

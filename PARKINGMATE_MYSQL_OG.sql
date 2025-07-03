@@ -99,7 +99,7 @@ CREATE TABLE parkingmate (
 	picture VARCHAR(300) NOT NULL,
 	addr VARCHAR(300) NOT NULL,
     bank VARCHAR(100) NOT NULL,
-	account INT NOT NULL,
+	account BIGINT NOT NULL,
 	id VARCHAR(50),
 	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_parkingmate_id foreign key(id) references user(id)
