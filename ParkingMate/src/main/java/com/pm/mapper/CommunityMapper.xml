@@ -112,4 +112,10 @@
 		ORDER BY idx DESC
 		LIMIT #{start}, #{end}
 	</select>
+	
+	<insert id="insertReview" parameterType="com.pm.com.model.ReviewDTO">
+    INSERT INTO review (id, bookingnum, writedate, rating, content, upload)
+    VALUES (#{id}, #{bookingnum}, now(), #{rating}, #{content}, #{upload})
+	</insert>
+	
 </mapper>

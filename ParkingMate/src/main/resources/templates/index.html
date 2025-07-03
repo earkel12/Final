@@ -96,13 +96,18 @@ function showLoginCheck() {
 <hr>
 
 <!-- ✅ 지도 섹션 -->
-<h2>주차장 지도</h2>
+  <!-- 검색창 -->
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="지역 또는 주차장 이름 입력">
+    <button id="searchBtn">검색</button>
+  </div>
 <div id="map" style="width:100%; height:600px;"></div>
 
 <table border="1" style="margin-top:20px;" id="infoTable">
   <tr><th>이름</th><td id="name">-</td></tr>
   <tr><th>주소</th><td id="addr">-</td></tr>
   <tr><th>종류</th><td id="type">-</td></tr>
+  <tr><th>가능/전체</th><td><label id="count">-</label>/<label id="place">-</label></td></tr>
   <tr><th>요금</th><td id="price">-</td></tr>
   <tr><th>발렛</th><td id="valet">-</td></tr>
 </table>
@@ -119,38 +124,90 @@ function showLoginCheck() {
     const map = new kakao.maps.Map(mapContainer, mapOption);
     const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 
-    // ✅ 주차장 목록 요청
-    fetch('/map/list')
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(parking => {
-          const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
-          const marker = new kakao.maps.Marker({
-            map: map,
-            position: position,
-            title: parking.name
-          });
+    let markers = [];
 
-          kakao.maps.event.addListener(marker, 'click', function () {
-            const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
-            infowindow.setContent(content);
-            infowindow.open(map, marker);
-            
-            // 주차장 정보를 서버로 전달
-            fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
-            .then(res => console.log("Session 저장 완료"));
+    function clearMarkers() {
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+    }
 
-            // 표 정보 업데이트
-            document.getElementById('name').innerText = parking.name;
-            document.getElementById('addr').innerText = parking.addr;
-            document.getElementById('type').innerText = parking.type;
-            document.getElementById('price').innerText = `${parking.price}원`;
-            document.getElementById('valet').innerText = parking.valet === 1 ? '가능' : '불가능';
+    function loadParkings(searchName = "") {
+      const url = searchName
+        ? `/map/search?name=${encodeURIComponent(searchName)}`
+        : '/map/list';
+		
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          clearMarkers(); // 기존 마커 제거
+
+          data.forEach(parking => {
+            const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+            const marker = new kakao.maps.Marker({
+              map: map,
+              position: position,
+              title: parking.name
+            });
+            markers.push(marker);
+
+            kakao.maps.event.addListener(marker, 'click', function () {
+            	  const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+            	  infowindow.setContent(content);
+            	  infowindow.open(map, marker);
+
+            	  fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
+            	    .then(res => console.log("Session 저장 완료"));
+
+            	  document.getElementById('name').innerText = parking.name;
+            	  document.getElementById('addr').innerText = parking.addr;
+            	  document.getElementById('type').innerText = parking.type;
+            	  document.getElementById('place').innerText = parking.maxnum;
+            	  document.getElementById('price').innerText = `${parking.price}원`;
+            	  document.getElementById('valet').innerText = parking.valet === 1 ? '가능' : '불가능';
+
+            	  // ✅ 주차 예약 수 API 호출하여 count 값 표시
+            	  fetch(`/map/count?idx=${parking.idx}`)
+            	    .then(res => res.json())
+            	    .then(count => {
+            	      document.getElementById('count').innerText = `${parking.maxnum - count}`;
+            	    })
+            	    .catch(err => {
+            	      document.getElementById('count').innerText = '-';
+            	      console.error("예약 수 불러오기 실패", err);
+            	});
+            });
           });
-        });
-      })
-      .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+      
+
+    }
+	
+
+    
+    // 최초 전체 주차장 로딩
+    loadParkings();
+
+    // 검색 버튼 클릭 이벤트
+    document.getElementById('searchBtn').addEventListener('click', () => {
+   	  const keyword = document.getElementById('searchInput').value.trim();
+   	  if (keyword !== "") {
+   	    window.location.href = `/search?keyword=${encodeURIComponent(keyword)}`;
+   	  }
+   	});
   });
+</script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+  const urlParams = new URLSearchParams(window.location.search);
+  const alertCode = urlParams.get('alert');
+
+  if (alertCode === '1') {
+    alert("먼저 주차장을 선택해주세요.");	
+  } else if (alertCode === '2') {
+    alert("로그인이 필요합니다.");
+  }
+/*]]>*/
 </script>
 <th:block th:include = "@{/footer}"></th:block>
 </body>

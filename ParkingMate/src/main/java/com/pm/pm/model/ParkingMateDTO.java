@@ -15,7 +15,7 @@ public class ParkingMateDTO {
 	private String picture;
 	private String addr;
 	private String bank;
-	private int account;
+	private long account;
 	private String id;
 
 }

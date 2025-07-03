@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookingDTO {
 
-	private String bookingnum;
+	private int bookingnum;
 	private LocalDateTime bookingdate;
 	private String bookingcarnum;
 	private LocalDateTime intime;
@@ -23,5 +23,9 @@ public class BookingDTO {
 	private int obstacle;
 	private int idx;
 	private String id;
-}
+	private Double ulatitude;
+	private Double ulongitude;
+	private Double pmlatitude;
+	private Double pmlongitude;
 
+}

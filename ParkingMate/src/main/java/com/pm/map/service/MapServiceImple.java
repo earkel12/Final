@@ -26,5 +26,10 @@ public class MapServiceImple implements MapService {
 		
 		return mapper.plbyname(name);
 	}
-
+	
+	@Override
+	public List<ParkingLotDTO> searchPl(String name) throws Exception {
+		
+		return mapper.searchPl(name);
+	}
 }

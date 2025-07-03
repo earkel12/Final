@@ -133,12 +133,51 @@ button:hover {
 .cancel-button:hover {
 	background-color: #B1B2FF;
 }
+
+.address-row {
+	display: flex;
+	gap: 8px; /* 요소 간 간격 */
+	align-items: center;
+}
+
+.address-row input[type="text"] {
+	flex: 1; /* 가능한 공간 나눠가짐 */
+	max-width: 250px;
+}
+
+.address-row button {
+	white-space: nowrap;
+	padding: 10px 16px;
+	font-size: 14px;
+}
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #6C72FF;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
 
 	<main>
 		<h1>파킹메이트 등록</h1>
+		<div id="ocr-loading"
+			style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 9999; text-align: center; padding-top: 200px;">
+			<div
+				style="display: inline-block; background: white; padding: 20px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); font-size: 18px; font-weight: bold;">
+				이미지에서 정보를 가져오는 중입니다...<br>
+				<div class="spinner" style="margin-top: 15px;"></div>
+			</div>
+		</div>
 		<form id="parkingMateForm" action="/pm/register" method="post"
 			enctype="multipart/form-data">
 			<table>
@@ -147,24 +186,31 @@ button:hover {
 					<td><input type="text" id="license" name="license" required
 						placeholder="예: 01-23-456789-00"
 						pattern="^\d{2}-\d{2}-\d{6}-\d{2}$"
-						title="예: 01-23-456789-00 형태로 입력하세요." /></td>
+						title="예: 01-23-456789-00 형태로 입력하세요."
+						oninput="formatLicenseNumber(this)" /></td>
 				</tr>
 				<tr>
 					<th><label for="picture">운전면허증 업로드</label></th>
 					<td><input type="file" id="picture" name="pictureFile"
-						accept="image/*" onchange="previewImage(event)" /> <br /> <img
-						id="preview"
-						style="display: none; margin-top: 10px; max-width: 300px; border: 1px solid #ccc; border-radius: 6px;"
+						accept="image/*" onchange="previewImage(event)" required /> <br />
+						<img id="preview" style="display:none; margin-top: 10px; max-width: 300px; border: 1px solid #ccc; border-radius: 6px;"
 						alt="미리보기" /></td>
 				</tr>
 				<tr>
 					<th><label for="history">차량 이력</label></th>
 					<td><textarea id="history" name="history" rows="3"
-							style="width: 100%;"></textarea></td>
+							style="width: 100%;" required></textarea></td>
 				</tr>
 				<tr>
 					<th><label for="addr">주소</label></th>
-					<td><input type="text" id="addr" name="addr" required /></td>
+					<td>
+						<div class="address-row">
+							<input type="text" id="addr" name="addr" th:value="${mainAddr}"
+								readonly /> <input type="text" id="addrDetail"
+								placeholder="상세주소 입력" th:value="${addrDetail}" />
+							<button type="button" onclick="execDaumPostcode()">주소 검색</button>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<th><label for="bank">은행명</label></th>
@@ -194,7 +240,7 @@ button:hover {
 				<tr>
 					<th><label for="account">계좌번호</label></th>
 					<td><input type="text" id="account" name="account"
-						placeholder="계좌번호를 입력하세요" maxlength="20" required
+						placeholder="계좌번호를 입력하세요" minlength="8" maxlength="16" required
 						oninput="formatAccountNumber(this)" /></td>
 				</tr>
 			</table>
@@ -206,29 +252,87 @@ button:hover {
 		</form>
 	</main>
 </body>
+<script
+	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script>
-	window.onload = function() {
-		alert('파킹메이트 등록은 처음 1회만 진행됩니다.\n이후 정보 수정은 파킹메이트 등록 페이지에서 수정 가능합니다.');
+	function execDaumPostcode() {
+		new daum.Postcode({
+			oncomplete : function(data) {
+				document.getElementById('addr').value = data.roadAddress;
+			}
+		}).open();
 	}
-
-	function formatAccountNumber(input) {
+	function formatLicenseNumber(input) {
 		let value = input.value.replace(/\D/g, '');
-
 		let formatted = '';
-		if (value.length <= 3) {
+
+		if (value.length <= 2) {
 			formatted = value;
-		} else if (value.length <= 6) {
-			formatted = value.slice(0, 3) + '-' + value.slice(3);
-		} else if (value.length <= 11) {
-			formatted = value.slice(0, 3) + '-' + value.slice(3, 5) + '-'
-					+ value.slice(5);
+		} else if (value.length <= 4) {
+			formatted = value.slice(0, 2) + '-' + value.slice(2);
+		} else if (value.length <= 10) {
+			formatted = value.slice(0, 2) + '-' + value.slice(2, 4) + '-' + value.slice(4);
 		} else {
-			formatted = value.slice(0, 3) + '-' + value.slice(3, 5) + '-'
-					+ value.slice(5, 11);
+			formatted = value.slice(0, 2) + '-' + value.slice(2, 4) + '-' + value.slice(4, 10) + '-' + value.slice(10, 12);
 		}
 
 		input.value = formatted;
 	}
+
+	function formatAccountNumber(input) {
+		let value = input.value.replace(/\D/g, '');
+		let formatted = '';
+
+		if (value.length <= 3) {
+			formatted = value;
+		} else if (value.length <= 5) {
+			formatted = value.slice(0, 3) + '-' + value.slice(3);
+		} else if (value.length <= 10) {
+			formatted = value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5);
+		}else if (value.length <= 12) {
+	        formatted = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6); 
+		}else {
+			formatted = value;
+		}
+
+		input.value = formatted;
+	}
+
+	window.onload = function() {
+		alert('파킹메이트 등록은 처음 1회만 진행됩니다.\n이후 정보 수정은 파킹메이트 등록 페이지에서 수정 가능합니다.');
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+	    const licenseInput = document.getElementById('license');
+	    const accountInput = document.getElementById('account');
+
+	    if (licenseInput) {
+	        if (licenseInput.value) formatLicenseNumber(licenseInput);
+	        licenseInput.addEventListener('input', () => formatLicenseNumber(licenseInput));
+	    }
+	    if (accountInput) {
+	        if (accountInput.value) formatAccountNumber(accountInput);
+	        accountInput.addEventListener('input', () => formatAccountNumber(accountInput));
+	    }
+
+	    document.getElementById('parkingMateForm').addEventListener('submit', function(e) {
+	        const addrInput = document.getElementById('addr');
+	        const addrDetailInput = document.getElementById('addrDetail');
+	        const fullAddress = addrInput.value.trim() + (addrDetailInput.value.trim() ? ' ' + addrDetailInput.value.trim() : '');
+	        addrInput.value = fullAddress;
+
+	        accountInput.value = accountInput.value.replace(/-/g, '');
+	        licenseInput.value = licenseInput.value.replace(/-/g, '');
+	    });
+
+	    let ocrLicense = /*[[${ocrLicense}]]*/ '';
+	    if (ocrLicense && ocrLicense !== '') {
+	        licenseInput.value = ocrLicense;
+	        formatLicenseNumber(licenseInput);
+	    }
+	});
+
 	function previewImage(event) {
 		const file = event.target.files[0];
 		const preview = document.getElementById('preview');
@@ -245,11 +349,50 @@ button:hover {
 			preview.style.display = 'none';
 		}
 	}
-	document.getElementById('parkingMateForm').addEventListener('submit',
-			function(e) {
-				const accountInput = document.getElementById('account');
-				accountInput.value = accountInput.value.replace(/-/g, ''); // 하이픈 제거
-			});
+	document.getElementById('picture').addEventListener('change', function(event) {
+	    const fileInput = event.target;
+	    const file = fileInput.files[0];
+	    if (!file) return;
+
+	    const loadingOverlay = document.getElementById('ocr-loading');
+	    loadingOverlay.style.display = 'block';
+	    
+	    const formData = new FormData();
+	    formData.append('pictureFile', file);
+
+	    fetch('/pm/ocrupload', {
+	        method: 'POST',
+	        body: formData
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        loadingOverlay.style.display = 'none';
+	        
+	        if (data.success) {
+	            if (data.licenseNumber) {
+	                const licenseInput = document.getElementById('license');
+	                licenseInput.value = data.licenseNumber;
+	                formatLicenseNumber(licenseInput);
+	            }
+	            if (data.address) {
+	                const addrInput = document.getElementById('addr');
+	                addrInput.value = data.address;
+	            }
+	            if (data.vehicleInfo) {
+	                const historyTextarea = document.getElementById('history');
+	                historyTextarea.value = data.vehicleInfo;
+	            }
+	        } else {
+	            alert('사진 인식 실패: ' + data.message);
+	        }
+	    })
+	    .catch(err => {
+	        loadingOverlay.style.display = 'none';
+	        console.error(err);
+	        alert('서버 통신 오류');
+	    });
+	});
 </script>
+
 <th:block th:include="@{/footer}"></th:block>
 </html>

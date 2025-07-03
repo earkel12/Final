@@ -6,7 +6,8 @@
 <link rel = "stylesheet" href = "css/login.css">
 </head>
 <body>
-<th:block th:include = "@{/header}"></th:block>
+
+<th:block th:include = "@{/header}"></th:block>	
 <h1>로그인</h1>
 <main>
 	<form name = "login"action = "login" method = "post">
@@ -25,6 +26,20 @@
 		</div>
 	</form>
 </main>
-<th:block th:include = "@{/footer}"></th:block>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+  const urlParams = new URLSearchParams(window.location.search);
+  const alertCode = urlParams.get('alert');
+
+  if (alertCode === '1') {
+    alert("먼저 주차장을 선택해주세요.");	
+  } else if (alertCode === '2') {
+    alert("로그인이 필요합니다.");
+  }
+/*]]>*/
+</script>
+<th:block th:include = "@{/footer}"></th:block>	
+
 </body>
 </html>

@@ -37,7 +37,11 @@ insert into ask values('ROSA1', '문의', 'ㅇㅇ', 'ㅇㅇㅇ', '', 'ㅇㅇ');
 
 #문의테이블
 CREATE TABLE ask (
+<<<<<<< HEAD
 	idx int AUTO_INCREMENT PRIMARY KEY,
+=======
+	idx INT AUTO_INCREMENT PRIMARY KEY,
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 	id VARCHAR(50),
 	type VARCHAR(50) NOT NULL,
 	title VARCHAR(50) NOT NULL,
@@ -58,14 +62,19 @@ INSERT INTO parkinglot
 #시퀀스용확인쿼리문
 SELECT LAST_INSERT_ID() AS parkinglot_idx;
 
+<<<<<<< HEAD
 SELECT * FROM parkinglot;
 drop table parkinglot;
+=======
+
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 #주차장테이블
 CREATE TABLE parkinglot (
 	idx	INT(100) AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(200) NOT NULL UNIQUE,
 	addr VARCHAR(200) NOT NULL,
 	type VARCHAR(100) NOT NULL,
+<<<<<<< HEAD
 	price INT(100) NOT NULL,
 	price2 INT(100) NOT NULL,
 	time DATE NOT NULL,
@@ -83,6 +92,26 @@ INSERT INTO `booking` (
   `bookingnum`, `bookingdate`, `bookingcarnum`, `outime`, `idx`, `id`
 ) VALUES (
   'BKG0001', '2025-06-18', '12가1234', '2025-06-18 14:30:00',
+=======
+	price INT NOT NULL,
+	price2 INT NOT NULL,
+	time DATETIME NOT NULL,
+	valet INT DEFAULT 0 NOT NULL,
+    maxnum INT DEFAULT 0 NOT NULL,
+	obstacle INT DEFAULT 0 NOT NULL,
+	maxheight INT DEFAULT 0 NOT NULL,
+	maxwidth INT DEFAULT 0 NOT NULL,
+	maxweight INT DEFAULT 0 NOT NULL,
+	latitude double DEFAULT 0 NOT NULL,
+    longitude double DEFAULT 0 NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=200;
+
+
+INSERT INTO `booking` (
+  `bookingdate`, `bookingcarnum`, `outime`, `idx`, `id`
+) VALUES (
+  '2025-06-18', '12가1234', '2025-06-18 14:30:00',
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 200, 'ROSA1'
 );
 
@@ -90,11 +119,19 @@ SELECT * FROM BOOKING;
 
 #예약내역테이블
 CREATE TABLE booking (
+<<<<<<< HEAD
 	bookingnum INT auto_increment PRIMARY KEY,
 	bookingdate	DATETIME NOT NULL,
 	bookingcarnum VARCHAR(300)	NOT NULL,
 	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	outime DATETIME NOT NULL,
+=======
+	bookingnum INT AUTO_INCREMENT PRIMARY KEY,
+	bookingdate	DATETIME NOT NULL,
+	bookingcarnum VARCHAR(300) NOT NULL,
+	intime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	outtime DATETIME NOT NULL,
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 	valet INT(50) DEFAULT 0 NOT NULL,
 	instand	INT(50) DEFAULT 0 NOT NULL,
 	price INT(100) DEFAULT 0 NOT NULL,
@@ -102,11 +139,20 @@ CREATE TABLE booking (
 	obstacle INT(5) DEFAULT 0 NOT NULL,
 	idx	INT(100),
 	id VARCHAR(50),
+
+
+	ulatitude DOUBLE DEFAULT 0,
+    	ulongitude DOUBLE DEFAULT 0,
+    	pmlatitude DOUBLE DEFAULT 0,
+    	pmlongitude DOUBLE DEFAULT 0,
+
+
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_booking_id foreign key(id) references user(id)
 ) ENGINE=InnoDB;
+<<<<<<< HEAD
 
 SELECT * FROM PARKINGMATE;
 
@@ -124,6 +170,9 @@ INSERT INTO `parkingmate` (
 
 SELECT LAST_INSERT_ID() AS parkingmate_idx;
 
+=======
+ 
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 #파킹메이트등록테이블
 CREATE TABLE parkingmate (
 	idx INT(200) AUTO_INCREMENT PRIMARY KEY,
@@ -132,7 +181,11 @@ CREATE TABLE parkingmate (
 	picture VARCHAR(300) NOT NULL,
 	addr VARCHAR(300) NOT NULL,
     bank VARCHAR(100) NOT NULL,
+<<<<<<< HEAD
 	account INT(100) NOT NULL,
+=======
+	account BIGINT NOT NULL,
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 	id VARCHAR(50),
 	#FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
 	CONSTRAINT fk_parkingmate_id foreign key(id) references user(id)
@@ -262,6 +315,7 @@ CREATE TABLE mate_paycheck (
 	CONSTRAINT fk_mate_paycheck_car_num foreign key(car_num) references user_cars(car_num)	
 ) ENGINE=InnoDB AUTO_INCREMENT=100;
 
+<<<<<<< HEAD
 
 INSERT INTO `review` (
   `id`, `bookingnum`, `content`
@@ -273,6 +327,9 @@ INSERT INTO `review` (
 
 SELECT * FROM REVIEW;
 
+=======
+#리뷰테이블
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 CREATE TABLE review (
 	id VARCHAR(50),
 	bookingnum VARCHAR(300),
@@ -289,6 +346,7 @@ CREATE TABLE review (
 ｓ
 
 create table notice (
+<<<<<<< HEAD
   　idx int AUTO_INCREMENT primary key,
     id varchar(50) not null,
     title varchar(100) NOT NULL,
@@ -296,6 +354,17 @@ create table notice (
     writedate DATETIME NOT NULL,
     readnum int NOT NULL,
     division int NOT NULL
+=======
+	idx INT AUTO_INCREMENT primary key,
+    id VARCHAR(50),
+    title VARCHAR(100) NOT NULL,
+    content VARCHAR(1000) NOT NULL,
+    writedate DATETIME NOT NULL,
+    readnum INT NOT NULL,
+    division INT NOT NULL,
+    -- FOREIGN KEY 설정 (id -> user 테이블의 id 참조)--
+	CONSTRAINT fk_notice_id foreign key(id) references user(id)
+>>>>>>> 92d440b52a4672c645c28a51da6cd52c539c34cc
 )ENGINE=InnoDB AUTO_INCREMENT=1;
 
 create table notice_poto (
@@ -310,6 +379,7 @@ create table notice_poto (
 )ENGINE=InnoDB AUTO_INCREMENT=1;
 
 create table faq (
+
 	 idx int AUTO_INCREMENT PRIMARY KEY,
      question varchar(100) NOT NULL,
      answer varchar(1000) NOT NULL
@@ -339,4 +409,6 @@ drop table faq;
 delete from parkinglot where time = '2025-07-01';
 select * from parkinglot;
 desc parkinglot;
-insert into notice (id, title, content, writedate, readnum, division) values ('관리자','8','8',now(),0,1)
+insert into notice (id, title, content, writedate, readnum, division) values ('관리자','8','8',now(),0,1);
+
+

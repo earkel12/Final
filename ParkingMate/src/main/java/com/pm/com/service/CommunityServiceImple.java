@@ -90,6 +90,13 @@ public class CommunityServiceImple implements CommunityService {
 
 		return sqlSessionTemplate.selectList("com.pm.mapper.CommunityMapper.getReviewList", paramMap);
 	}
+
+	
+	@Override
+	public int insertReview(ReviewDTO dto) throws Exception {
+		
+		return mapper.insertReview(dto);
+	}
 	@Override
 	public int getSearchCount(String type, String keyword) {
 	    Map<String, String> paramMap = new HashMap<>();
@@ -111,5 +118,6 @@ public class CommunityServiceImple implements CommunityService {
 	    paramMap.put("end", end);
 
 	    return sqlSessionTemplate.selectList("com.pm.mapper.CommunityMapper.searchCommunity", paramMap);
+
 	}
 }
