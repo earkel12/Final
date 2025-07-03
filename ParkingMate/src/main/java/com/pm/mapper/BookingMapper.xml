@@ -76,9 +76,8 @@
 		p.price
 		FROM booking b
 		JOIN parkinglot p ON b.idx = p.idx
-		WHERE b.instand
-		= 1
-		AND b.status = '예약접수'
+		WHERE b.instand = 1
+		AND b.status = '파킹메이트결제완료'
 		ORDER BY b.bookingdate DESC
 	</select>
 

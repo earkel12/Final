@@ -16,17 +16,3 @@ SELECT * FROM user;
 SELECT * FROM notice;
 SELECT * FROM notice_poto;
 SELECT * FROM faq;
-
-
-SELECT m.*, b.*, pl.*
-FROM mate_paycheck m
-JOIN booking b ON m.car_num = b.bookingcarnum
-JOIN parkinglot pl ON b.idx = pl.idx
-WHERE m.mid = 'user2';
-
-
-SELECT m.*, b.*, pl.*
-    FROM mate_paycheck m
-    JOIN booking b ON m.car_num = b.bookingcarnum
-    JOIN parkinglot pl ON b.idx = pl.idx
-    WHERE m.mid = #{mateId} AND m.status = '정산대기';

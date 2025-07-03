@@ -42,7 +42,7 @@
 		<if test="endDate != null and endDate != ''">
 			and endtime &lt;= #{endDate}
 		</if>
-		order by starttime desc
+		order by starttime desc 
 	</select>
 
 	<select id="totalPmWorklog" resultType="map">
@@ -52,7 +52,7 @@
 		from
 		mate_paycheck
 		where mid = #{mid}
-		and status = '정산가능'
+		and status = '정산완료'
 	</select>
 
 	<insert id="insertMatePayCheck"

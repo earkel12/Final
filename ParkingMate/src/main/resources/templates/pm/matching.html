@@ -5,64 +5,222 @@
 <title>파킹메이트 매칭</title>
 <th:block th:include="@{/header}"></th:block>
 <style>
+ body {
+    font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    margin: 0;
+    padding: 40px 20px;
+  }
 
+  h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    border-left: 5px solid #B1B2FF;
+    padding-left: 15px;
+    color: #1a1a1a;
+  }
+
+.summary {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.accordion-item {
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.accordion-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #f8f9fa;
+	padding: 15px 20px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.accordion-header:hover {
+	background-color: #f0f4ff;
+}
+
+.accordion-content {
+	display: none;
+	background-color: #fff;
+	padding: 15px 20px;
+	line-height: 1.6;
+	border-top: 1px solid #ddd;
+}
+
+.accordion-item.active .accordion-content {
+	display: block;
+}
+
+.inline-actions {
+	display: flex;
+	gap: 12px;          
+}
+
+.inline-actions input[type="submit"] {
+	background-color: #6C72FF; 
+	color: white;
+	border: none;
+	padding: 8px 18px;        
+	font-size: 14px;          
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	user-select: none;
+}
+
+.inline-actions input[type="submit"]:hover {
+	background-color: #555bff; 
+}
+
+.label {
+	font-weight: bold;
+	display: inline-block;
+	width: 120px;
+}
+
+.actions {
+	margin-top: 10px;
+	text-align: right;
+}
+
+.actions form {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.actions input[type="submit"] {
+	background-color: #3498db;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 5px;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.actions input[type="submit"]:hover {
+	background-color: #217dbb;
+}
+
+.back-link {
+	display: block;
+	margin-top: 30px;
+	text-align: center;
+	font-weight: bold;
+	color: #2980b9;
+	text-decoration: none;
+}
+
+.back-link:hover {
+	text-decoration: underline;
+}
 </style>
 </head>
 <body>
-<header><h1>파킹메이트 매칭</h1></header>
-	<p th:text="'총 ' + ${instadList.size()} + '건의 예약 요청이 있습니다.'"></p>
-	<table>
-		<thead>
-			<tr>
-				<th>예약번호</th>
-				<th>예약일자</th>
-				<th>차량번호</th>
-				<th>입차시간</th>
-				<th>출차시간</th>
-				<th>주차장</th>
-				<th>주차장 위치</th>
-				<th>요금</th>
-				<th>사용자 위치</th>
-				<th>파킹메이트 위치</th>
-				<th>처리</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="item : ${instadList}">
-				<td th:text="${item.bookingnum}"></td>
-				<td th:text="${item.bookingdate?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
-				<td th:text="${item.bookingcarnum}"></td>
-				<td th:text="${item.intime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
-				<td th:text="${item.outtime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
-				<td th:text="${item.lotName}"></td>
-				<td th:text="${item.lotAddr}"></td>
-				<td th:text="${item.lotPrice}"></td>
-				<td th:text="|(${item.ulatitude}, ${item.ulongitude})|"></td>
-				<td th:text="|(${item.pmlatitude}, ${item.pmlongitude})|"></td>
-				<td>
-					<form th:action="@{/pm/matching/accept}" method="post" th:attr="data-waiting-count=${waitingCount}" onsubmit="return checkSettlement(this);" style="display:inline;">
-    				<input type="hidden" name="bookingnum" th:value="${item.bookingnum}" />
-    				<input type="submit" value="수락" />
-					</form>
-					<form th:action="@{/pm/matching/reject}" method="post" style="display: inline;">
-						<input type="hidden" name="bookingnum" th:value="${item.bookingnum}" /> 
-						<input type="submit" value="거절" />
-					</form>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-<p><a th:href="@{/parkingmate}">파킹메이트 메인</a></p>
-<th:block th:include="@{/footer}"></th:block>
-<script>
-function checkSettlement(form) {
+
+	<h1>파킹메이트 매칭</h1>
+	<p class="summary"
+		th:text="'총 ' + ${instadList.size()} + '건의 예약 요청이 있습니다.'"></p>
+	<div th:each="item : ${instadList}" class="accordion-item">
+		<div class="accordion-header" onclick="toggleAccordion(this)">
+			<div class="summary">
+				<span th:text=" ${item.lotName} "></span>
+				<span th:text=" ${item.bookingdate?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></span>
+				<span th:text=" ${item.lotAddr} "></span>
+			</div>
+			<div class="inline-actions">
+				<form th:action="@{/pm/matching/accept}" method="post"
+					th:attr="data-waiting-count=${waitingCount}"
+					onsubmit="return checkSettlement(this);">
+					<input type="hidden" name="bookingnum"
+						th:value="${item.bookingnum}" /> <input type="submit" value="수락" />
+				</form>
+				<form th:action="@{/pm/matching/reject}" method="post">
+					<input type="hidden" name="bookingnum"
+						th:value="${item.bookingnum}" /> <input type="submit" value="거절" />
+				</form>
+			</div>
+		</div>
+
+		<div class="accordion-content">
+			<p>
+				<strong>예약번호:</strong> <span
+					th:text="${item.bookingnum}"></span>
+			</p>
+			<p>
+				<strong>예약일자:</strong> <span
+					th:text="${item.bookingdate?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></span>
+			</p>
+			<p>
+				<strong>차량번호:</strong> <span th:text="${item.bookingcarnum}"></span>
+			</p>
+			<p>
+				<strong>입차시간:</strong> <span
+					th:text="${item.intime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></span>
+			</p>
+			<p>
+				<strong>출차시간:</strong> <span
+					th:text="${item.outtime?.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></span>
+			</p>
+			<p>
+				<strong>주차장 이름:</strong> <span th:text="${item.lotName} "></span>
+			</p>
+			<p>
+				<strong>주차장 주소:</strong> <span th:text="${item.lotAddr}"></span>
+			</p>
+			<p>
+				<strong>요금:</strong> <span th:text="${item.lotPrice}"></span>
+			</p>
+			<p>
+				<strong>사용자 위치:</strong> <span
+					th:text="|(${item.ulatitude}, ${item.ulongitude})|"></span>
+			</p>
+			<p>
+				<strong>파킹메이트 위치:</strong> <span
+					th:text="|(${item.pmlatitude}, ${item.pmlongitude})|"></span>
+			</p>
+		</div>
+	</div>
+
+
+	<a th:href="@{/parkingmate}" class="back-link">← 파킹메이트 메인으로 돌아가기</a>
+
+	<th:block th:include="@{/footer}"></th:block>
+
+	<script>
+  function toggleAccordion(header) {
+    const item = header.closest('.accordion-item');
+
+    const allItems = document.querySelectorAll('.accordion-item');
+    allItems.forEach(el => {
+      if (el !== item) {
+        el.classList.remove('active');
+        el.querySelector('.accordion-content').style.display = 'none';
+      }
+    });
+
+    const content = item.querySelector('.accordion-content');
+    const isActive = item.classList.toggle('active');
+    content.style.display = isActive ? 'block' : 'none';
+  }
+
+  function checkSettlement(form) {
     const waitingCount = parseInt(form.getAttribute("data-waiting-count"));
     if (waitingCount >= 2) {
-        alert("정산대기 상태의 예약이 2건 이상 있어 수락할 수 없습니다. 먼저 정산을 완료해주세요.");
-        return false; 
+      alert("정산대기 상태의 예약이 2건 이상 있어 수락할 수 없습니다. 먼저 정산을 완료해주세요.");
+      return false;
     }
     return true;
-}
+  }
 </script>
+
 </body>
 </html>

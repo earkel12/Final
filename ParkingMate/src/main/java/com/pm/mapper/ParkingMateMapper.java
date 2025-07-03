@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
@@ -14,7 +15,7 @@ public interface ParkingMateMapper {
 	public int insertParkingMate(ParkingMateDTO dto) throws Exception;
 	public int updateParkingMate(ParkingMateDTO dto) throws Exception;
 	public List<MatePayCheckDTO> getMatePayCheck(Map<String, Object> params) throws Exception;
-	public Map<String, Object> totalPmWorklog(String mid) throws Exception;
+	public Map<String, Object> totalPmWorklog(@Param("mid") String mid) throws Exception;
 	public int insertMatePayCheck(MatePayCheckDTO dto);
 	public List<MatePayCheckDTO> selectMateUsageList(String mid);
 	public int getSettlementWaitingCount(String mid);
