@@ -12,4 +12,5 @@ public interface BookingMapper {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
 	public void updateStatus(String userid) throws Exception;
+	public int bookingCount(int idx) throws Exception;
 }

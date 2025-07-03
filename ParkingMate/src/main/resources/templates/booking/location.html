@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ParkingMate 메인</title>
+  <!-- ✅ 카카오 지도 SDK -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+ 
+</head>
+<body>
+<!-- ✅ 지도 섹션 -->
+<h2>약속장소 등록하기</h2>
+<div id="map" style="width:100%; height:600px;"></div>
+<p><em>지도를 클릭해주세요!</em></p>
+<table border="1" style="margin-top:20px;" id="locationinfo">
+  <tr><th>위도</th><td><input type = "text" name = "ulatitude" id = "ulatitude" readonly></td></tr>
+  <tr><th>경도</th><td><input type = "text" name = "ulongitude" id = "ulongitude" readonly></td></tr>
+</table>
+<button type="button" onclick="sendLocation()">등록하기</button>	
+<div id="clickLatlng"></div>
+<script>
+  kakao.maps.load(function () {
+    const mapContainer = document.getElementById('map');
+    const mapOption = {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 5
+    };
+
+    const map = new kakao.maps.Map(mapContainer, mapOption);
+    const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+
+    const marker = new kakao.maps.Marker({
+      position: map.getCenter()
+    });
+    marker.setMap(map);
+
+    // 지도 클릭 이벤트: 위도/경도 input에 채워넣기
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+      const latlng = mouseEvent.latLng;
+      marker.setPosition(latlng);
+      document.getElementById('ulatitude').value = latlng.getLat();
+      document.getElementById('ulongitude').value = latlng.getLng();
+    });
+  })
+  
+    function sendLocation() {
+    const lat = document.getElementById('ulatitude').value;
+    const lng = document.getElementById('ulongitude').value;
+	
+    if (window.opener && !window.opener.closed) {
+      // 부모창의 input에 값 전달
+      window.opener.document.getElementById('ulatitude').value = lat;
+      window.opener.document.getElementById('ulongitude').value = lng;
+      window.opener.document.getElementById('locationBtn').innerText="약속장소 등록완료";
+      // 팝업 닫기
+      window.close();
+    } else {
+      alert("부모창이 없습니다.");
+    }
+  }
+</script>
+</body>
+</html>

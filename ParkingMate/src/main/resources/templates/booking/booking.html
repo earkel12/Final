@@ -18,6 +18,7 @@
   </style>
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
   <div class="container">
 
     <h2>예약하기</h2>
@@ -33,7 +34,7 @@
 	<p>30분당 이용 금액 : <span id="per30min" th:text="${session.price2}">0</span>원</p>
 
     <!-- 2. 예약 정보 입력 영역 -->
-    <form action="/booking/agree" method="post">
+    <form action="/booking/agree" method="post" onsubmit="return checkLocation()">
       <select id="bookingcarnum" name="bookingcarnum">
 		  <option value="">-- 선택 --</option>
 		  <option th:each="car : ${carList}"
@@ -63,16 +64,22 @@
       <div class="input-group">
         <label>파킹메이트 유무</label>
         <div class="radio-group">
-          <label><input type="radio" name="mate" value="1"> 있음</label>
-          <label><input type="radio" name="mate" value="0" checked> 없음</label>
+          <label><input type="radio" name="instand" value="1"> 있음</label>
+          <label><input type="radio" name="instand" value="0" checked> 없음</label>
         </div>
+          <!-- ✅ 현위치 등록 버튼 (기본은 숨김) -->
+		 <button type="button" id="locationBtn" style="display:none; margin-top: 10px;">
+		   약속장소 등록하기
+		 </button>
+		 <input type="hidden" name="ulatitude" id="ulatitude" value="0">
+		 <input type="hidden" name="ulongitude" id="ulongitude" value="0">
       </div>
 
       <div class="input-group">
         <label>장애인 여부</label>
         <div class="radio-group">
-          <label><input type="radio" name="handicap" value="1"> 해당</label>
-          <label><input type="radio" name="handicap" value="0" checked> 해당 없음</label>
+          <label><input type="radio" name="obstacle" value="1"> 해당</label>
+          <label><input type="radio" name="obstacle" value="0" checked> 해당 없음</label>
         </div>
       </div>
 	   <div class="input-group">
@@ -87,7 +94,7 @@
       <div class="right-align">
         <p>결제 금액 : <span id="total">0</span>원</p>
         <input type="hidden" id="totalInput" name="total" value="0">
-        <button type="submit">다음</button>
+        <button type="submit" disabled>다음</button>
       </div>
 
     </form>
@@ -100,9 +107,12 @@
 	  const durationInput = document.getElementById("duration");
 	  const estimateDisplay = document.getElementById("estimate");
 	  const totalDisplay = document.getElementById("total");
-	  const mateRadios = document.getElementsByName("mate");
-	  
-	  
+	  const instandRadios = document.getElementsByName("instand");
+	  const locationBtn = document.getElementById("locationBtn");
+	  const bookingCarSelect = document.getElementById("bookingcarnum");
+	  const inTimeInput = document.getElementById("inTime");
+	  const submitBtn = document.querySelector("form button[type='submit']");
+ 
 	  
 	  let addMateFee = 0; // 파킹메이트 추가 요금
 	
@@ -113,24 +123,65 @@
 	      const timeCost = (hours * 2) * per30;
 	      const total = base + timeCost;
 	      estimateDisplay.textContent = total + "원";
-	      totalDisplay.textContent = addMateFee;
-	      document.getElementById("totalInput").value = addMateFee;
+	      totalDisplay.textContent = base+addMateFee;
+	      document.getElementById("totalInput").value = base+addMateFee;
 	    }
 	  }
-	
+	  
+	  // 폼 입력 유효성 검사
+	  function validateForm() {
+	    const carSelected = bookingCarSelect.value !== "";
+	    const inTimeSelected = inTimeInput.value !== "";
+	    const durationValid = durationInput.value !== "" && parseInt(durationInput.value) > 0;
+
+	    submitBtn.disabled = !(carSelected && inTimeSelected && durationValid);
+	  }
+	  // 각 필드 변경 시 유효성 검사
+	  bookingCarSelect.addEventListener("change", validateForm);
+	  inTimeInput.addEventListener("input", validateForm);
+	  durationInput.addEventListener("input", function () {
+	    calculateTotal();
+	    validateForm();
+	  });
+	  
 	  // 주차 시간 입력 시 계산
 	  durationInput.addEventListener("input", calculateTotal);
-	
+	  
 	  // 파킹메이트 선택 시 추가요금 적용
-	  mateRadios.forEach(radio => {
+	  instandRadios.forEach(radio => {
 	    radio.addEventListener("change", function () {
 	      addMateFee = this.value === "1" ? 10000 : 0;
+	      locationBtn.style.display = this.value === "1" ? "inline-block" : "none";
 	      calculateTotal(); // 선택 변경 시 다시 계산
 	    });
 	  });
 	  
+	  // ✅ 버튼 클릭 시 팝업 열기
+	  locationBtn.addEventListener("click", function () {
+	    window.open(
+	      "/location",
+	      "locationPopup",
+	      "width=600,height=600,top=100,left=200"
+	    );
+	  });
 	  
+	  // 초기 비활성화
+	  submitBtn.disabled = true;
 	  
+	  //장소 미등록시
+		  function checkLocation() {
+    const instandSelected = document.querySelector('input[name="instand"]:checked').value === "1";
+    const ulat = document.getElementById("ulatitude").value;
+
+    if (instandSelected && (!ulat || ulat === "0")) {
+      alert("파킹메이트를 선택한 경우, 약속 장소를 등록해야 합니다.");
+      return false;  // 제출 중지
+    }
+
+    return true; // 제출 계속
+  }
 	</script>
+ 
+<th:block th:include = "@{/footer}"></th:block>	
 </body>
 </html>

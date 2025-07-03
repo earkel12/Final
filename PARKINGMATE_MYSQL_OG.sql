@@ -92,7 +92,7 @@ CREATE TABLE booking (
 	ulatitude double DEFAULT 0,
 	ulongitude double DEFAULT 0,
 	pmlatitude double DEFAULT 0,
-	pmlongitude double DEFAULT 0
+	pmlongitude double DEFAULT 0,
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),
 	# FOREIGN KEY 설정 (id -> user 테이블의 id 참조)

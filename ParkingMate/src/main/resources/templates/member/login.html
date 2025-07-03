@@ -5,6 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>	
 <h1>로그인</h1>
 <form name = "login"action = "login" method = "post">
 	<label>아이디</label>
@@ -19,5 +20,19 @@
 		<a href = "idFind">아이디 찾기</a> | <a href = "pwdFind">비밀번호 찾기</a>
 	</div>
 </form>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+  const urlParams = new URLSearchParams(window.location.search);
+  const alertCode = urlParams.get('alert');
+
+  if (alertCode === '1') {
+    alert("먼저 주차장을 선택해주세요.");	
+  } else if (alertCode === '2') {
+    alert("로그인이 필요합니다.");
+  }
+/*]]>*/
+</script>
+<th:block th:include = "@{/footer}"></th:block>	
 </body>
 </html>
