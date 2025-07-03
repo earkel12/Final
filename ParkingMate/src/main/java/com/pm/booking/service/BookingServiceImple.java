@@ -43,6 +43,7 @@ public class BookingServiceImple implements BookingService {
 	@Override
 	public int bookingCount(int idx) throws Exception {
 		return mapper.bookingCount(idx);
+	}
 
 	@Override
 	public void updateStatusToReserved(int bookingnum) {
