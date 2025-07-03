@@ -38,6 +38,12 @@ public class BookingServiceImple implements BookingService {
 	public void updateStatus(String userid) throws Exception {
 		mapper.updateStatus(userid);
 	}
+
+	
+	@Override
+	public int bookingCount(int idx) throws Exception {
+		return mapper.bookingCount(idx);
+
 	@Override
 	public void updateStatusToReserved(int bookingnum) {
 		 mapper.updateStatusToReserved(bookingnum);
@@ -82,5 +88,6 @@ public class BookingServiceImple implements BookingService {
 	@Override
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);
+
 	}
 }

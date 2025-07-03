@@ -80,10 +80,12 @@ CREATE TABLE booking (
 	idx	INT,
 	id VARCHAR(50),
 
+
 	ulatitude DOUBLE DEFAULT 0,
     	ulongitude DOUBLE DEFAULT 0,
     	pmlatitude DOUBLE DEFAULT 0,
     	pmlongitude DOUBLE DEFAULT 0,
+
 
 	# FOREIGN KEY 설정 (idx-> parkinglot 테이블의 idx 참조)
 	CONSTRAINT fk_booking_idx foreign key(idx) references parkinglot(idx),

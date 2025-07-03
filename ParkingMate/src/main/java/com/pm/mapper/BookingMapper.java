@@ -16,6 +16,9 @@ public interface BookingMapper {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
 	public void updateStatus(String userid) throws Exception;
+
+	public int bookingCount(int idx) throws Exception;
+
 	public List<BookingParkingDTO> selectActiveInstadBookings();
 	public void updateStatusToReserved(@Param("bookingnum") int bookingnum);
 	public BookingDTO getBookingByNum(int bookingnum);
@@ -27,4 +30,5 @@ public interface BookingMapper {
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
+
 }
