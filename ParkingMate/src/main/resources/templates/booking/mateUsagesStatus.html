@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>파킹메이트 매칭중</title>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+    .container {
+        width: 90%;
+        margin: 20px auto;
+    }
+    .top-section {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 40px;
+    }
+    .status-box {
+        border: 2px solid #000;
+        padding: 40px;
+        width: 300px;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .info-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .info-item {
+        border: 2px solid #000;
+        padding: 10px 15px;
+        width: 350px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2em;
+    }
+    .button-group-inline {
+        display: flex;
+        gap: 5px;
+        margin-left: 10px;
+    }
+    .button-group-inline button {
+        padding: 5px 10px;
+        font-size: 0.9em;
+    }
+    .bottom-section {
+        display: flex;
+        margin-top: 30px;
+    }
+    .map-box {
+        border: 2px solid #000;
+        width: 70%;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+    }
+    .mate-info-box {
+        border: 2px solid #000;
+        width: 28%;
+        margin-left: 2%;
+        padding: 20px;
+        font-size: 1.1em;
+    }
+    .mate-info-box img {
+        width: 150px;
+        height: 150px;
+        background: #eee;
+        display: block;
+        margin: 20px auto;
+    }
+</style>
+<script>
+function enablePayment() {
+    // 결제하기 버튼 활성화
+    document.getElementById("paymentBtn").disabled = false;
+
+    // 출차하기 버튼 비활성화
+    document.getElementById("checkoutBtn").disabled = true;
+}
+</script>
+</head>
+<body>
+<div class="container">
+    <!-- 상단 -->
+    <div class="top-section">
+        <div class="status-box">
+    		<span th:text="${#lists.isEmpty(findMate) ? '파킹메이트 매칭중...' : '파킹메이트 매칭완료!'}"></span>
+		</div>
+        <div class="info-box" th:each="booking : ${mateBookingList}">
+            <div class="info-item">
+                <span>주차장:</span> 
+                <span th:text="${parkinglotdto != null ? parkinglotdto.name : '없음'}"></span>
+
+            </div>
+            <div class="info-item">
+                <span>입차시간:</span> 
+                <span th:text="${booking.intime!=null?#dates.format(booking.intime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 14:18</span>
+            </div>
+            <div class="info-item">
+                <span>출차시간:</span> 
+                <span th:text="${booking.outtime!=null?#dates.format(booking.outtime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 15:00</span>
+            </div>
+            <div class="info-item">
+                <span>결제금액:</span> 
+                <span th:text="${booking.price != 0 ? #numbers.formatInteger(booking.price, 3, 'COMMA') + '원' : '0원'}"></span>
+            </div>
+            <div class="info-item">
+                <div class="button-group-inline">
+                   <form th:action="@{/booking/updateOuttime}" method="post">
+					    <input type="hidden" name="bookingnum" th:value="${booking.bookingnum}" />
+					    <button id="checkoutBtn" type="submit" onclick="enablePayment()">출차하기</button>
+					</form>
+                    <button type="button" id="paymentBtn" disabled>결제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 하단 -->
+    <div class="bottom-section">
+        <div class="map-box" id="map">
+            <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+			<script>
+			kakao.maps.load(function () {
+				//서버에서 전달받은 위도, 경도
+				const lat = '[[${parkinglotdto.latitude}?:0]]';
+    			const lng = '[[${parkinglotdto.longitude}?:0]]';
+    			const name = '[[${parkinglotdto != null ? parkinglotdto.name : "없음"}]]';
+    			const addr = '[[${parkinglotdto != null ? parkinglotdto.addr : "없음"}]]';
+				
+    			const userLat = parseFloat('[[${ulatitude}?:0]]');
+    			const userLng = parseFloat('[[${ulongitude}?:0]]');
+
+    			const mateLat = parseFloat('[[${pmlatitude}?:0]]');
+    			const mateLng = parseFloat('[[${pmlongitude}?:0]]');
+
+			    const mapContainer = document.getElementById('map');
+			    const mapOption = {
+			        center: new kakao.maps.LatLng(lat, lng), // 초기 중심 좌표(서울)
+			    	level: 2
+			    };
+			    const map = new kakao.maps.Map(mapContainer, mapOption);
+			    
+			 	// 주차장 마커
+			    const markerPosition = new kakao.maps.LatLng(lat, lng);
+			    const marker = new kakao.maps.Marker({
+			        position: markerPosition,
+			        map: map,
+			        title: name
+			    });
+				
+			    // 유저 마커
+			    const userMarker = new kakao.maps.Marker({
+			        position: new kakao.maps.LatLng(userLat, userLng),
+			        map: map,
+			        title: "사용자 위치"
+			    });
+			    
+			    // 메이트 마커
+			    const mateMarker = new kakao.maps.Marker({
+			        position: new kakao.maps.LatLng(mateLat, mateLng),
+			        map: map,
+			        title: "파킹메이트 위치"
+			    });
+			    
+			    //하버사인 공식 거리 계산 함수
+			    function calculateDistance(lat1, lng1, lat2, lng2) {
+			        const R = 6371000; // m
+			        const toRad = x => x * Math.PI / 180;
+			        const dLat = toRad(lat2 - lat1);
+			        const dLng = toRad(lng2 - lng1);
+			        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+			                  Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+			                  Math.sin(dLng/2) * Math.sin(dLng/2);
+			        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+			        return Math.round(R * c);
+			    }
+				
+			    const distance = calculateDistance(userLat, userLng, mateLat, mateLng);
+				
+			    const speed_mps = 1.1; // m/s (도보 기준)
+			    const estimatedTime_sec = distance / speed_mps;
+			    const estimatedTime_min = Math.round(estimatedTime_sec / 60);
+			    
+			 	// 거리 표시
+			    const distanceDiv = document.createElement('div');
+			    distanceDiv.style.background = 'white';
+			    distanceDiv.style.padding = '5px 10px';
+			    distanceDiv.style.border = '2px solid black';
+			    distanceDiv.style.borderRadius = '8px';
+			    distanceDiv.style.fontSize = '14px';
+			    distanceDiv.style.fontWeight = 'bold';
+			    distanceDiv.textContent = `현재 메이트와의 거리: ${distance} m (도보 약 ${estimatedTime_min}분 소요)`;
+
+			    const distanceOverlay = new kakao.maps.CustomOverlay({
+			        position: userMarker.getPosition(),
+			        content: distanceDiv,
+			        yAnchor: 1.5
+			    });
+
+			    distanceOverlay.setMap(map);
+			    
+			 	// 사용자와 메이트 경로 선 그리기
+			    const linePath = [
+			        new kakao.maps.LatLng(userLat, userLng),
+			        new kakao.maps.LatLng(mateLat, mateLng)
+			    ];
+
+			    const polyline = new kakao.maps.Polyline({
+			        path: linePath,
+			        strokeWeight: 4,
+			        strokeColor: '#FF0000',
+			        strokeOpacity: 0.8,
+			        strokeStyle: 'solid'
+			    });
+
+			    polyline.setMap(map);
+			    const infowindow = new kakao.maps.InfoWindow({
+			        content: `<div style="padding:5px;"><b>${name}</b><br>${addr}</div>`,
+			        zIndex: 1
+			    });
+			    infowindow.open(map, marker);
+			});
+			</script>
+        </div>
+        <div class="mate-info-box">
+		    <h2>파킹 메이트 정보</h2>
+		    <img src="/img/logo.png" alt="프로필 이미지">
+		
+		    <div th:each="mate : ${findMate}">
+		        <div>이름: <span th:text="${mate.mate_name}">메이트 이름</span></div>
+		        <div>TEL: <span th:text="${mate.mate_tel}">메이트 전화번호</span></div>
+    		</div>
+		</div>
+    </div>
+</div>
+</body>
+</html>

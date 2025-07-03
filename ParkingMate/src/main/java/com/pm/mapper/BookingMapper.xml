@@ -5,6 +5,7 @@
 <mapper namespace="com.pm.mapper.BookingMapper">
 	<!-- mybatis설정 -->
 
+
 	<insert id="insertBooking" parameterType="com.pm.booking.model.BookingDTO">
         INSERT INTO booking (bookingdate, bookingcarnum, intime, outtime, valet, instand, price, status, obstacle, idx, id, ulatitude, ulongitude)
         VALUES (#{bookingdate}, #{bookingcarnum}, #{intime}, #{outtime}, #{valet}, #{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id}, #{ulatitude}, #{ulongitude})
@@ -19,6 +20,7 @@
 		    WHERE b.bookingcarnum = uc.car_num
 		    AND b.status != '전체결제완료'
 		);
+
 
 	</select>
 	<update id="updateStatus" parameterType="String">
@@ -38,9 +40,134 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
+
 	
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
 		select count(*) from booking where idx = #{idx}
 	
 	</select>
+
+
+
+	<!-- 메이트이용현황관련 -->
+	<resultMap id="BookingParkingMap"
+		type="com.pm.booking.model.BookingParkingDTO">
+		<id property="bookingnum" column="bookingnum" />
+		<result property="bookingdate" column="bookingdate" />
+		<result property="bookingcarnum" column="bookingcarnum" />
+		<result property="intime" column="intime" />
+		<result property="outtime" column="outtime" />
+		<result property="valet" column="valet" />
+		<result property="instand" column="instand" />
+		<result property="price" column="price" />
+		<result property="status" column="status" />
+		<result property="obstacle" column="obstacle" />
+		<result property="idx" column="idx" />
+		<result property="id" column="id" />
+		<result property="ulatitude" column="ulatitude" />
+		<result property="ulongitude" column="ulongitude" />
+		<result property="pmlatitude" column="pmlatitude" />
+		<result property="pmlongitude" column="pmlongitude" />
+
+		<result property="latitude" column="latitude" />
+		<result property="longitude" column="longitude" />
+		<result property="name" column="name" />
+		<result property="addr" column="addr" />
+
+		<result property="lotIdx" column="lot_idx" />
+		<result property="lotName" column="name" />
+		<result property="lotAddr" column="addr" />
+		<result property="lotType" column="type" />
+		<result property="lotPrice" column="lot_price" />
+	</resultMap>
+
+	<select id="selectActiveInstadBookings"
+		resultMap="BookingParkingMap">
+		SELECT b.*, p.idx AS lot_idx, p.name, p.addr, p.type,
+		p.price
+		FROM booking b
+		JOIN parkinglot p ON b.idx = p.idx
+		WHERE b.instand = 1
+		AND b.status = '파킹메이트결제완료'
+		ORDER BY b.bookingdate DESC
+	</select>
+
+	<select id="getBookingParkingListByMateId"
+		resultType="com.pm.booking.model.BookingParkingDTO">
+		 SELECT m.*, b.*, pl.*
+    FROM mate_paycheck m
+    JOIN booking b ON m.car_num = b.bookingcarnum
+    JOIN parkinglot pl ON b.idx = pl.idx
+    WHERE m.mid = #{mateId} AND m.status = '정산대기';
+	</select>
+
+	<update id="updateStatusToReserved">
+		UPDATE booking
+		SET status = '파킹메이트매칭완료'
+		WHERE
+		bookingnum = #{bookingnum}
+	</update>
+
+	<select id="getBookingByNum"
+		resultType="com.pm.booking.model.BookingDTO">
+		SELECT * FROM booking WHERE bookingnum = #{bookingnum}
+	</select>
+
+	<select id="showMatebookingList" parameterType="String"
+		resultType="map">
+		select
+		a.*,
+		b.name as parkinglot_name
+		from
+		booking a
+		join
+		parkinglot b on a.idx = b.idx
+		where
+		a.status = '파킹메이트매칭완료'
+		and instand =
+		1
+	</select>
+
+	<select id="findParkinglotByName" parameterType="String"
+		resultType="com.pm.map.model.ParkingLotDTO">
+		select
+		*
+		from
+		parkinglot
+		where
+		name = #{name}
+	</select>
+
+	<select id="findMatcingMate" resultType="map">
+		select
+		m1.*,
+		m2.name AS
+		mate_name,
+		m2.tel AS mate_tel
+		from
+		mate_paycheck m1
+		join
+		user m2
+		on
+		m1.mid =
+		m2.id
+		where
+		m1.id = #{id}
+		and m1.mid is not null
+		and m1.car_num =
+		#{car_num}
+		and
+		m2.mate_use = 1
+	</select>
+
+	<update id="updateOuttime" parameterType="int">
+		update
+		booking
+		SET
+		outtime = NOW()
+		WHERE
+		bookingnum = #{bookingnum}
+	</update>
+
+
 </mapper>

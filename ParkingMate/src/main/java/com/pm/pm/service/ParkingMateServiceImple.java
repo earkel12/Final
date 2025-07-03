@@ -44,5 +44,17 @@ public class ParkingMateServiceImple implements ParkingMateService {
     public Map<String, Object> getTotalPmWorklog(String mid) throws Exception {
     	 return mapper.totalPmWorklog(mid);
     }
+    @Override
+    public int insertMatePayCheck(MatePayCheckDTO dto) {
+    	return mapper.insertMatePayCheck(dto);
+    }
+    @Override
+    public List<MatePayCheckDTO> getMateUsageList(String mid) {
+    	return mapper.selectMateUsageList(mid);
+    }
+    @Override
+    public int getSettlementWaitingCount(String mid) {
+    	return mapper.getSettlementWaitingCount(mid);
+    }
 }
 
