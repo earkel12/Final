@@ -87,11 +87,12 @@ public class BookingServiceImple implements BookingService {
 		return findMate;
 	}
 	@Override
-	public int updateInTime(int bookingnum) throws Exception {
+	public int updateEndTime(int bookingnum) throws Exception {
 		int result1 = mapper.updateInTime(bookingnum);
 	    int result2 = mapper.updateStartTimePaycheck(bookingnum);
 	    return result1 + result2;
 	}
+	
 	@Override
 	public Map<String, Object> updateIntime(int bookingnum) throws Exception {
 		
@@ -160,6 +161,7 @@ public class BookingServiceImple implements BookingService {
 	public List<BookingParkingDTO> getActiveInstadBookings() {
 		return mapper.selectActiveInstadBookings();
 	}
+	
 	@Override
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);

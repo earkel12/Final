@@ -489,8 +489,8 @@ public class ParkingMateController {
 	@PostMapping("/pm/completeParking")
 	public ModelAndView completeParking(@RequestParam("bookingnum") int bookingnum) throws Exception {
 		ModelAndView mav = new ModelAndView();
-		int updateintime = bookingservice.updateInTime(bookingnum);
-		if(updateintime != 2) {
+		int updateEndtime = bookingservice.updateEndTime(bookingnum);
+		if(updateEndtime != 2) {
 			mav.addObject("msg", "입차 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
 			mav.addObject("gourl", "parking");
 		}else {
