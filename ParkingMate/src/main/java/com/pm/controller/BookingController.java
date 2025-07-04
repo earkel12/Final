@@ -124,9 +124,14 @@ public class BookingController {
 
 	//메이트이용현황 관련
 	@GetMapping("/mateUsagesStatus")
-	public String mateUsagesStatus(@SessionAttribute("sid")String id,
-									@RequestParam(value = "bookingcarnum", required = false) String bookingcarnum, Model model) {
+	public String mateUsagesStatus(@SessionAttribute(value = "sid", required = false) String id,
+	        @RequestParam(value = "bookingcarnum", required = false) String bookingcarnum, Model model) {
 		System.out.println("사용자ID:"+ id);
+		
+		if (id == null || id.isEmpty()) {
+		   System.out.println("세션 만료 또는 미로그인 상태, 로그인 페이지로 리다이렉트");
+		   return "redirect:/login?alert=2";
+		}
 		
 		try {
 	        List<String> reservedCarNums = service.findBookingCarNumByUser(id);
@@ -202,7 +207,7 @@ public class BookingController {
 			}
 		}
 		model.addAttribute("findMate", findMate);
-		
+		System.out.println("들어감");
 		return "booking/mateUsagesStatus";
 	}
 	
