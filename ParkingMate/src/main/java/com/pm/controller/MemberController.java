@@ -57,9 +57,9 @@ public class MemberController {
 			String dbname = service.userInfo(userid);
 			session.setAttribute("sid", userid);
 			session.setAttribute("sname", dbname);
-			mav.addObject("msg", dbname+"님 환영합니다.");
+			//mav.addObject("msg", dbname+"님 환영합니다.");
 			mav.addObject("gourl", "/");
-			mav.setViewName("member/login_ok");
+			mav.setViewName("/index");
 
 			if(saveid.equals("on")) {
 				Cookie ck = new Cookie("saveid", userid);
@@ -71,13 +71,15 @@ public class MemberController {
 				resp.addCookie(saveidCookie);
 			}
 		}else if(result == MemberService.NOT_ID || result == MemberService.NOT_PWD) {
-			mav.addObject("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
+			//mav.addObject("msg", "아이디 또는 비밀번호가 잘못되었습니다.");
 			mav.addObject("gourl", "/login");
-			mav.setViewName("member/memberMsg");
+			mav.addObject("error", "아이디 또는 비밀번호가 잘못되었습니다.");
+			mav.addObject("userid",userid);
+			mav.setViewName("member/login");
 		}else if(result == MemberService.ERROR) {
-			mav.addObject("msg", "예기치 못한 에러가 발생했습니다. 로그인을 다시 시도해주세요.");
+			mav.addObject("error", "예기치 못한 에러가 발생했습니다. 로그인을 다시 시도해주세요.");
 			mav.addObject("gourl", "/login");
-			mav.setViewName("member/memberMsg");
+			mav.setViewName("member/login");
 		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -3,10 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>파킹메이트 매칭중</title>
-  <!-- 복잡한 DOM 조작, AJAX, 이벤트 처리 -->
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+  <!-- 복잡한 DOM 조작, AJAX, 이벤트 처리 
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
   <!-- 결제api -->
   <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
+<!-- Jqurry사용 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Js별도관리 -->
+<script src="/js/involveMateUsageStatusList.js"></script>
+
 <style>
     body {
         font-family: sans-serif;
@@ -84,24 +91,53 @@
         margin: 20px auto;
     }
 </style>
-<script>
-function enablePayment() {
-    // 결제하기 버튼 활성화
-    document.getElementById("paymentBtn").disabled = false;
-
-    // 출차하기 버튼 비활성화
-    document.getElementById("checkoutBtn").disabled = true;
-}
-</script>
 </head>
 <body>
 <div class="container">
+	<div class="tab-container">
+    <ul class="tab-list">
+        <li th:each="usercarnum : ${reservedCarNums}">
+           <a th:href="@{/mateUsagesStatus(bookingcarnum=${usercarnum})}"
+			   th:text="${usercarnum}"
+			   class="tab-item"
+			   th:classappend="${usercarnum == selectedCarNum} ? 'active' : ''">
+			</a>
+        </li>
+    </ul>
+	</div>
     <!-- 상단 -->
     <div class="top-section">
+    	<!-- 상태메세지박스 -->
         <div class="status-box">
-    		<span th:text="${#lists.isEmpty(findMate) ? '파킹메이트 매칭중...' : '파킹메이트 매칭완료!'}"></span>
+    		<!-- 출차 완료 상태 (최우선) -->
+		    <span th:if="${booking['outtime'] != null}">
+		        출차 완료! 이용시간:
+		        <span th:text="${booking['intime'] != null ? T(java.time.Duration).between(booking['intime'].toLocalDateTime(), booking['outtime'].toLocalDateTime()).toMinutes() : 0}"></span>분
+		    </span>
+		
+		    <!-- 입차 완료 상태 -->
+		    <span th:if="${booking['intime'] != null and booking['outtime'] == null}">
+		        입차 완료!
+		    </span>
+		
+		    <!-- instand == 1 + findMate 상태 표시 (입차/출차가 아닌 경우만) -->
+		    <span th:if="${booking['intime'] == null and booking['instand'] == 1 and !#lists.isEmpty(findMate)}">
+		        파킹메이트 매칭완료!
+		    </span>
+		
+		    <span th:if="${booking['intime'] == null and booking['instand'] == 1 and #lists.isEmpty(findMate)}">
+		        파킹메이트 매칭 중
+		    </span>
+		
+		    <!-- instand != 1 상태 표시 (입차/출차가 아닌 경우만) -->
+		    <span th:if="${booking['intime'] == null and booking['instand'] != 1}"
+		          th:text="${#lists.isEmpty(findMate) ? '파킹메이트결제완료' : '파킹메이트 매칭완료!'}">
+		    </span>
 		</div>
-        <div class="info-box" th:each="booking : ${mateBookingList}">
+		<!-- 예약정보 -->
+		 <div class="info-box" th:each="booking : ${bookingInfoByCarnum}">
+         </div>
+        <div class="info-box" th:each="booking : ${bookingInfoByCarnum}">
             <div class="info-item">
                 <span>주차장:</span> 
                 <span th:text="${parkinglotdto != null ? parkinglotdto.name : '없음'}"></span>
@@ -109,24 +145,33 @@ function enablePayment() {
             </div>
             <div class="info-item">
                 <span>입차시간:</span> 
-                <span th:text="${booking.intime!=null?#dates.format(booking.intime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 14:18</span>
+                <span th:text="${intime!=null?#dates.format(intime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 14:18</span>
             </div>
             <div class="info-item">
                 <span>출차시간:</span> 
-                <span th:text="${booking.outtime!=null?#dates.format(booking.outtime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 15:00</span>
+                <span th:text="${outtime!=null?#dates.format(outtime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 15:00</span>
             </div>
             <div class="info-item">
                 <span>결제금액:</span> 
+
                 <span th:text="${booking.price != 0 ? #numbers.formatInteger(booking.price, 3, 'COMMA') + '원' : '0원'}" id="lastpay"></span>
+
             </div>
             <div class="info-item">
                 <div class="button-group-inline">
-                   <form th:action="@{/booking/updateOuttime}" method="post">
-					    <input type="hidden" name="bookingnum" th:value="${booking.bookingnum}" />
-					    <button id="checkoutBtn" type="submit" onclick="enablePayment()">출차하기</button>
-					</form>
-                    <button type="button" id="paymentBtn" disabled>결제하기</button>
-                </div>
+				    <!-- 입차하기 -->
+				    <input type="hidden" id="bookingnum-[[${booking.bookingnum]]" th:value="${booking.bookingnum}">
+				    <button type="button" id="intimeBtn-[[${booking.bookingnum]]" th:if="${booking['intime'] == null and booking['instand'] != 1}"
+				    	onclick="updateIntime(this)">입차하기</button>
+				    <!-- 출차하기 -->
+				    <input type="hidden" id="bookingnum-[[${booking.bookingnum}]]" th:value="${booking.bookingnum}">
+				    <button type="button" id="outtimeBtn-[[${booking.bookingnum}]]" th:if="${booking['intime'] != null and booking['outtime'] == null}" 
+    					onclick="updateOuttime(this)">출차하기</button>
+				
+				    <!-- 결제하기(광준싀 여기하삼) -->
+				    <button type="button" id="paymentBtn">결제하기</button>
+				    
+				</div>
             </div>
         </div>
     </div>
@@ -238,13 +283,13 @@ function enablePayment() {
 			});
 			</script>
         </div>
-        <div class="mate-info-box">
+        <div class="mate-info-box" th:if="${not #lists.isEmpty(findMate)}">
 		    <h2>파킹 메이트 정보</h2>
 		    <img src="/img/logo.png" alt="프로필 이미지">
 		
 		    <div th:each="mate : ${findMate}">
-		        <div>이름: <span th:text="${mate.mate_name}">메이트 이름</span></div>
-		        <div>TEL: <span th:text="${mate.mate_tel}">메이트 전화번호</span></div>
+		        <div>이름: <span th:text="${mate['mate_name']}">메이트 이름</span></div>
+		        <div>TEL: <span th:text="${mate['mate_tel']}">메이트 전화번호</span></div>
     		</div>
 		</div>
     </div>

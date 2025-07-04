@@ -79,7 +79,24 @@
 .inline-actions input[type="submit"]:hover {
 	background-color: #555bff; 
 }
+.inline-actions form:last-child input[type="submit"] {
+  background-color: #AAC4FF;
+  color: #1a1a1a;
+  margin-left: 12px;
+  border: none;
+  padding: 8px 18px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
 
+.inline-actions form:last-child input[type="submit"]:hover,
+.inline-actions form:last-child input[type="submit"]:focus {
+  background-color: #B1B2FF;
+  outline: none;
+}
 .label {
 	font-weight: bold;
 	display: inline-block;
