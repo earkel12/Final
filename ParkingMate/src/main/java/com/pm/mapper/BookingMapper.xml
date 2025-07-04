@@ -60,7 +60,7 @@
 	
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
 		select count(*) from booking where idx = #{idx}
-	
+	</select>
 
     
 	<!-- 메이트이용현황관련(사용자입장) -->
