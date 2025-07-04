@@ -22,7 +22,7 @@ public interface BookingMapper {
 	public List<BookingParkingDTO> selectActiveInstadBookings();
 	public void updateStatusToReserved(@Param("bookingnum") int bookingnum);
 	public BookingDTO getBookingByNum(int bookingnum);
-	
+	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
 	
 	//메이트이용현황관련
   public List<String> findBookingCarNumByUser(String id) throws Exception;
