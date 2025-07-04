@@ -47,13 +47,18 @@ public class MypageController {
 		System.out.println("이용자ID:"+id);
 		
 		List<Map<String, Object>> bookingList = null;
-		
+		//리뷰
+		List<Integer> reviewList= null;
 		try {
 			bookingList=service.checkMyParkingHistoryList(id);
+			//리뷰
+			reviewList=service.checkReview(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		model.addAttribute("bookingList", bookingList);
+		//리뷰
+		model.addAttribute("reviewList", reviewList);
 		return "mypage/myParkingHistory";
 	}
 	

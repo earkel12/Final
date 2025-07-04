@@ -28,4 +28,7 @@ public interface MypageMapper {
 	
 	public List<Map<String, Object>> checkMyParkingHistoryList(String id) throws Exception;
 	public List<Map<String, Object>> checkMyParkingMateHistoryList(String id) throws Exception;
+	
+	//리뷰관련
+	public List<Integer> checkReview(String id) throws Exception;
 }

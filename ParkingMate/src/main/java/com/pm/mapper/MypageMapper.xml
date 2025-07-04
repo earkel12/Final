@@ -98,5 +98,8 @@
 		  and a.instand = 1
 	</select>
 	
-	
+	<!-- 리뷰관련 -->	
+	<select id="checkReview" parameterType="String" resultType="int">
+		select bookingnum from review where id =#{id}
+	</select>
 </mapper>
