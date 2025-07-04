@@ -98,16 +98,27 @@ public class BookingController {
 	
 	@PostMapping("/payment")
 	@ResponseBody
-	public String updateBookingAfterPayment(HttpSession session) {
+	public String updatePayment(HttpSession session) {
 	    String userId = (String) session.getAttribute("sid");
 	    try {
-	        service.updateStatus(userId);  // 최신 예약 1건의 status를 예약접수로 변경
+	        service.updateStatus(userId);
 	        return "OK";
 	    } catch (Exception e) {
 	        return "FAIL";
 	    }
 	}
-
+	
+	@PostMapping("/finalpayment")
+	@ResponseBody
+	public String finalupdatePayment(HttpSession session) {
+	    String userId = (String) session.getAttribute("sid");
+	    try {
+	        service.finalupdateStatus(userId);  
+	        return "OK";
+	    } catch (Exception e) {
+	        return "FAIL";
+	    }
+	}
 	
 	
 	

@@ -40,7 +40,23 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
-
+	<update id="finalupdateStatus" parameterType="String">
+		UPDATE booking
+		JOIN (
+		SELECT bookingnum
+		FROM (
+		SELECT bookingnum
+		FROM booking
+		WHERE id = #{id}
+		ORDER BY bookingnum DESC
+		LIMIT 1
+		) AS sub
+		) AS sub2
+		ON booking.bookingnum
+		= sub2.bookingnum
+		SET
+		booking.status = '주차장결제완료'
+	</update>
 	
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
 		select count(*) from booking where idx = #{idx}
