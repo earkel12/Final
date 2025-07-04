@@ -1,63 +1,154 @@
 <!DOCTYPE html>
-<html xmlns:th = "http://www.thymeleaf.org">
+<html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <title>Parking Mate</title>
   <style>
     body {
       margin: 0;
+      font-family: 'Noto Sans KR', sans-serif;
     }
+
+    /* 헤더 */
     .header {
-	  display: flex;
-	  justify-content: space-between;
-	  align-items: center; /* 수직 가운데 정렬 */
-	  background: linear-gradient(90deg, #B1B2FF, #AAC4FF,#D2DAFF,#AAC4FF,#B1B2FF);
-	  color: #1a1a1a;
-	  padding: 10px 20px;
-	  height: 100px; /* 고정 높이 */
-	}
-    .menu, .auth {
-      font-size: 14px;
-      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, #B1B2FF, #AAC4FF, #D2DAFF, #AAC4FF, #B1B2FF);
+      color: #1a1a1a;
+      padding: 10px 20px;
+      height: 100px;
+      position: relative;
+      z-index: 998;
     }
-    .logo {
-	  display: flex;
-	  align-items: center;
-	}
-	
-	.logo-img {
-	  height: 220px; /* 이미지 조금 크게 */
-	  width: auto;
-	  margin-right: 10px;
-	}
+
+    .menu {
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logo-img {
+      height: 220px;
+      width: auto;
+      margin-right: 10px;
+    }
+
     .auth a {
       text-decoration: none;
-      margin-left: 15px;
+      
       color: #1a1a1a;
     }
-    .auth a:hover {
-      text-decoration: underline;
+
+    /* 사이드 메뉴 */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -50%;
+      width: 33%;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      transition: left 0.3s ease;
+      z-index: 999;
+      padding: 30px;
+    }
+
+    .side-menu.active {
+      left: 0;
+    }
+
+    .side-menu h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-menu ul li {
+      margin: 15px 0;
+    }
+
+    .side-menu ul li a {
+      text-decoration: none;
+      color: #4B55E1;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="menu">MENU</div>
-    <div class="logo">
 
-    <a href = "/">
-	  <img src="/img/logo.png" alt="ParkingMate" class="logo-img">
-	</a>
+<!-- 헤더 -->
+<header class="header">
+  <div class="menu" onclick="openMenu()">MENU</div>
 
-	</div>
-	
+  <div class="logo">
+    <a href="/">
+      <img src="/img/logo.png" alt="ParkingMate" class="logo-img">
+    </a>
+  </div>
+
     <!-- 로그인 상태 확인 -->
-<div th:if="${session.sname != null}">
-    <a th:href="@{/logout}">Sign Out</a> | <a th:href="@{/mypageMain}">Mypage</a>
+  <div class="auth" th:if="${session.sname != null}">
+    <a th:href="@{/logout}">Sign Out</a> |
+    <a th:href="@{/mypageMain}">Mypage</a>
   </div>
-  <div th:if="${session.sname == null}">
-    <a th:href="@{/login}">Sign In</a> | <a th:href="@{/register}">Sign Up</a>
+  <div class="auth" th:if="${session.sname == null}">
+    <a th:href="@{/login}">Sign In</a> |
+    <a th:href="@{/register}">Sign Up</a>
   </div>
-  </header>
+</header>
+
+<!-- 사이드 메뉴 -->
+<div id="sideMenu" class="side-menu" th:if="${session.sname != null}">
+  <button class="close-btn" onclick="closeMenu()">✖</button>
+  <h3>MENU</h3>
+  <ul>
+    <li><a href="/">home</a></li>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="/search">예약하기</a></li>
+    <li><a href="/">예약현황</a></li>
+    <li><a href="/notice">공지사항</a></li>
+    <li><a href="/mypageMain">마이페이지</a></li>
+    <li><a href="/community">커뮤니티</a></li>
+  </ul>
+</div>
+<div id="sideMenu" class="side-menu" th:if="${session.sname == null}">
+  <button class="close-btn" onclick="closeMenu()">✖</button>
+  <h3>MENU</h3>
+  <ul>
+    <li><a href="/">home</a></li>
+    <li><a href="/login">로그인</a></li>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="/search">검색하기 > </a></li>
+    <li><a href="/community">커뮤니티</a></li>
+  </ul>
+</div>
+<script>
+  function openMenu() {
+    document.getElementById('sideMenu').classList.add('active');
+  }
+
+  function closeMenu() {
+    document.getElementById('sideMenu').classList.remove('active');
+  }
+</script>
+
 </body>
 </html>

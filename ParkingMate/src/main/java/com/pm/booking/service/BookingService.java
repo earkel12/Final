@@ -14,7 +14,7 @@ public interface BookingService {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
 	public void updateStatus(String userid) throws Exception;
-
+	public void finalupdateStatus(String userid) throws Exception;
 	public int bookingCount(int idx) throws Exception;
 
 	public void updateStatusToReserved(@Param("bookingnum") int bookingnum);

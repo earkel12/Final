@@ -3,10 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>파킹메이트 매칭중</title>
+
+  <!-- 복잡한 DOM 조작, AJAX, 이벤트 처리 
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+  <!-- 결제api -->
+  <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
 <!-- Jqurry사용 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Js별도관리 -->
 <script src="/js/involveMateUsageStatusList.js"></script>
+
 <style>
     body {
         font-family: sans-serif;
@@ -146,7 +153,9 @@
             </div>
             <div class="info-item">
                 <span>결제금액:</span> 
-                <span th:text="${price != 0 ? #numbers.formatInteger(price, 3, 'COMMA') + '원' : '0원'}"></span>
+
+                <span th:text="${booking.price != 0 ? #numbers.formatInteger(booking.price, 3, 'COMMA') + '원' : '0원'}" id="lastpay"></span>
+
             </div>
             <div class="info-item">
                 <div class="button-group-inline">
@@ -285,5 +294,48 @@
 		</div>
     </div>
 </div>
+<script>
+//예측 가능한 실행 보장을 위해 DOMContentLoaded를 씀 
+document.addEventListener("DOMContentLoaded", function () {
+    const paymentBtn = document.getElementById("paymentBtn");
+    const lastpayText = document.getElementById('lastpay').textContent;
+    const finalPrice = parseInt(lastpayText.replace(/[^0-9]/g, '') || "0", 10);
+
+    paymentBtn.addEventListener("click", () => {
+        const IMP = window.IMP;
+        IMP.init("imp84584038"); // 본인의 imp 키로 대체
+
+        IMP.request_pay({
+            pg: "kakaopay",
+            pay_method: "card",
+            merchant_uid: "order_" + new Date().getTime(),
+            name: "주차장 금액 결제",
+            amount: finalPrice,
+            buyer_email: "이수한@naver.com",
+            buyer_name: "이수한",
+            buyer_tel: "010-1234-5678",
+            buyer_addr: "서울특별시",
+            buyer_postcode: "12345"
+        }, function (rsp) {
+            if (rsp.success) {
+                alert("주차장결제 성공!");
+
+                $.ajax({
+                    url: "/finalpayment",
+                    method: "POST",
+                    success: function () {
+                        location.href = "/";
+                    },
+                    error: function () {
+                        alert("결제 처리 후 상태 업데이트 실패!");
+                    }
+                });
+            } else {
+                alert("결제 실패: " + rsp.error_msg);
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
