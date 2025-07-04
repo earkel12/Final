@@ -51,14 +51,14 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
-<<<<<<< HEAD
+
 
 
 	<select id="bookingCount" parameterType="Integer"
 		resultType="Integer">
 		select count(*) from booking where idx = #{idx}
-
-=======
+	</select>
+	
 	<update id="finalupdateStatus" parameterType="String">
 		UPDATE booking
 		JOIN (
@@ -108,7 +108,6 @@
     	where
         	a.id = #{id}
     	and a.bookingcarnum = #{bookingcarnum}
->>>>>>> origin/feat/minorIssueFix
 	</select>
 
 
@@ -211,7 +210,7 @@
 		and m1.car_num = #{car_num}
 		and m2.mate_use = 1
 	</select>
-<<<<<<< HEAD
+
 
 	<update id="updateInTime">
 		UPDATE booking
@@ -227,6 +226,7 @@
         SELECT bookingcarnum FROM booking WHERE bookingnum = #{bookingnum}
     	)
 	</update>
+	
 	<update id="updateOuttime" parameterType="int">
 		update
 		booking
@@ -234,7 +234,7 @@
 		outtime = NOW()
 		WHERE
 		bookingnum = #{bookingnum}
-=======
+	</update>
     
 	<!-- 주차장만 이용 시 입차시간 업데이트 -->
 	<update id="updateIntime" parameterType="int">
@@ -271,7 +271,6 @@
     		price = #{price}
     	WHERE
     		bookingnum = #{bookingnum}
->>>>>>> origin/feat/minorIssueFix
 	</update>
 
 </mapper>

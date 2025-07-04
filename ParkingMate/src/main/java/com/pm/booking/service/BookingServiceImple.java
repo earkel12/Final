@@ -164,9 +164,8 @@ public class BookingServiceImple implements BookingService {
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);
 	}
-<<<<<<< HEAD
+
 	
 }
-=======
-}
->>>>>>> origin/feat/minorIssueFix
+
+
