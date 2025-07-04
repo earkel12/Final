@@ -37,20 +37,34 @@
 	
 	
 	
-	<!-- 메이트이용현황관련 -->
-	<select id="showMatebookingList" parameterType="String" resultType="map" >
+	<!-- 메이트이용현황관련(사용자입장) -->
+	<!-- 예약접수된 유저차량번호 리스트조회 -->
+	<select id="findBookingCarNumByUser" parameterType="String" resultType="String">
 		select
-			a.*,
-			b.name as parkinglot_name
+			distinct bookingcarnum
 		from
-			booking a
-		join
-			parkinglot b on a.idx = b.idx
+			booking
 		where
-			a.id = #{id}
-		and a.status = '파킹메이트결제완료'
-		and instand = 1
+			id = #{id}
+		and status != '주차장결제완료'
+		and status = '파킹메이트결제완료'
 	</select>
+	<!-- 차량번호별 내용조회 -->
+	<select id="findBookingInfoByCarNum" parameterType="String" resultType="map">
+		select
+        	a.*,
+        	b.name AS parkinglot_name
+    	from
+        	booking a
+    	join
+        	parkinglot b
+    	on
+        	a.idx = b.idx
+    	where
+        	a.id = #{id}
+    	and a.bookingcarnum = #{bookingcarnum}
+	</select>
+	<!-- 주차장정보 가져오기 -->
 	<select id="findParkinglotByName" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
 		select
 			*
@@ -59,6 +73,7 @@
 		where
 			name = #{name}
 	</select>
+	<!-- 메이트이용 시 매칭된 메이트정보 가져오기 -->
 	<select id="findMatcingMate" resultType="map">
 		select
 			m1.*,
@@ -76,13 +91,39 @@
 		and m1.car_num = #{car_num}
 		and m2.mate_use = 1
 	</select>
-	<update id="updateOuttime" parameterType="int">
+	<!-- 주차장만 이용 시 입차시간 업데이트 -->
+	<update id="updateIntime" parameterType="int">
     	update
     		booking
     	SET
-    		outtime = NOW()
+    		intime = NOW()
     	WHERE
     		bookingnum = #{bookingnum}
-</update>
+	</update>
+	<!-- 출차관련 요금계산 정보조회 -->
+	<select id="findIntimeAndPrice2" parameterType="int">
+		select
+			a.intime,
+			a.price,
+			b.price2
+		from
+			booking a
+		join
+			parkinglot b
+		on
+			a.idx = b.idx
+		where
+			a.bookingnum = #{bookingnum}
+	</select>
+	<!-- 주차장이용과 주차+메이트이용관련 출차시간 업데이트 -->
+	<update id="updateOuttime" parameterType="map">
+    	update
+    		booking
+    	SET
+    		outtime = NOW(),
+    		price = #{price}
+    	WHERE
+    		bookingnum = #{bookingnum}
+	</update>
 	
 </mapper>

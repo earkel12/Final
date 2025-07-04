@@ -1,6 +1,7 @@
 package com.pm.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.UserCarDTO;
 import com.pm.booking.service.BookingService;
 import com.pm.map.model.ParkingLotDTO;
+import com.pm.mapper.BookingMapper;
 import com.pm.pm.model.MatePayCheckDTO;
 
 import jakarta.servlet.http.HttpSession;
@@ -104,24 +106,46 @@ public class BookingController {
 	
 	//메이트이용현황 관련
 	@GetMapping("/mateUsagesStatus")
-	public String mateUsagesStatus(@SessionAttribute("sid")String id, Model model) {
-		
+	public String mateUsagesStatus(@SessionAttribute("sid")String id,
+									@RequestParam(value = "bookingcarnum", required = false) String bookingcarnum, Model model) {
 		System.out.println("사용자ID:"+ id);
 		
-		List<Map<String, Object>> mateBookingList = null;
+		try {
+	        List<String> reservedCarNums = service.findBookingCarNumByUser(id);
+	        model.addAttribute("reservedCarNums", reservedCarNums);
+
+	        if (bookingcarnum == null && !reservedCarNums.isEmpty()) {
+	        	bookingcarnum = reservedCarNums.get(0);
+	        }
+	        model.addAttribute("selectedCarNum", bookingcarnum);
+
+	    	} catch (Exception e) {
+	        e.printStackTrace();
+	    	}
+		
+		List<Map<String, Object>> bookingInfoByCarnum = null;
 		
 		try {
-			mateBookingList = service.showMatebookingList(id);
+			bookingInfoByCarnum = service.findBookingInfoByCarNum(id, bookingcarnum);
 		} catch (Exception e) {
 			System.out.println("메이트이용현황 오류발생! 고객센터에 연락바랍니다.");
 			e.printStackTrace();
 		}
 		
-		model.addAttribute("mateBookingList", mateBookingList);
+		if (bookingInfoByCarnum != null && !bookingInfoByCarnum.isEmpty()) {
+		    Map<String, Object> booking = bookingInfoByCarnum.get(0);
+		    model.addAttribute("booking", booking);
+		    model.addAttribute("intime", booking.get("intime"));
+		    model.addAttribute("outtime", booking.get("outtime"));
+		    model.addAttribute("price", booking.get("price"));
+		    model.addAttribute("instand", booking.get("instand")); 
+		}
+		
+		model.addAttribute("bookingInfoByCarnum", bookingInfoByCarnum);
 		
 		String parkinglotName = null;
-		if(mateBookingList!=null && !mateBookingList.isEmpty()) {
-			parkinglotName = (String)mateBookingList.get(0).get("parkinglot_name");
+		if(bookingInfoByCarnum!=null && !bookingInfoByCarnum.isEmpty()) {
+			parkinglotName = (String)bookingInfoByCarnum.get(0).get("parkinglot_name");
 		}
 		
 		ParkingLotDTO parkinglotdto = null;
@@ -136,8 +160,8 @@ public class BookingController {
 		model.addAttribute("parkinglotdto", parkinglotdto);
 		
 		//지도위도, 경도추가
-		if (mateBookingList != null && !mateBookingList.isEmpty()) {
-		    Map<String, Object> booking = mateBookingList.get(0);
+		if (bookingInfoByCarnum != null && !bookingInfoByCarnum.isEmpty()) {
+		    Map<String, Object> booking = bookingInfoByCarnum.get(0);
 
 		    model.addAttribute("ulatitude", booking.get("ulatitude"));
 		    model.addAttribute("ulongitude", booking.get("ulongitude"));
@@ -147,9 +171,11 @@ public class BookingController {
 		
 		List<Map<String, Object>> findMate = null;
 		
-		if(mateBookingList!=null && !mateBookingList.isEmpty()) {
-			String car_num = (String)mateBookingList.get(0).get("bookingcarnum");
+		if(bookingInfoByCarnum!=null && !bookingInfoByCarnum.isEmpty()) {
+			String car_num = (String)bookingInfoByCarnum.get(0).get("bookingcarnum");
 		
+			System.out.println("조회된 car_num: " + car_num);
+			
 			try {
 				findMate = service.findMatcingMate(id, car_num);
 			} catch (Exception e) {
@@ -162,15 +188,54 @@ public class BookingController {
 		return "booking/mateUsagesStatus";
 	}
 	
-	@PostMapping("/booking/updateOuttime")
-	public String updateOuttime(@RequestParam("bookingnum") int bookingnum) {
-	    try {
-	        service.updateOuttime(bookingnum); // service → mapper → SQL update 수행
+	@PostMapping("/booking/updateIntime")
+	@ResponseBody
+	public Map<String, Object> updateIntime(@RequestParam("bookingnum")int bookingnum, HttpSession session) {
+		System.out.println("bookingnum: " + bookingnum);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		try {
+			String id = (String) session.getAttribute("sid");
+			if(id==null) {
+				result.put("success", false);
+	            result.put("error", "세션 만료. 로그인 필요");
+	            result.put("redirect", "/login"); // redirect URL 전달
+	            return result;
+			}
+	        service.updateIntime(bookingnum);
+	        result.put("success", true);
 	    } catch (Exception e) {
-	        e.printStackTrace();
+	    	e.printStackTrace();
+	        result.put("success", false);
+	        result.put("error", e.getMessage());
 	    }
-	    return "redirect:/mateUsagesStatus";
+		 return result;
 	}
 	
-	
+	@PostMapping("/booking/updateOuttime")
+	@ResponseBody
+	public Map<String, Object> updateOuttime(@RequestParam("bookingnum") int bookingnum, HttpSession session) {
+		System.out.println("bookingnum: " + bookingnum);
+
+		Map<String, Object> result2 = new HashMap<>();
+	    try {
+	    	String id = (String) session.getAttribute("sid");
+	    	if(id==null) {
+	    		result2.put("success", false);
+	            result2.put("error", "세션 만료. 로그인 필요");
+	            result2.put("redirect", "/login");
+	            return result2;
+	    	}
+	    	Map<String, Object> data = service.updateOuttime(bookingnum);
+	    	result2.put("success", true);
+	        result2.put("price", data.get("price"));
+	        result2.put("minutes", data.get("minutes"));
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	        result2.put("success", false);
+	        result2.put("error", e.getMessage());
+	    }
+	    return result2;
+	}
 }

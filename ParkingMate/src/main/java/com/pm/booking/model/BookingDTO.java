@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookingDTO {
 
-	private String bookingnum;
+	private int bookingnum;
 	private LocalDateTime bookingdate;
 	private String bookingcarnum;
 	private LocalDateTime intime;
