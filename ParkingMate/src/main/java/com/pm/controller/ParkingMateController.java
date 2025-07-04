@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.BookingParkingDTO;
 import com.pm.booking.service.BookingService;
+import com.pm.member.service.MemberService;
 import com.pm.notice.service.NoticeServiceImple;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
@@ -50,6 +51,9 @@ public class ParkingMateController {
 	@Autowired
 	private BookingService bookingservice;
 
+	@Autowired
+	private MemberService memberservice;
+	
 	@Autowired
 	private ParkingMateService service;
 
@@ -164,8 +168,15 @@ public class ParkingMateController {
 		}
 
 		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
-
 		ModelAndView mav = new ModelAndView("pm/usagehistory");
+		
+		if (!usageList.isEmpty()) {
+	        String userId = usageList.get(0).getId();
+	        String userTel = memberservice.getTelById(userId);
+	        mav.addObject("userId", userId);
+	        mav.addObject("userTel", userTel);
+	    }
+		
 		mav.addObject("usageList", usageList);
 		return mav;
 	}
@@ -462,10 +473,32 @@ public class ParkingMateController {
 		}
 
 		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
-
 		ModelAndView mav = new ModelAndView("pm/parking");
+		
+		if (!usageList.isEmpty()) {
+	        String userId = usageList.get(0).getId();
+	        String userTel = memberservice.getTelById(userId);
+	        mav.addObject("userId", userId);
+	        mav.addObject("userTel", userTel);
+	    }
+		
 		mav.addObject("usageList", usageList);
 		return mav;
+	}
+	
+	@PostMapping("/pm/completeParking")
+	public ModelAndView completeParking(@RequestParam("bookingnum") int bookingnum) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		int updateintime = bookingservice.updateInTime(bookingnum);
+		if(updateintime != 2) {
+			mav.addObject("msg", "입차 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+			mav.addObject("gourl", "parking");
+		}else {
+		    mav.addObject("msg", "입차 처리가 완료되었습니다!");
+		    mav.addObject("gourl", "/pm/settlement"); 
+		}
+		mav.setViewName("pm/pmMsg");
+	    return mav; 
 	}
 
 	public String callOcrSpaceAPI(File imageFile, String apiKey) throws Exception {

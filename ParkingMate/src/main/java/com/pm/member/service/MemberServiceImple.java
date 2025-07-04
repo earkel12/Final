@@ -15,22 +15,28 @@ public class MemberServiceImple implements MemberService {
 	public int loginCheck(String userid, String userpwd) throws Exception {
 		String dbpwd = mapper.loginCheck(userid);
 		int result = 0;
-		if(dbpwd == null) {
+		if (dbpwd == null) {
 			result = NOT_ID;
-		}else {
-			if(dbpwd.equals(userpwd)) {
+		} else {
+			if (dbpwd.equals(userpwd)) {
 				result = LOGIN_OK;
-			}else {
+			} else {
 				result = NOT_PWD;
 			}
 		}
 		return result;
 	}
 
-@Override
-public String userInfo(String userid) throws Exception {
-	String dbname = mapper.userInfo(userid);
+	@Override
+	public String userInfo(String userid) throws Exception {
+		String dbname = mapper.userInfo(userid);
 
-	return dbname;
-}
+		return dbname;
+	}
+	
+	@Override
+	public String getTelById(String id) throws Exception{
+	    return mapper.selectTelById(id);
+	}
+	
 }

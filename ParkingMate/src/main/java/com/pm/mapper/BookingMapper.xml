@@ -6,19 +6,30 @@
 	<!-- mybatis설정 -->
 
 
-	<insert id="insertBooking" parameterType="com.pm.booking.model.BookingDTO">
-        INSERT INTO booking (bookingdate, bookingcarnum, intime, outtime, valet, instand, price, status, obstacle, idx, id, ulatitude, ulongitude)
-        VALUES (#{bookingdate}, #{bookingcarnum}, #{intime}, #{outtime}, #{valet}, #{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id}, #{ulatitude}, #{ulongitude})
-    </insert>
-	<select id="carbyid" parameterType="String" resultType="com.pm.booking.model.UserCarDTO">
+	<insert id="insertBooking"
+		parameterType="com.pm.booking.model.BookingDTO">
+		INSERT INTO booking (bookingdate, bookingcarnum, intime,
+		outtime, valet,
+		instand, price, status, obstacle, idx, id, ulatitude,
+		ulongitude)
+		VALUES (#{bookingdate}, #{bookingcarnum}, #{intime},
+		#{outtime},
+		#{valet}, #{instand}, #{price}, #{status}, #{obstacle},
+		#{idx}, #{id},
+		#{ulatitude}, #{ulongitude})
+	</insert>
+	<select id="carbyid" parameterType="String"
+		resultType="com.pm.booking.model.UserCarDTO">
 		SELECT uc.car_num, uc.modelname
 		FROM user_cars uc
-		WHERE uc.id = #{id}
+		WHERE uc.id
+		= #{id}
 		AND NOT EXISTS (
-		    SELECT 1
-		    FROM booking b
-		    WHERE b.bookingcarnum = uc.car_num
-		    AND b.status != '전체결제완료'
+		SELECT 1
+		FROM booking b
+		WHERE b.bookingcarnum =
+		uc.car_num
+		AND b.status != '전체결제완료'
 		);
 
 
@@ -40,6 +51,14 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
+<<<<<<< HEAD
+
+
+	<select id="bookingCount" parameterType="Integer"
+		resultType="Integer">
+		select count(*) from booking where idx = #{idx}
+
+=======
 	<update id="finalupdateStatus" parameterType="String">
 		UPDATE booking
 		JOIN (
@@ -89,6 +108,7 @@
     	where
         	a.id = #{id}
     	and a.bookingcarnum = #{bookingcarnum}
+>>>>>>> origin/feat/minorIssueFix
 	</select>
 
 
@@ -131,18 +151,21 @@
 		p.price
 		FROM booking b
 		JOIN parkinglot p ON b.idx = p.idx
-		WHERE b.instand = 1
+		WHERE b.instand
+		= 1
 		AND b.status = '파킹메이트결제완료'
 		ORDER BY b.bookingdate DESC
 	</select>
 
 	<select id="getBookingParkingListByMateId"
 		resultType="com.pm.booking.model.BookingParkingDTO">
-		 SELECT m.*, b.*, pl.*
-    FROM mate_paycheck m
-    JOIN booking b ON m.car_num = b.bookingcarnum
-    JOIN parkinglot pl ON b.idx = pl.idx
-    WHERE m.mid = #{mateId} AND m.status = '정산대기';
+		SELECT m.*, b.*, pl.*
+		FROM mate_paycheck m
+		JOIN booking b ON
+		m.car_num = b.bookingcarnum
+		JOIN parkinglot pl ON b.idx = pl.idx
+		WHERE
+		m.mid = #{mateId} AND m.status = '정산대기';
 	</select>
 
 	<update id="updateStatusToReserved">
@@ -188,6 +211,30 @@
 		and m1.car_num = #{car_num}
 		and m2.mate_use = 1
 	</select>
+<<<<<<< HEAD
+
+	<update id="updateInTime">
+		UPDATE booking
+		SET intime = NOW()
+		WHERE bookingnum =
+		#{bookingnum}
+	</update>
+	
+	<update id="updateStartTimePaycheck">
+		UPDATE mate_paycheck
+		SET starttime = NOW()
+		WHERE car_num = (
+        SELECT bookingcarnum FROM booking WHERE bookingnum = #{bookingnum}
+    	)
+	</update>
+	<update id="updateOuttime" parameterType="int">
+		update
+		booking
+		SET
+		outtime = NOW()
+		WHERE
+		bookingnum = #{bookingnum}
+=======
     
 	<!-- 주차장만 이용 시 입차시간 업데이트 -->
 	<update id="updateIntime" parameterType="int">
@@ -224,6 +271,7 @@
     		price = #{price}
     	WHERE
     		bookingnum = #{bookingnum}
+>>>>>>> origin/feat/minorIssueFix
 	</update>
 
 </mapper>
