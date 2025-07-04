@@ -206,11 +206,7 @@ public class BookingController {
 		return "booking/mateUsagesStatus";
 	}
 	
-<<<<<<< HEAD
 
-=======
-	    
->>>>>>> 694dfc5d54fb5891275cfc607d7337009ba09b42
 	@PostMapping("/booking/updateIntime")
 	@ResponseBody
 	public Map<String, Object> updateIntime(@RequestParam("bookingnum")int bookingnum, HttpSession session) {

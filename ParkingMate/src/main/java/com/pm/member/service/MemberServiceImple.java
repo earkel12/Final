@@ -48,8 +48,7 @@ public String pwdFind(MemberDTO dto) throws Exception {
 	return mapper.pwdFind(dto);
 }
 
-		return dbname;
-	}
+
 	
 	@Override
 	public String getTelById(String id) throws Exception{

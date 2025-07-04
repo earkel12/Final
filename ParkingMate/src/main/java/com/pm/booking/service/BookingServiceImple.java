@@ -167,8 +167,4 @@ public class BookingServiceImple implements BookingService {
 
 	
 }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 694dfc5d54fb5891275cfc607d7337009ba09b42

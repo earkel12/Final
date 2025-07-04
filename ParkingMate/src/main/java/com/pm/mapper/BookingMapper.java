@@ -32,19 +32,11 @@ public interface BookingMapper {
 
 	public int updateInTime(int bookingnum) throws Exception;
 	public int updateStartTimePaycheck(int bookingnum) throws Exception;
-<<<<<<< HEAD
-	
-=======
-	public int updateOuttime(int bookingnum) throws Exception;
-	
 
->>>>>>> 694dfc5d54fb5891275cfc607d7337009ba09b42
 	public int updateIntime(int bookingnum) throws Exception;
 	public Map<String, Object> findIntimeAndPrice2(int bookingnum) throws Exception;
 	public int updateOuttime(Map<String, Object> param) throws Exception;
 
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 694dfc5d54fb5891275cfc607d7337009ba09b42
+
