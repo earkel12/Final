@@ -88,7 +88,7 @@ public class BookingServiceImple implements BookingService {
 	}
 	@Override
 	public int updateEndTime(int bookingnum) throws Exception {
-		int result1 = mapper.updateInTime(bookingnum);
+		int result1 = mapper.updateEndTime(bookingnum);
 	    int result2 = mapper.updateStartTimePaycheck(bookingnum);
 	    return result1 + result2;
 	}
@@ -166,8 +166,4 @@ public class BookingServiceImple implements BookingService {
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);
 	}
-
-	
 }
-
-

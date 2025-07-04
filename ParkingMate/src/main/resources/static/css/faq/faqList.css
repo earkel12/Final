@@ -1,0 +1,103 @@
+/* 전체 구조 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.full-width-header,
+.full-width-footer {
+  width: 100%;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* 제목 */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* 글쓰기 버튼 */
+.editWriteBtn {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+#writeBtn {
+  background-color: #B1B2FF;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+#writeBtn:hover {
+  background-color: #D2DAFF;
+}
+
+/* FAQ 항목 */
+.faq-item {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.faq-item:hover {
+  background-color: #f9f9f9;
+}
+
+.faq-question {
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.faq-answer {
+  display: none;
+  font-size: 14px;
+  padding-left: 20px;
+  color: #555;
+}
+
+/* 관리자 전용 수정/삭제 */
+.admin-actions {
+  display: block;
+  margin-top: 10px;
+}
+
+.admin-actions a {
+  margin-right: 15px;
+  color: #007bff;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.admin-actions a:hover {
+  color: #0056b3;
+}
+
+/* 돌아가기 링크 */
+.location {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.location a {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.location a:hover {
+  text-decoration: underline;
+}

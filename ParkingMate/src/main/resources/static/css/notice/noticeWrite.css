@@ -1,0 +1,99 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  margin: 0;
+  padding: 40px;
+}
+
+/* noticeEdit.css */
+
+header,
+footer,
+th\:block[th\:include="@{/header}"],
+th\:block[th\:include="@{/footer}"] {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 아래는 옵션: header/footer 내부를 더 이쁘게 하려면 */
+header, footer {
+  background-color: #f0f0f0;
+  padding: 20px 40px;
+}
+
+
+.write-container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #B1B2FF;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-actions input[type="submit"],
+.form-actions a {
+  display: inline-block;
+  width: 120px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  background-color: #B1B2FF;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-actions a {
+  line-height: 38px;
+}
+
+.form-actions input[type="submit"]:hover,
+.form-actions a:hover {
+  background-color: #9ba3f8;
+}

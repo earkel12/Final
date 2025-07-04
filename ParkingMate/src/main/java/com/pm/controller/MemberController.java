@@ -1,5 +1,7 @@
 package com.pm.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.member.model.MemberDTO;
 import com.pm.member.service.MemberService;
 
 import jakarta.servlet.http.Cookie;
@@ -102,5 +105,38 @@ public class MemberController {
 	@GetMapping("/pwdFind")
 	public String pwdFindForm() {
 		return "member/pwdFind";
+	}
+	
+	@PostMapping("/idFind")
+	public ModelAndView idFind(MemberDTO dto) {
+		String userid = null;
+		try {
+			userid = service.idFind(dto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("userid", userid);
+		mav.addObject("useridSel", true);
+		mav.setViewName("member/idFind");
+		return mav;
+	}
+	
+	@PostMapping("/pwdFind")
+	public ModelAndView pwdFind(MemberDTO dto) {
+		String pwd = null;
+		
+		try {
+			pwd = service.pwdFind(dto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("userpwd", pwd);
+		mav.addObject("userpwdSel", true);
+		mav.setViewName("member/pwdFind");
+		return mav;
 	}
 }

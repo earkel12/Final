@@ -2,42 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>문의 목록 (관리자 전용)</title>
+    <title>문의 처리 결과 (관리자 전용)</title>
+    <link rel="stylesheet" th:href="@{/css/ask/askList.css}" />
 </head>
 <body>
-<h1>문의 처리 결과</h1>
-<a href = "ask">돌아가기</a>
-<table border="1" width="100%" cellspacing="0" cellpadding="5">
-    <thead>
-        <tr>
-            <th>번호</th>
-            <th>유형</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>답변상태</th>
-            <th>확인하기</th>
-        </tr>
-    </thead>
+<th:block th:include = "@{/header}"></th:block>
+    <a href="ask" class="btn-result">고객 문의 목록</a>
+    <h1>문의 처리 결과</h1>
 
-    <tbody>
-        <tr th:each= "ask : ${askList}">
-            <td>
-                <a th:href= "@{/askComment(idx=${ask.idx})}" th:text= "${ask.idx}">번호</a>
-            </td>
-            <td th:text= "${ask.type}">유형</td>
-            <td th:text= "${ask.title}">제목</td>
-            <td th:text= "${ask.id}">작성자</td>
-            <td th:text= "${ask.comment != null ? '답변완료' : '미답변'}">상태</td>
-            <td><a th:href = "@{/resultContent(idx = ${ask.idx})}" th:text = "확인하기">확인버튼</a></td>
-        </tr>
-    </tbody>
+    <table class="ask-table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>유형</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>답변상태</th>
+                <th>확인버튼</th>
+            </tr>
+        </thead>
 
-    <tfoot>
-        <tr>
-            <td colspan= "6" align= "center" th:utext= "${pageStr}">페이징</td>
-        </tr>
-    </tfoot>
-</table>
+        <tbody>
+            <tr th:each="ask : ${askList}">
+                <td>
+                    <a th:href="@{/resultContent(idx=${ask.idx})}" th:text="${ask.idx}">번호</a>
+                </td>
+                <td th:text="${ask.type}">유형</td>
+                <td th:text="${ask.title}">제목</td>
+                <td th:text="${ask.id}">작성자</td>
+                <td th:text="${ask.comment != null ? '답변완료' : '미답변'}"
+                    th:classappend="${ask.comment != null} ? 'answered' : 'not-answered'">
+                    상태
+                </td>
+                <td>
+                    <a th:href="@{/resultContent(idx=${ask.idx})}" class="btn-reply">확인하기</a>
+                </td>
+            </tr>
+        </tbody>
 
+        <tfoot>
+            <tr>
+                <td colspan="6" align="center" th:utext="${pageStr}">페이징</td>
+            </tr>
+        </tfoot>
+    </table>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

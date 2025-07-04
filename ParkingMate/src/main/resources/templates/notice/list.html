@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel = "stylesheet" href = "css/noticeList.css">
+<link rel = "stylesheet" href = "css/notice/noticeList.css">
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
@@ -19,11 +19,10 @@
 	</thead>
 	<tfoot>
 		<tr>
-			<td colspan = "3" align = "center" th:utext="${pageStr}">
+			<td colspan = "4" align = "center" th:utext="${pageStr}">
 			
 			</td>
 			<td th:if="${userid == 'admin'}"><a href = "write">글쓰기</a></td>
-			<td><a href = "/">돌아가기</a></td>
 		</tr>
 	</tfoot>
 	<tbody>

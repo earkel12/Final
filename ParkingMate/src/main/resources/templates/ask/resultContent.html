@@ -3,34 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/ask/askResultContent.css}" />
 </head>
 <body>
-<h1>답변내용 확인(관리자)</h1>
-<form name = "resultContent" action = "result" method = "get">
-<fieldset th:each = "ask : ${askContent}">
-<input type = "hidden" name = "idx" th:value = "${ask.idx}">
-<div class = "userid">
-<label>문의자ID</label>
-<label th:text = "${ask.id}"></label>
-</div>
-<div class = "askType">
-<label>문의 유형</label>
-<label th:text = "${ask.type}"></label>
-</div>
-<div class = "askTitle">
-<label>문의 제목</label>
-<label th:text = "${ask.title}"></label>
-</div>
-<div class = "askContent">
-<label>문의 내용</label>
-<label th:text = "${ask.content}"></label>
-</div>
-<label>답변 내용</label>
-<br>
-<textarea rows="8" cols="10" name = "comment" th:text = "${ask.comment}" readonly></textarea>
-<br>
-<input type = "submit" value = "돌아가기">
-</fieldset>
-</form>
+<th:block th:include = "@{/header}"></th:block>
+  <h1>답변 내용 확인 (관리자)</h1>
+
+  <form name="resultContent" action="result" method="get" class="result-form">
+    <fieldset th:each="ask : ${askContent}">
+      <input type="hidden" name="idx" th:value="${ask.idx}" />
+
+      <div class="form-row">
+        <label>문의자 ID</label>
+        <span th:text="${ask.id}"></span>
+      </div>
+
+      <div class="form-row">
+        <label>문의 유형</label>
+        <span th:text="${ask.type}"></span>
+      </div>
+
+      <div class="form-row">
+        <label>문의 제목</label>
+        <span th:text="${ask.title}"></span>
+      </div>
+
+      <div class="form-row">
+        <label>문의 내용</label>
+        <div class="multiline" th:text="${ask.content}">내용</div>
+      </div>
+
+      <div class="form-row">
+        <label>답변 내용</label>
+        <textarea rows="8" name="comment" readonly th:text="${ask.comment}"></textarea>
+      </div>
+
+      <div class="form-row center">
+        <input type="submit" value="돌아가기" class="btn-back" />
+      </div>
+    </fieldset>
+  </form>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

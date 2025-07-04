@@ -9,7 +9,18 @@
   	<select id = "userInfo" parameterType="String" resultType="String">
   		select name from user where id = #{id}
   	</select>
+
+  	
+  	<select id = "idFind" parameterType="com.pm.member.model.MemberDTO" resultType="String">
+  		select id from user where name = #{name} and tel = #{tel}
+  	</select>
+  	
+  	<select id = "pwdFind" parameterType="com.pm.member.model.MemberDTO" resultType = "String">
+  		select pwd from user where id = #{id} and name = #{name} and tel = #{tel}
+  	</select>
+
   	<select id="selectTelById" resultType="String">
     	SELECT tel FROM user WHERE id = #{id}
 	</select>
+
   </mapper>

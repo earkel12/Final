@@ -203,7 +203,7 @@
 	</select>
 
 
-	<update id="updateInTime">
+	<update id="updateEndTime">
 		UPDATE booking
 		SET intime = NOW()
 		WHERE bookingnum =

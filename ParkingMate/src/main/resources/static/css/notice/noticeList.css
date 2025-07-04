@@ -1,0 +1,98 @@
+/* 기본 바디 스타일 */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9fb;
+  margin: 0;
+  padding: 0; /* ✅ 바디 패딩 제거 */
+  box-sizing: border-box;
+}
+
+/* 헤더 영역 꽉차게 */
+header {
+  width: 100%;
+  background: linear-gradient(90deg, #B1B2FF, #AAC4FF, #D2DAFF, #AAC4FF, #B1B2FF);
+  color: #1a1a1a;
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* 푸터도 동일하게 */
+footer {
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* 페이지 제목 */
+h1 {
+  text-align: center;
+  color: #333;
+  margin: 40px 0 30px;
+}
+
+/* 테이블 레이아웃 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: auto;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 테이블 셀 */
+th, td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+thead th {
+  background-color: #B1B2FF;
+  color: white;
+  font-weight: 600;
+}
+
+tbody tr:hover {
+  background-color: #f0f4ff;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 푸터 하단 버튼들 */
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f1f1f1;
+  box-sizing: border-box;
+}
+
+.footer-actions a {
+  padding: 8px 14px;
+  border-radius: 4px;
+  background-color: #B1B2FF;
+  color: white;
+  font-weight: 500;
+}
+
+.footer-actions a:hover {
+  background-color: #9ba3f8;
+}
+
+.no-data {
+  padding: 30px 0;
+  text-align: center;
+  color: #999;
+}

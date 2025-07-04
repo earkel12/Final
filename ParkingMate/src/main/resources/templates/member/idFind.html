@@ -1,18 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script>
-
-</script>
+<link rel = "stylesheet" href = "css/member/idFind.css">
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
 <h1>아이디 찾기</h1>
-<div class = "email">
-<label>이메일</label>
-<input type = "text" name = "email" required>
-<input type = "button" value = "인증번호">
+<div class = "idFindNotice">
+<p>가입 할때 등록했던 핸드폰 번호를 입력해주세요.</p>
 </div>
+<form name = "idFind" action = "idFind" method = "post">
+<div class = "nameBox">
+<label>이름</label>
+<input type = "text" name = "name" required>
+</div>
+<div class = "emailBox">
+<label>전화번호</label>
+<input type = "text" name = "tel" required>
+<div class = "submitbut">
+<input type = "submit" value = "확인하기">
+</div>
+</div>
+<div class= "useridResult">
+  <p th:if="${userid != null}">
+    회원님의 아이디는 <strong th:text="${userid}"></strong> 입니다.
+    <br>
+    <a th:href="@{/pwdFind(userid=${userid})}">비밀번호 찾기</a>
+  </p>
+  <p th:if="${userid == null} and ${useridSel}"  class = "notice">
+    일치하는 아이디가 없습니다.
+  </p>
+</div>
+</form>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>
