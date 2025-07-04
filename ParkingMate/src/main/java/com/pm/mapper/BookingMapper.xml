@@ -51,13 +51,6 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
-
-
-
-	<select id="bookingCount" parameterType="Integer"
-		resultType="Integer">
-		select count(*) from booking where idx = #{idx}
-	</select>
 	
 	<update id="finalupdateStatus" parameterType="String">
 		UPDATE booking
@@ -110,8 +103,6 @@
     	and a.bookingcarnum = #{bookingcarnum}
 	</select>
 
-
-   
 	<!-- 메이트이용현황관련 -->
 	<resultMap id="BookingParkingMap"
 		type="com.pm.booking.model.BookingParkingDTO">
@@ -227,15 +218,6 @@
     	)
 	</update>
 	
-	<update id="updateOuttime" parameterType="int">
-		update
-		booking
-		SET
-		outtime = NOW()
-		WHERE
-		bookingnum = #{bookingnum}
-	</update>
-    
 	<!-- 주차장만 이용 시 입차시간 업데이트 -->
 	<update id="updateIntime" parameterType="int">
     	update
