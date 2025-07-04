@@ -14,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pm.booking.model.BookingDTO;
+import com.pm.booking.model.BookingParkingDTO;
+import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.UserCarDTO;
 import com.pm.map.model.ParkingLotDTO;
 import com.pm.mapper.BookingMapper;
-import com.pm.pm.model.MatePayCheckDTO;
 
 
 @Service
@@ -41,7 +42,21 @@ public class BookingServiceImple implements BookingService {
 	public void updateStatus(String userid) throws Exception {
 		mapper.updateStatus(userid);
 	}
+
 	
+	@Override
+	public int bookingCount(int idx) throws Exception {
+		return mapper.bookingCount(idx);
+	}
+
+	@Override
+	public void updateStatusToReserved(int bookingnum) {
+		 mapper.updateStatusToReserved(bookingnum);
+	}
+	@Override
+	public BookingDTO getBookingByNum(int bookingnum) {
+		return mapper.getBookingByNum(bookingnum);
+	}
 	
 	
 	
@@ -136,5 +151,15 @@ public class BookingServiceImple implements BookingService {
 	    result.put("units", units);
 
 	    return result;
+	}
+
+	@Override
+	public List<BookingParkingDTO> getActiveInstadBookings() {
+		return mapper.selectActiveInstadBookings();
+	}
+	@Override
+	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
+		return mapper.getBookingParkingListByMateId(mateId);
+
 	}
 }

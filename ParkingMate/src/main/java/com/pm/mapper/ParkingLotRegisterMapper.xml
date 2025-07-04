@@ -3,5 +3,22 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace = "com.pm.mapper.ParkingLotRegisterMapper">
-  
+  	<insert id = "parkingLotInsert" parameterType="com.pm.parkingLotRegister.model.ParkingLotRegisterDTO">
+  		insert into parkinglot (name, addr, type, price, price2, time, valet, maxnum, obstacle, maxheight, maxwidth, maxweight, latitude, longitude)
+  		 values(#{name}, #{addr}, #{type}, #{price}, #{price2}, now(), #{valet}, #{maxnum}, #{obstacle}, #{maxheight}, #{maxwidth}, #{maxweight}, #{latitude}, #{longitude})
+  	</insert>
+  	
+  	<delete id = "parkingLotDelete" parameterType="String">
+  		delete from parkinglot where name = #{name}
+  	</delete>
+  	
+  	<update id = "parkingLotUpdate" parameterType="com.pm.parkingLotRegister.model.ParkingLotRegisterDTO">
+  		update parkinglot set addr = #{addr}, type = #{type}, price = #{price}, price2 = #{price2}, valet = #{valet}, maxnum = #{maxnum}, obstacle = #{obstacle}, maxheight = #{maxheight}, maxwidth = #{maxwidth}, maxweight = #{maxweight}, latitude = #{latitude}, longitude = #{longitude} where name = #{name}
+  	</update>
+  	
+   <select id="checkName" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	    FROM parkinglot
+	    WHERE name = #{name}
+   </select>
   </mapper>

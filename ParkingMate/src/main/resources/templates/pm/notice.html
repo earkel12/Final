@@ -179,9 +179,8 @@
         <a href="/pm/pmNoticeWrite" class="write-button">공지 등록</a>
       </div>
 
-      <!-- 페이지 네비게이션 -->
+
       <div class="paging" th:utext="${pageStr}">
-        <!-- 여기에 서버에서 만들어준 페이지 네비게이션 HTML이 들어갑니다 -->
       </div>
     </div>
 
@@ -211,6 +210,7 @@
       });
     });
   </script>
+  <a th:href="@{/parkingmate}">파킹메이트 메인</a>
 </body>
 <th:block th:include="@{/footer}"></th:block>
 </html>

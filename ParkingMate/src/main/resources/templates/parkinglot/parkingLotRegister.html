@@ -62,86 +62,233 @@
 </nav>
 <!-- ✅ 지도 섹션 -->
 <h2>주차장 등록(관리자)</h2>
+<form name = "parkingLot" action = "" method = "post" id = "parkingLotForm">
 <div id="map" style="width:100%; height:600px;"></div>
 <p><em>지도를 클릭해주세요!</em></p>
 <table border="1" style="margin-top:20px;" id="infoTable">
-  <tr><th>이름</th><td id="name"><input type = "text" name = "name"></td></tr>
-  <tr><th>주소</th><td id="addr"><input type = "text" name = "addr"></td></tr>
-  <tr><th>종류</th><td id="type"><input type = "text" name = "type"></td></tr>
-  <tr><th>최소금액</th><td id="price"><input type = "text" name = "price"></td></tr>
-  <tr><th>주차장금액(30분당)</th><td id="price2"><input type = "text" name = "price2"></td></tr>
-  <tr><th>주차장운영시간</th><td id="price2"><input type = "text" name = "time"></td></tr>
-  <tr><th>발렛유무</th><td id="price2"><input type = "text" name = "valet"></td></tr>
-  <tr><th>주차총 가능대수</th><td id="price2"><input type = "text" name = "maxnum"></td></tr>
-  <tr><th>장애인자리유무</th><td id="price2"><input type = "text" name = "obstacle"></td></tr>
-  <tr><th>제한높이</th><td id="price2"><input type = "text" name = "maxheight"></td></tr>
-  <tr><th>제한넓이</th><td id="price2"><input type = "text" name = "maxwidth"></td></tr>
-  <tr><th>제한중량</th><td id="price2"><input type = "text" name = "maxweight"></td></tr>
-  <tr><th>위도</th><td id="price2"><input type = "text" name = "latitude" id = "latitude"></td></tr>
-  <tr><th>경도</th><td id="price2"><input type = "text" name = "longitude" id = "longitude"></td></tr>
+  <tr><th>이름</th>
+  <td><input type = "text" id = "name" name = "name" required>
+    <button type="button" onclick="checkName()">중복 확인</button>
+    <span id="nameCheckResult"></span>
+  </td></tr>
+  <tr><th>주소</th><td id="addr"><input type = "text" name = "addr" required></td></tr>
+  <tr><th>종류</th><td id="type"><input type = "text" name = "type" required></td></tr>
+  <tr><th>최소금액</th><td id="price"><input type = "text" name = "price" required></td></tr>
+  <tr><th>주차장금액(30분당)</th><td id="price2"><input type = "text" name = "price2" required></td></tr>
+  <tr><th>발렛유무</th>
+  <td id="valet">
+  <select name = "valet" required>
+  <option value = "">발렛유무를 선택해주세요.</option>
+  <option value = "0">불가</option>
+  <option value = "1">가능</option>
+  </select>
+  </td></tr>
+  <tr><th>주차총 가능대수</th><td id="maxnum"><input type = "text" name = "maxnum" required></td></tr>
+  <tr><th>장애인자리유무</th>
+  <td id="obstacle">
+  <select name = "obstacle" required>
+  <option value = "">장애인주차 유무를 선택해주세요.</option>
+  <option value = 0>없음</option>
+  <option value = 1>있음</option>
+  </select>
+  </td></tr>
+  <tr><th>제한높이</th><td id="maxheight"><input type = "text" name = "maxheight"></td></tr>
+  <tr><th>제한넓이</th><td id="maxwidth"><input type = "text" name = "maxwidth"></td></tr>
+  <tr><th>제한중량</th><td id="maxweight"><input type = "text" name = "maxweight"></td></tr>
+  <tr><th>위도</th><td id="latitude1"><input type = "text" name = "latitude" id = "latitude" required readonly></td></tr>
+  <tr><th>경도</th><td id="longitude1"><input type = "text" name = "longitude" id = "longitude" required readonly></td></tr>
 </table>
-<a href="#">등록하기</a>
-<a href = "#">삭제하기</a>
-<a href = "#">수정하기</a><br>
-<div id="clickLatlng"></div>
+  <div class = "buttons">
+<button type="button" onclick="handleSubmit('insert')">등록하기</button>
+<button type="button" onclick="handleSubmit('delete')">삭제하기</button>
+<button type="button" onclick="handleSubmit('update')">수정하기</button>
+  </div>
+
+</form>
 <script>
-  kakao.maps.load(function () {
-    const mapContainer = document.getElementById('map');
-    const mapOption = {
-      center: new kakao.maps.LatLng(37.5665, 126.9780),
-      level: 5
-    };
+kakao.maps.load(function () {
+	  const mapContainer = document.getElementById('map');
+	  const mapOption = {
+	    center: new kakao.maps.LatLng(37.5665, 126.9780),
+	    level: 5
+	  };
 
-    const map = new kakao.maps.Map(mapContainer, mapOption);
-    const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+	  const map = new kakao.maps.Map(mapContainer, mapOption);
+	  const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 
-    const marker = new kakao.maps.Marker({
-      position: map.getCenter()
-    });
-    marker.setMap(map);
+	  let customMarker = null; // 이전 마커 저장
 
-    // 지도 클릭 이벤트: 위도/경도 input에 채워넣기
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-      const latlng = mouseEvent.latLng;
-      marker.setPosition(latlng);
-      document.getElementById('latitude').value = latlng.getLat();
-      document.getElementById('longitude').value = latlng.getLng();
-      document.getElementById('clickLatlng').innerText =
-        `클릭한 위치의 위도는 ${latlng.getLat()} 이고, 경도는 ${latlng.getLng()} 입니다.`;
-    });
+	  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+	    const latlng = mouseEvent.latLng;
 
-    // ✅ 주차장 목록 마커 추가
-    fetch('/map/list')
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(parking => {
-          const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
-          const pMarker = new kakao.maps.Marker({
-            map: map,
-            position: position,
-            title: parking.name
-          });
+	    // 이전 마커 있으면 제거
+	    if (customMarker) {
+	      customMarker.setMap(null);
+	    }
 
-          kakao.maps.event.addListener(pMarker, 'click', function () {
-            const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
-            infowindow.setContent(content);
-            infowindow.open(map, pMarker);
+	    // 새 마커 생성
+	    customMarker = new kakao.maps.Marker({
+	      position: latlng,
+	      map: map
+	    });
 
-            fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
-              .then(res => console.log("Session 저장 완료"));
+	    // 위도/경도 input 채우기
+	    document.getElementById('latitude').value = latlng.getLat();
+	    document.getElementById('longitude').value = latlng.getLng();
 
-            document.querySelector('#name input').value = parking.name;
-            document.querySelector('#addr input').value = parking.addr;
-            document.querySelector('#type input').value = parking.type;
-            document.querySelector('#price input').value = parking.price;
-            document.querySelector('#price2 input').value = parking.price2;
-            document.querySelector('#valet input').value = parking.valet === 1 ? '가능' : '불가능';
-          });
-        });
-      })
-      .catch(err => console.error(err));
-  });
+	    // 다른 입력 필드 초기화
+	    const fieldsToClear = ['name', 'addr', 'type', 'price', 'price2', 'valet', 'maxnum', 'obstacle', 'maxheight', 'maxwidth', 'maxweight'];
+	    fieldsToClear.forEach(fieldName => {
+	      const elem = document.querySelector(`[name="${fieldName}"]`);
+	      if (!elem) return;
+	      if (elem.tagName === "SELECT") {
+	        elem.selectedIndex = 0;
+	      } else {
+	        elem.value = '';
+	      }
+	    });
+
+	    // 중복검사 결과 초기화
+	    const nameCheckResult = document.getElementById('nameCheckResult');
+	    if (nameCheckResult) nameCheckResult.textContent = '';
+	  });
+
+	  // 기존 주차장 마커 추가 (기존 코드 유지)
+	  fetch('/map/list')
+	    .then(response => response.json())
+	    .then(data => {
+	      data.forEach(parking => {
+	        const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+	        const pMarker = new kakao.maps.Marker({
+	          map: map,
+	          position: position,
+	          title: parking.name
+	        });
+
+	        kakao.maps.event.addListener(pMarker, 'click', function () {
+	          const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
+	          infowindow.setContent(content);
+	          infowindow.open(map, pMarker);
+
+	          fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
+	            .then(res => console.log("Session 저장 완료"));
+
+	          // 입력 필드에 값 세팅
+	          document.querySelector('input[name="name"]').value = parking.name;
+	          document.querySelector('input[name="addr"]').value = parking.addr;
+	          document.querySelector('input[name="type"]').value = parking.type;
+	          document.querySelector('input[name="price"]').value = parking.price;
+	          document.querySelector('input[name="price2"]').value = parking.price2;
+	          document.querySelector('select[name="valet"]').value = String(parking.valet);
+	          document.querySelector('input[name="maxnum"]').value = parking.maxnum;
+	          document.querySelector('select[name="obstacle"]').value = String(parking.obstacle);
+	          document.querySelector('input[name="maxheight"]').value = parking.maxheight;
+	          document.querySelector('input[name="maxwidth"]').value = parking.maxwidth;
+	          document.querySelector('input[name="maxweight"]').value = parking.maxweight;
+	          document.querySelector('input[name="latitude"]').value = parking.latitude;
+	          document.querySelector('input[name="longitude"]').value = parking.longitude;
+
+	          // 중복검사 결과 초기화
+	          const nameCheckResult = document.getElementById('nameCheckResult');
+	          if (nameCheckResult) nameCheckResult.textContent = '';
+	        });
+	      });
+	    })
+	    .catch(err => console.error(err));
+	});
+	
+const lat = parseFloat(document.getElementById('latitude').value.trim());
+const lng = parseFloat(document.getElementById('longitude').value.trim());
+let actionType = "";
+function handleSubmit(type) {
+	  const form = document.getElementById("parkingLotForm");
+
+	  if (type === 'insert') {
+	    const latStr = document.getElementById('latitude').value.trim();
+	    const lngStr = document.getElementById('longitude').value.trim();
+
+	    const lat = parseFloat(latStr);
+	    const lng = parseFloat(lngStr);
+
+	    console.log("lat:", lat, "lng:", lng, "diff:", Math.abs(lat - lng));
+
+	    if (isNaN(lat) || isNaN(lng)) {
+	      alert("위도와 경도를 입력해주세요.");
+	      return false;
+	    }
+
+	    if (Math.abs(lat - lng) < 0.000001) {
+	      alert("위도와 경도가 같을 수 없습니다. 다시 지도에서 선택해주세요.");
+	      return false;
+	    }
+
+	    form.action = "parkingLotInsert";
+	    form.submit();
+	    return true;
+
+	  } else if (type === 'delete') {
+	    if (confirm("정말 삭제하시겠습니까?")) {
+	      form.action = "parkingLotDelete";
+	      form.submit();
+	      return true;
+	    }
+	    return false;
+	  } else if (type === 'update') {
+	    form.action = "parkingLotUpdate";
+	    form.submit();
+	    return true;
+	  }
+	}
+
+
+	
+  function checkName() {
+	    const nameInput = document.getElementById('name').value.trim();
+	    const resultSpan = document.getElementById('nameCheckResult');
+
+	    if (!nameInput) {
+	      alert("이름을 입력해주세요.");
+	      return;
+	    }
+
+	    fetch(`/parkingLot/checkName?name=${encodeURIComponent(nameInput)}`)
+	      .then(response => response.text())
+	      .then(data => {
+	        if (data === "ok") {
+	          resultSpan.textContent = "사용 가능한 이름입니다.";
+	          resultSpan.style.color = "green";
+	        } else {
+	          resultSpan.textContent = "이미 존재하는 이름입니다.";
+	          resultSpan.style.color = "red";
+	        }
+	      })
+	      .catch(error => {
+	        console.error("중복 검사 중 오류:", error);
+	        resultSpan.textContent = "오류가 발생했습니다.";
+	        resultSpan.style.color = "red";
+	      });
+	  }
+  
+  function validateForm() {
+	  if (actionType === 'insert') {
+	    const lat = document.getElementById('latitude').value.trim();
+	    const lng = document.getElementById('longitude').value.trim();
+
+	    if (!lat || !lng) {
+	      alert("위도와 경도를 입력해주세요.");
+	      return false;
+	    }
+
+	    if (lat === lng) {
+	      alert("위도와 경도가 같을 수 없습니다. 다시 지도에서 선택해주세요.");
+	      return false;
+	    }
+	  }
+
+	  return true; // insert가 아니면 그냥 통과
+	}
 </script>
+
 <th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

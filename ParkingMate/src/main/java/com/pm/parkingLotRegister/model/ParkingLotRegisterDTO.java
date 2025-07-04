@@ -1,5 +1,7 @@
 package com.pm.parkingLotRegister.model;
 
+
+
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;

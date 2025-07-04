@@ -39,10 +39,26 @@ public class BookingController {
 		
 		return "booking/search";
 	}
+	
+	@GetMapping("/location")
+	public String locationPopup() throws Exception {
+		
+		return "booking/location";
+	}
+
 	@GetMapping("/booking")
 	public String bookingForm(HttpSession session, Model model) throws Exception {
-	    String userId = (String) session.getAttribute("sid"); // 세션에서 사용자 ID 추출
-	    List<UserCarDTO> carList = service.carbyid(userId);   // 차량 리스트 불러오기
+	    String userid = (String) session.getAttribute("sid"); // 세션에서 사용자 ID 추출
+	    String pname = (String) session.getAttribute("pname");
+	    		
+	    if (userid == null || userid.isEmpty()) {
+	        return "redirect:/login?alert=2";  // 리다이렉트
+	    } else if(pname==null || pname.isEmpty()) {
+        	return "redirect:/?alert=1";
+        }
+	    
+	    List<UserCarDTO> carList = service.carbyid(userid);   // 차량 리스트 불러오기
+	    
 	    model.addAttribute("carList", carList);               // View에 전달
 
 	    return "booking/booking"; 
@@ -93,17 +109,8 @@ public class BookingController {
 	        return "FAIL";
 	    }
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	//메이트이용현황 관련
 	@GetMapping("/mateUsagesStatus")
 	public String mateUsagesStatus(@SessionAttribute("sid")String id,

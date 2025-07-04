@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel = "stylesheet" href = "css/noticeList.css">
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
 <h1>공지사항</h1>
 <table>
 	<thead>
@@ -43,5 +45,6 @@
 		</tr>
 	</tbody>
 </table>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

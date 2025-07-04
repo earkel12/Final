@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.pm.booking.service.BookingService;
 import com.pm.map.model.ParkingLotDTO;
 import com.pm.map.service.MapService;
 
@@ -21,6 +22,8 @@ public class MapController {
 
     @Autowired
     private MapService service;
+    @Autowired
+    private BookingService bservice;
     
     @ResponseBody
     @GetMapping("/list")
@@ -38,9 +41,17 @@ public class MapController {
     @ResponseBody
     @GetMapping("/parking")
     public ParkingLotDTO getParkingInfo(@RequestParam("name") String name) throws Exception {
+    	
         return service.plbyname(name);
     }
     
+    @ResponseBody
+	@GetMapping("/count")
+	public int bookingCount(int idx) throws Exception {
+		
+		return bservice.bookingCount(idx);
+	}
+	
     @GetMapping("/setSession")
     @ResponseBody
     public void setSessionInfo(@RequestParam("idx") int idx,

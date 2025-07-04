@@ -23,11 +23,9 @@ public class BookingDTO {
 	private int obstacle;
 	private int idx;
 	private String id;
-	private double ulatitude;
-	private double ulongitude;
-	private double pmlatitude;
-	private double pmlongitude;
-  
-}	
+	private Double ulatitude;
+	private Double ulongitude;
+	private Double pmlatitude;
+	private Double pmlongitude;
 
-
+}

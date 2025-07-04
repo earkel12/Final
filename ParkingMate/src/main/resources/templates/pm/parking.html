@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>파킹메이트 이용현황</title>
+<th:block th:include="@{/header}"></th:block>
+<!-- ✅ 카카오 지도 SDK -->
+<script
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+
+<style>
+body {
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #2c3e50;
+	margin: 0;
+	padding: 40px 20px;
+}
+
+h1 {
+	font-size: 28px;
+	margin-bottom: 30px;
+	border-left: 5px solid #B1B2FF;
+	padding-left: 15px;
+	color: #1a1a1a;
+}
+
+#map {
+	width: 100%;
+	height: 400px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+#route-info {
+	font-size: 16px;
+	color: #333;
+	margin-bottom: 30px;
+}
+
+a {
+	display: inline-block;
+	margin-top: 10px;
+	color: #6C72FF;
+	text-decoration: none;
+	font-weight: 600;
+	transition: color 0.3s ease;
+}
+
+a:hover {
+	color: #555bff;
+}
+
+@media ( max-width : 600px) {
+	#map {
+		height: 300px;
+	}
+}
+
+.customInfoBox {
+	background: white;
+	border: 2px solid #4A90E2;
+	border-radius: 8px;
+	padding: 10px 15px;
+	font-size: 14px;
+	color: #333;
+	box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+	white-space: nowrap;
+}
+
+.customInfoBox b {
+	color: #4A90E2;
+}
+</style>
+</head>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  const usageList = /*[[${usageList}]]*/ [];
+  if (usageList.length === 0) {
+    alert('예약 내역이 없습니다.');
+    history.back();
+  }
+  /*]]>*/
+</script>
+
+<body>
+	<h1>파킹메이트 이용현황</h1>
+	<div id="map"></div>
+	<div id="route-info"></div>
+	<!-- 경로 정보 표시 영역 -->
+
+	<script>
+	
+  kakao.maps.load(function () {
+      if (usageList.length === 0) return;
+      
+      const endPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude);
+      function getTimeHTML(distance) {
+    	  const distanceKm = (distance / 1000).toFixed(2);
+
+    	  const carSpeedMPerMin = 40 * 1000 / 60; // 666.67 m/min
+    	  const carMinTotal = distance / carSpeedMPerMin;
+    	  const carHour = Math.floor(carMinTotal / 60);
+    	  const carMin = Math.round(carMinTotal % 60);
+
+    	  const carTimeStr =
+    	    (carHour > 0 ? `${carHour}시간 ` : '') +
+    	    (carMin > 0 ? `${carMin}분` : (carHour === 0 ? '0분' : ''));
+
+    	  return `
+    	    <div class="customInfoBox">
+    	      <b>총 거리:</b> ${distanceKm} km<br>
+    	      <b>차량 예상 시간:</b> ${carTimeStr}
+    	    </div>
+    	  `;
+    	}
+      
+      function drawMap(startPos) {
+    	  const mapContainer = document.getElementById('map');
+          const map = new kakao.maps.Map(mapContainer, { center: startPos, level: 5 });
+
+          const carMarkerImage = new kakao.maps.MarkerImage(
+          	    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/red_b.png',
+          	    new kakao.maps.Size(50, 50)
+          	  );
+          	  const destinationMarkerImage = new kakao.maps.MarkerImage(
+          	    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png',
+          	    new kakao.maps.Size(50, 50)
+          	  );
+          	  
+          	  const carPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude); // 차량 위치
+          	  const destinationPos = new kakao.maps.LatLng(usageList[0].latitude, usageList[0].longitude); // 목적지 (주차장)
+
+
+          	  // 마커 찍기
+          	  new kakao.maps.Marker({
+          	    map,
+          	    position: carPos,
+          	    image: carMarkerImage,
+          	    title: '차량위치'
+          	  });
+
+          	  new kakao.maps.Marker({
+          	    map,
+          	    position: destinationPos,
+          	    image: destinationMarkerImage,
+          	    title: '목적지'
+          	  });
+
+
+        	  // 경로 선
+        	  const routePath = [carPos,  destinationPos];
+        	  const polyline = new kakao.maps.Polyline({
+        	    path: routePath,
+        	    strokeWeight: 5,
+        	    strokeColor: '#4A90E2',
+        	    strokeOpacity: 0.7,
+        	    strokeStyle: 'solid'
+        	  });
+        	  polyline.setMap(map);
+
+        	  const distance = Math.round(polyline.getLength());
+        	  const content = getTimeHTML(distance);
+        	  new kakao.maps.CustomOverlay({
+        	    map,
+        	    position: carPos,
+        	    content: content,
+        	    xAnchor: 0.5,
+        	    yAnchor: 1.8,
+        	    zIndex: 3
+        	  });
+
+        	  // 하단 정보
+        	  const routeInfoDiv = document.getElementById('route-info');
+        	  routeInfoDiv.innerHTML = `
+        	   	<b>차량 위치:</b> 위도 ${carPos.getLat().toFixed(6)}, 경도 ${carPos.getLng().toFixed(6)}<br>
+        	    <b>목적지:</b> ${usageList[0].name} (${usageList[0].addr})<br>
+        	    <b>목적지 좌표:</b> 위도 ${destinationPos.getLat().toFixed(6)}, 경도 ${destinationPos.getLng().toFixed(6)}
+        	  `;
+        	  
+      }
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const gpsPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              drawMap(gpsPos);
+            },
+            (error) => {
+              const dbPos = new kakao.maps.LatLng(usageList[0].pmlatitude, usageList[0].pmlongitude);
+              drawMap(dbPos);
+            }
+          );
+        } else {
+          const dbPos = new kakao.maps.LatLng(usageList[0].pmlatitude, usageList[0].pmlongitude);
+          drawMap(dbPos);
+        }
+});
+  
+  </script>
+	<h2>
+		<a th:href="@{/pm/usagehistory}">이전 페이지로</a>
+	</h2>
+	<a th:href="@{/parkingmate}">파킹메이트 메인</a>
+	<th:block th:include="@{/footer}"></th:block>
+</body>
+</html>
