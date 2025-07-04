@@ -206,12 +206,7 @@ public class BookingController {
 		return "booking/mateUsagesStatus";
 	}
 	
-<<<<<<< HEAD
-	@PostMapping("/booking/updateOuttime")
-	public String updateOuttime(@RequestParam("bookingnum") int bookingnum) {
-	    try {
-	        service.updateOuttime(bookingnum);
-=======
+
 	@PostMapping("/booking/updateIntime")
 	@ResponseBody
 	public Map<String, Object> updateIntime(@RequestParam("bookingnum")int bookingnum, HttpSession session) {
@@ -229,7 +224,7 @@ public class BookingController {
 			}
 	        service.updateIntime(bookingnum);
 	        result.put("success", true);
->>>>>>> origin/feat/minorIssueFix
+
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	        result.put("success", false);
