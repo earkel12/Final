@@ -1,0 +1,84 @@
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+.full-width-header,
+.full-width-footer {
+  width: 100%;
+}
+
+.edit-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.form-actions input[type="submit"] {
+  padding: 10px 20px;
+  background-color: #B1B2FF;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-actions input[type="submit"]:hover {
+  background-color: #D2DAFF;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background-color: #eee;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  line-height: 38px;
+  font-size: 15px;
+}
+
+.cancel-btn:hover {
+  background-color: #ddd;
+}

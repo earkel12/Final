@@ -3,32 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+ <link rel="stylesheet" th:href="@{/css/ask/askWrite.css}">
 </head>
 <body>
-<h1>문의작성</h1>
-<form name = "askWrite" action = "askWrite" method = "post">
-<input type = "hidden" th:value = "${userid}" name = "id">
-<div class = "categoryBox">
-	<label>문의유형</label>
-	<select name = "type" required>
-		<option value = "">문의 유형을 선택해주세요.</option>
-		<option value="주차장 이용">주차장 이용</option>
-	    <option value="결제 관련">결제 관련</option>
-	    <option value="예약 취소">예약 취소</option>
-	    <option value="기타">기타</option>
-	</select>
-</div>
-<div class = "titleBox">
-	<label>문의 제목: </label>
-	<input type = "text" name = "title">
-</div>
-<div class = "contentBox">
-	<label>문의 내용:</label>
-	<textarea rows="8" cols="80" name = "content"></textarea>
-</div>
-<div class = "writeSubmit">
-	<input type = "submit" value = "문의등록">
-</div>
-</form>
+  <header th:include="@{/header}" class="full-width-header"></header>
+
+  <main class="ask-container">
+    <h1>문의 작성</h1>
+
+    <form name="askWrite" action="askWrite" method="post" class="ask-form">
+      <input type="hidden" th:value="${userid}" name="id">
+
+      <div class="form-group">
+        <label for="type">문의 유형</label>
+        <select id="type" name="type" required>
+          <option value="">문의 유형을 선택해주세요.</option>
+          <option value="주차장 이용">주차장 이용</option>
+          <option value="결제 관련">결제 관련</option>
+          <option value="예약 취소">예약 취소</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="title">문의 제목</label>
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+      </div>
+
+      <div class="form-group">
+        <label for="content">문의 내용</label>
+        <textarea id="content" name="content" rows="8" placeholder="내용을 입력하세요" required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <input type="submit" value="문의 등록">
+        <a href="/askList" class="cancel-btn">취소</a>
+      </div>
+    </form>
+  </main>
+
+  <footer th:include="@{/footer}" class="full-width-footer"></footer>
 </body>
 </html>
