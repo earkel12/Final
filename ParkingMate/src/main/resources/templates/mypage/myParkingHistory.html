@@ -55,7 +55,7 @@ function moveToMyParkingMateHistory() {
             <th>결제금액</th>
             <th>상태구분</th>
             <th>장애인여부</th>
-            <th></th>
+            <th>리뷰</th>
         </tr>
     </thead>
     <tr th:if="${#lists.isEmpty(bookingList)}">
@@ -76,11 +76,16 @@ function moveToMyParkingMateHistory() {
             <td th:text="${history.status}"></td>
             <td th:text="${history.obstacle == 1 ? 'O' : 'X'}"></td>
 			<td>
-			  <input type="button" value="리뷰쓰기"
-			         class="review-btn"
-			         th:data-bookingnum="${history.bookingnum}"
-			         th:data-bookingdate="${history.bookingdate}"
-			         th:data-parkinglot_name="${history.parkinglot_name}">
+			  <th:block th:if="${reviewList.contains(history.bookingnum)}">
+			    <button disabled>작성완료</button>
+			  </th:block>
+			  <th:block th:unless="${reviewList.contains(history.bookingnum)}">
+			    <input type="button" value="리뷰쓰기"
+			           class="review-btn"
+			           th:data-bookingnum="${history.bookingnum}"
+			           th:data-bookingdate="${history.bookingdate}"
+			           th:data-parkinglot_name="${history.parkinglot_name}">
+			  </th:block>
 			</td>
         </tr>
     </tbody>

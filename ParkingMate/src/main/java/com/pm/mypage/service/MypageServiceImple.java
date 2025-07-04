@@ -91,6 +91,15 @@ public class MypageServiceImple implements MypageService {
 		return bookingParkingMateList;
 	}
 
-
+	
+	
+	
+	
+	
+	@Override
+	public List<Integer> checkReview(String id) throws Exception {
+		List<Integer> reviewList=mapper.checkReview(id);
+		return reviewList;
+	}
 	
 }

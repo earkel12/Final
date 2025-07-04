@@ -6,7 +6,7 @@
 <th:block th:include="@{/header}"></th:block>
 <!-- ✅ 카카오 지도 SDK -->
 <script
-	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false"></script>
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false&libraries=services"></script>
 
 <style>
 body {
@@ -32,46 +32,134 @@ h1 {
 	border-radius: 10px;
 	margin-bottom: 20px;
 }
-
+.customInfoBox {
+  background: white;
+  border: 2px solid #B1B2FF;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #3A2CAD;
+  box-shadow: 0 2px 6px rgba(58, 45, 173, 0.3);
+  white-space: nowrap;
+}
+.customInfoBox b {
+  color: #3A2CAD;
+}
 #route-info {
 	font-size: 16px;
 	color: #333;
 	margin-bottom: 30px;
 }
-
-a {
-	display: inline-block;
-	margin-top: 10px;
-	color: #6C72FF;
-	text-decoration: none;
-	font-weight: 600;
-	transition: color 0.3s ease;
+.info-section {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+  padding: 1.5rem;
+  text-align: center;
+}
+/* 표 스타일 */
+.info-table {
+  max-width: 700px;
+  margin: 0 auto 30px auto;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
-a:hover {
-	color: #555bff;
+.info-table th,
+.info-table td {
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+  vertical-align: middle;
 }
 
-@media ( max-width : 600px) {
-	#map {
-		height: 300px;
-	}
+.info-table th {
+  background-color: #b1b2ff;
+  color: #2e2a8c;
+  font-weight: 600;
+  width: 35%;
 }
 
-.customInfoBox {
-	background: white;
-	border: 2px solid #4A90E2;
-	border-radius: 8px;
-	padding: 10px 15px;
-	font-size: 14px;
-	color: #333;
-	box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
-	white-space: nowrap;
+.info-table td {
+  color: #3a2cad;
+  font-weight: 500;
 }
 
-.customInfoBox b {
-	color: #4A90E2;
+/* 주차 완료 버튼 스타일 */
+.complete-btn {
+  display: block;
+  max-width: 320px;
+  margin: 0 auto 40px auto;
+  background: linear-gradient(45deg, #6c72ff, #3a2cad);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  padding: 14px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(58, 42, 173, 0.6);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 350px;
 }
+
+.complete-btn:hover {
+  background: linear-gradient(45deg, #3a2cad, #6c72ff);
+  box-shadow: 0 8px 16px rgba(58, 42, 173, 0.9);
+}
+
+/* 링크 스타일 */
+.link-group {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.link-group a {
+  color: #3a2cad;
+  font-weight: 600;
+  margin: 0 15px;
+  text-decoration: none;
+  border: 2px solid transparent;
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.link-group a:hover {
+  background-color: #3a2cad;
+  color: white;
+  border-color: #3a2cad;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .info-table th,
+  .info-table td {
+    display: block;
+    width: 100%;
+  }
+  .info-table th {
+    margin-top: 1rem;
+  }
+  .complete-btn {
+    max-width: 100%;
+  }
+  .link-group a {
+    display: inline-block;
+    margin: 8px 0;
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
 </style>
 </head>
 
@@ -89,13 +177,11 @@ a:hover {
 	<h1>파킹메이트 이용현황</h1>
 	<div id="map"></div>
 	<div id="route-info"></div>
-	<!-- 경로 정보 표시 영역 -->
 
 	<script>
-	
   kakao.maps.load(function () {
       if (usageList.length === 0) return;
-      
+
       const endPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude);
       function getTimeHTML(distance) {
     	  const distanceKm = (distance / 1000).toFixed(2);
@@ -116,10 +202,10 @@ a:hover {
     	    </div>
     	  `;
     	}
-      
+
       function drawMap(startPos) {
     	  const mapContainer = document.getElementById('map');
-          const map = new kakao.maps.Map(mapContainer, { center: startPos, level: 5 });
+          const map = new kakao.maps.Map(mapContainer, { center: startPos, level: 9 });
 
           const carMarkerImage = new kakao.maps.MarkerImage(
           	    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/red_b.png',
@@ -129,10 +215,9 @@ a:hover {
           	    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png',
           	    new kakao.maps.Size(50, 50)
           	  );
-          	  
+
           	  const carPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude); // 차량 위치
           	  const destinationPos = new kakao.maps.LatLng(usageList[0].latitude, usageList[0].longitude); // 목적지 (주차장)
-
 
           	  // 마커 찍기
           	  new kakao.maps.Marker({
@@ -149,13 +234,12 @@ a:hover {
           	    title: '목적지'
           	  });
 
-
         	  // 경로 선
         	  const routePath = [carPos,  destinationPos];
         	  const polyline = new kakao.maps.Polyline({
         	    path: routePath,
         	    strokeWeight: 5,
-        	    strokeColor: '#4A90E2',
+        	    strokeColor: '#3A2CAD',
         	    strokeOpacity: 0.7,
         	    strokeStyle: 'solid'
         	  });
@@ -172,37 +256,78 @@ a:hover {
         	    zIndex: 3
         	  });
 
-        	  // 하단 정보
-        	  const routeInfoDiv = document.getElementById('route-info');
-        	  routeInfoDiv.innerHTML = `
-        	   	<b>차량 위치:</b> 위도 ${carPos.getLat().toFixed(6)}, 경도 ${carPos.getLng().toFixed(6)}<br>
-        	    <b>목적지:</b> ${usageList[0].name} (${usageList[0].addr})<br>
-        	    <b>목적지 좌표:</b> 위도 ${destinationPos.getLat().toFixed(6)}, 경도 ${destinationPos.getLng().toFixed(6)}
-        	  `;
-        	  
+        	  const geocoder = new kakao.maps.services.Geocoder();
+
+        	// 차량 위치 주소 가져오기
+        	geocoder.coord2Address(carPos.getLng(), carPos.getLat(), function(result, status) {
+        	  if (status === kakao.maps.services.Status.OK) {
+        	    const carAddr = result[0].road_address?.address_name || result[0].address.address_name;
+        	    document.getElementById('cell-car-addr').innerText = carAddr;
+        	    
+        	    // 목적지 주소 가져오기
+        	    geocoder.coord2Address(destinationPos.getLng(), destinationPos.getLat(), function(result2, status2) {
+        	      if (status2 === kakao.maps.services.Status.OK) {
+        	        const destAddr = result2[0].road_address?.address_name || result2[0].address.address_name;
+        	        document.getElementById('cell-dest-addr').innerText = destAddr;
+        	        
+        	      
+        	      }
+        	    });
+        	  }
+        	});
       }
       if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const gpsPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
-              drawMap(gpsPos);
-            },
-            (error) => {
-              const dbPos = new kakao.maps.LatLng(usageList[0].pmlatitude, usageList[0].pmlongitude);
-              drawMap(dbPos);
-            }
-          );
-        } else {
-          const dbPos = new kakao.maps.LatLng(usageList[0].pmlatitude, usageList[0].pmlongitude);
-          drawMap(dbPos);
-        }
+    	  navigator.geolocation.getCurrentPosition(
+    	    (position) => {
+    	      // GPS 위치 대신 차량 위치 좌표를 지도 중심으로 사용
+    	      const carPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude);
+    	      drawMap(carPos);
+    	    },
+    	    (error) => {
+    	      // GPS 거부 시에도 차량 위치 좌표로 지도 중심 설정
+    	      const carPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude);
+    	      drawMap(carPos);
+    	    }
+    	  );
+    	} else {
+    	  // 위치 정보가 없는 경우도 차량 위치 좌표로 초기화
+    	  const carPos = new kakao.maps.LatLng(usageList[0].ulatitude, usageList[0].ulongitude);
+    	  drawMap(carPos);
+    	}
 });
-  
   </script>
-	<h2>
-		<a th:href="@{/pm/usagehistory}">이전 페이지로</a>
-	</h2>
-	<a th:href="@{/parkingmate}">파킹메이트 메인</a>
-	<th:block th:include="@{/footer}"></th:block>
+
+  <section class="info-section">
+    <table class="info-table">
+      <tr>
+        <th>차량 위치 주소</th>
+        <td id="cell-car-addr">불러오는 중…</td>
+      </tr>
+      <tr>
+        <th>목적지 주소</th>
+        <td id="cell-dest-addr">불러오는 중…</td>
+      </tr>
+      <tr>
+        <th>이용자 ID</th>
+        <td th:text="${userId}">user123</td>
+      </tr>
+      <tr>
+        <th>전화번호</th>
+        <td th:text="${userTel}">010-0000-0000</td>
+      </tr>
+    </table>
+
+    <form th:action="@{/pm/completeParking}" method="post" style="text-align:center;">
+      <input type="hidden" name="bookingnum" th:value="${usageList[0].bookingnum}" />
+      <button type="submit" class="complete-btn">차량 주차 완료</button>
+    </form>
+
+    <div class="link-group">
+      <a th:href="@{/pm/usagehistory}">이전 페이지로</a>
+      <a th:href="@{/parkingmate}">파킹메이트 메인</a>
+    </div>
+  </section>
+
+  <th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

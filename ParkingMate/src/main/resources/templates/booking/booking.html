@@ -1,107 +1,232 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>주차장 예약하기</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .container { max-width: 800px; margin: auto; }
-    .section-title { font-size: 1.2em; margin-bottom: 10px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    td, th { padding: 10px; vertical-align: top; }
-    .input-group { margin-bottom: 10px; }
-    label { display: block; font-weight: bold; margin-bottom: 5px; }
-    select, input[type="text"], input[type="number"] { width: 100%; padding: 5px; }
-    .radio-group { display: flex; gap: 10px; margin-top: 5px; }
-    .summary-box { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
-    .right-align { text-align: right; }
-  </style>
+<meta charset="UTF-8">
+<title>주차장 예약하기</title>
+<style>
+body {
+	font-family: 'Noto Sans KR', sans-serif;
+	background-color: #EEF1FF;
+	margin: 0;
+	padding: 20px;
+	color: #333;
+}
+
+.container {
+	background-color: #fff;
+	max-width: 800px;
+	margin: 40px auto;
+	padding: 30px 40px;
+	border-radius: 16px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.step-indicator {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px; /* 간격 줄이기 */
+	font-weight: 500;
+	padding: 0 40px; /* 양쪽 여백 주면 가운데보다 바깥으로 길어 보임 */
+}
+
+.step {
+	position: relative;
+	flex: 1; /* 각 단계 너비 동일하게 */
+	text-align: center;
+	font-size: 20px; /* 사이 간격 줄이려면 글씨 크기도 살짝 줄이는 게 자연스러움 */
+	padding-bottom: 10px;
+}
+
+.step::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 10%;
+	width: 80%; /* 글자보다 더 길게 */
+	height: 2px;
+	background-color: #ccc;
+}
+
+.step.active {
+	color: #4B55E1;
+}
+
+.step.active::after {
+	background-color: #4B55E1;
+}
+
+.booking-layout {
+	display: flex;
+	gap: 40px;
+	padding: 30px;
+}
+
+.left-panel {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.parking-image {
+	width: 100%;
+	max-width: 200px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.info-box {
+	background: #f8f8f8;
+	padding: 15px;
+	border-radius: 8px;
+	width: 100%;
+	text-align: center;
+	font-size: 14px;
+}
+
+.right-panel {
+	flex: 2;
+}
+
+.input-group {
+	margin-bottom: 20px;
+}
+
+.input-group label {
+	font-weight: bold;
+	display: block;
+	margin-bottom: 6px;
+}
+
+.input-group select, .input-group input[type="number"], .input-group input[type="datetime-local"]
+	{
+	width: 100%;
+	padding: 8px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	background: #F5F8FF;
+}
+
+.radio-group {
+	display: flex;
+	gap: 20px;
+	margin-top: 6px;
+}
+
+.payment-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px 40px;
+	border-top: 1px dashed #aaa;
+	font-weight: bold;
+}
+
+.payment-footer button {
+	background: #4B55E1;
+	color: white;
+	padding: 12px 30px;
+	border-radius: 8px;
+	border: none;
+	cursor:pointer;
+	font-size: 14px;
+}
+</style>
 </head>
 <body>
-<th:block th:include = "@{/header}"></th:block>
-  <div class="container">
+	<th:block th:include="@{/header}"></th:block>
+	<div class="container">
+		<div class="step-indicator">
+			<div class="step">예약</div>
+			<div class="step active">약관동의</div>
+			<div class="step">결제</div>
+		</div>
 
-    <h2>예약하기</h2>
+		<!-- 2. 예약 정보 입력 영역 -->
+		<form action="/booking/agree" method="post"
+			onsubmit="return checkLocation()">
+			<div class="booking-layout">
+				<!-- 왼쪽 영역: 주차장 사진 + 정보 -->
+				<div class="left-panel">
+					<img src="/img/logo2.png" alt="parkingmate" class="parking-image">
+					<div class="info-box">
+						<p th:text="'선택한 주차장: ' + ${session.pname}"></p>
+						<p>
+							기본 이용 금액: <span id="basePrice" th:text="${session.price}">0</span>원
+						</p>
+						<p>
+							30분당 이용 금액: <span id="per30min" th:text="${session.price2}">0</span>원
+						</p>
+					</div>
+				</div>
 
-    <!-- 주차장 이름 표시 -->
-	<p th:text="'선택한 주차장: ' + ${session.pname}"></p>
-	
-	<!-- 사진 -->
-	<!--<img th:src="@{'/images/' + ${session.pIdx} + '.jpg'}" alt="주차장 사진" width="100%">-->
-	
-	<!-- 가격 -->
-	<p>기본 이용 금액 : <span id="basePrice" th:text="${session.price}">0</span>원</p>
-	<p>30분당 이용 금액 : <span id="per30min" th:text="${session.price2}">0</span>원</p>
+				<!-- 오른쪽 영역: 입력 폼 -->
+				<div class="right-panel">
+					<div class="input-group">
+						<label>차량 선택</label> <select name="bookingcarnum"
+							id="bookingcarnum">
+							<option value="">-- 선택 --</option>
+							<option th:each="car : ${carList}" th:value="${car.car_num}"
+								th:text="${car.car_num + ' / ' + car.modelname}"></option>
+						</select>
+					</div>
+					<div class="input-group">
+						<label>예상 주차 시간</label> <input type="number" name="duration"
+							id="duration" placeholder="시간">
+					</div>
 
-    <!-- 2. 예약 정보 입력 영역 -->
-    <form action="/booking/agree" method="post" onsubmit="return checkLocation()">
-      <select id="bookingcarnum" name="bookingcarnum">
-		  <option value="">-- 선택 --</option>
-		  <option th:each="car : ${carList}"
-		          th:value="${car.car_num}"
-		          th:text="${car.car_num + ' / ' + car.modelname}">차량명</option>
-		</select>
+					<div class="input-group">
+						<label>예상 금액</label>
+						<p id="estimate">0원</p>
+						<small>※시간당 비용은 출차 시 결제됩니다</small>
+					</div>
 
-      <div class="input-group">
-        <label for="entryTime">입차 시간 선택</label>
-        <input type="datetime-local" id="inTime" name="inTime">
-      </div>
+					<div class="input-group">
+						<label>발렛 유무</label>
+						<div class="radio-group">
+							<label><input type="radio" name="valet" value="1">
+								있음</label> <label><input type="radio" name="valet" value="0"
+								checked> 없음</label>
+						</div>
+					</div>
 
-      <div class="input-group">
-        <label for="duration">예상 주차 시간 (시간)</label>
-        <input type="number" id="duration" name="duration" min="1" placeholder="예: 2">
-      </div>
+					<div class="input-group">
+						<label>파킹메이트 유무</label>
+						<div class="radio-group">
+							<label><input type="radio" name="instand" value="1">
+								있음</label> <label><input type="radio" name="instand" value="0"
+								checked> 없음</label>
+						</div>
+						<!-- ✅ 현위치 등록 버튼 (기본은 숨김) -->
+						<button type="button" id="locationBtn"
+							style="display: none; margin-top: 10px;">약속장소 등록하기</button>
+						<input type="hidden" name="ulatitude" id="ulatitude" value="0">
+						<input type="hidden" name="ulongitude" id="ulongitude" value="0">
+					</div>
 
-      <!-- 3. 선택사항 -->
-      <div class="input-group">
-        <label>발렛 유무</label>
-        <div class="radio-group">
-          <label><input type="radio" name="valet" value="1"> 있음</label>
-          <label><input type="radio" name="valet" value="0" checked> 없음</label>
-        </div>
-      </div>
+					<div class="input-group">
+						<label>장애인 여부</label>
+						<div class="radio-group">
+							<label><input type="radio" name="obstacle" value="1">
+								해당</label> <label><input type="radio" name="obstacle" value="0"
+								checked> 해당 없음</label>
+						</div>
+					</div>
+				</div>
+			</div>
 
-      <div class="input-group">
-        <label>파킹메이트 유무</label>
-        <div class="radio-group">
-          <label><input type="radio" name="instand" value="1"> 있음</label>
-          <label><input type="radio" name="instand" value="0" checked> 없음</label>
-        </div>
-          <!-- ✅ 현위치 등록 버튼 (기본은 숨김) -->
-		 <button type="button" id="locationBtn" style="display:none; margin-top: 10px;">
-		   약속장소 등록하기
-		 </button>
-		 <input type="hidden" name="ulatitude" id="ulatitude" value="0">
-		 <input type="hidden" name="ulongitude" id="ulongitude" value="0">
-      </div>
+			<!-- 하단 결제 및 버튼 -->
+			<div class="payment-footer">
+				<span>결제 금액: <span id="total">0</span>원
+				</span>
+				        <input type="hidden" id="totalInput" name="total" value="0">
+				<button type="submit" disabled>다음</button>
+			</div>
+		</form>
+	</div>
 
-      <div class="input-group">
-        <label>장애인 여부</label>
-        <div class="radio-group">
-          <label><input type="radio" name="obstacle" value="1"> 해당</label>
-          <label><input type="radio" name="obstacle" value="0" checked> 해당 없음</label>
-        </div>
-      </div>
-	   <div class="input-group">
-        <label>예상 금액</label>
-        <p id="estimate">0원</p>
-      </div>
-
-      <p style="font-size: 0.8em;">※ 주차비는 출차 시 결제됩니다</p>
-	  
-	  
-      <!-- 4. 결제 -->
-      <div class="right-align">
-        <p>결제 금액 : <span id="total">0</span>원</p>
-        <input type="hidden" id="totalInput" name="total" value="0">
-        <button type="submit" disabled>다음</button>
-      </div>
-
-    </form>
-
-  </div>
-
-  <script>
+	<script>
 	  const base = parseInt(document.getElementById("basePrice").textContent);
 	  const per30 = parseInt(document.getElementById("per30min").textContent);
 	  const durationInput = document.getElementById("duration");
@@ -131,14 +256,11 @@
 	  // 폼 입력 유효성 검사
 	  function validateForm() {
 	    const carSelected = bookingCarSelect.value !== "";
-	    const inTimeSelected = inTimeInput.value !== "";
 	    const durationValid = durationInput.value !== "" && parseInt(durationInput.value) > 0;
-
-	    submitBtn.disabled = !(carSelected && inTimeSelected && durationValid);
+	    submitBtn.disabled = !(carSelected && durationValid);
 	  }
 	  // 각 필드 변경 시 유효성 검사
 	  bookingCarSelect.addEventListener("change", validateForm);
-	  inTimeInput.addEventListener("input", validateForm);
 	  durationInput.addEventListener("input", function () {
 	    calculateTotal();
 	    validateForm();
@@ -161,7 +283,7 @@
 	    window.open(
 	      "/location",
 	      "locationPopup",
-	      "width=600,height=600,top=100,left=200"
+	      "width=600,height=530,top=100,left=200"
 	    );
 	  });
 	  
@@ -170,18 +292,18 @@
 	  
 	  //장소 미등록시
 		  function checkLocation() {
-    const instandSelected = document.querySelector('input[name="instand"]:checked').value === "1";
-    const ulat = document.getElementById("ulatitude").value;
-
-    if (instandSelected && (!ulat || ulat === "0")) {
-      alert("파킹메이트를 선택한 경우, 약속 장소를 등록해야 합니다.");
-      return false;  // 제출 중지
-    }
-
-    return true; // 제출 계속
-  }
+		    const instandSelected = document.querySelector('input[name="instand"]:checked').value === "1";
+		    const ulat = document.getElementById("ulatitude").value;
+		
+		    if (instandSelected && (!ulat || ulat === "0")) {
+		      alert("파킹메이트를 선택한 경우, 약속 장소를 등록해야 합니다.");
+		      return false;  // 제출 중지
+		    }
+		
+		    return true; // 제출 계속
+		  }
 	</script>
- 
-<th:block th:include = "@{/footer}"></th:block>	
+
+	<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

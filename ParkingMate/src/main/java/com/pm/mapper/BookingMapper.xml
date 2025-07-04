@@ -6,19 +6,30 @@
 	<!-- mybatis설정 -->
 
 
-	<insert id="insertBooking" parameterType="com.pm.booking.model.BookingDTO">
-        INSERT INTO booking (bookingdate, bookingcarnum, intime, outtime, valet, instand, price, status, obstacle, idx, id, ulatitude, ulongitude)
-        VALUES (#{bookingdate}, #{bookingcarnum}, #{intime}, #{outtime}, #{valet}, #{instand}, #{price}, #{status}, #{obstacle}, #{idx}, #{id}, #{ulatitude}, #{ulongitude})
-    </insert>
-	<select id="carbyid" parameterType="String" resultType="com.pm.booking.model.UserCarDTO">
+	<insert id="insertBooking"
+		parameterType="com.pm.booking.model.BookingDTO">
+		INSERT INTO booking (bookingdate, bookingcarnum, intime,
+		outtime, valet,
+		instand, price, status, obstacle, idx, id, ulatitude,
+		ulongitude)
+		VALUES (#{bookingdate}, #{bookingcarnum}, #{intime},
+		#{outtime},
+		#{valet}, #{instand}, #{price}, #{status}, #{obstacle},
+		#{idx}, #{id},
+		#{ulatitude}, #{ulongitude})
+	</insert>
+	<select id="carbyid" parameterType="String"
+		resultType="com.pm.booking.model.UserCarDTO">
 		SELECT uc.car_num, uc.modelname
 		FROM user_cars uc
-		WHERE uc.id = #{id}
+		WHERE uc.id
+		= #{id}
 		AND NOT EXISTS (
-		    SELECT 1
-		    FROM booking b
-		    WHERE b.bookingcarnum = uc.car_num
-		    AND b.status != '전체결제완료'
+		SELECT 1
+		FROM booking b
+		WHERE b.bookingcarnum =
+		uc.car_num
+		AND b.status != '전체결제완료'
 		);
 
 
@@ -40,14 +51,57 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
-
+	
+	<update id="finalupdateStatus" parameterType="String">
+		UPDATE booking
+		JOIN (
+		SELECT bookingnum
+		FROM (
+		SELECT bookingnum
+		FROM booking
+		WHERE id = #{id}
+		ORDER BY bookingnum DESC
+		LIMIT 1
+		) AS sub
+		) AS sub2
+		ON booking.bookingnum
+		= sub2.bookingnum
+		SET
+		booking.status = '주차장결제완료'
+	</update>
 	
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
 		select count(*) from booking where idx = #{idx}
-	
 	</select>
 
-
+    
+	<!-- 메이트이용현황관련(사용자입장) -->
+	<!-- 예약접수된 유저차량번호 리스트조회 -->
+	<select id="findBookingCarNumByUser" parameterType="String" resultType="String">
+		select
+			distinct bookingcarnum
+		from
+			booking
+		where
+			id = #{id}
+		and status != '주차장결제완료'
+		and status = '파킹메이트결제완료'
+	</select>
+	<!-- 차량번호별 내용조회 -->
+	<select id="findBookingInfoByCarNum" parameterType="String" resultType="map">
+		select
+        	a.*,
+        	b.name AS parkinglot_name
+    	from
+        	booking a
+    	join
+        	parkinglot b
+    	on
+        	a.idx = b.idx
+    	where
+        	a.id = #{id}
+    	and a.bookingcarnum = #{bookingcarnum}
+	</select>
 
 	<!-- 메이트이용현황관련 -->
 	<resultMap id="BookingParkingMap"
@@ -87,18 +141,21 @@
 		p.price
 		FROM booking b
 		JOIN parkinglot p ON b.idx = p.idx
-		WHERE b.instand = 1
+		WHERE b.instand
+		= 1
 		AND b.status = '파킹메이트결제완료'
 		ORDER BY b.bookingdate DESC
 	</select>
 
 	<select id="getBookingParkingListByMateId"
 		resultType="com.pm.booking.model.BookingParkingDTO">
-		 SELECT m.*, b.*, pl.*
-    FROM mate_paycheck m
-    JOIN booking b ON m.car_num = b.bookingcarnum
-    JOIN parkinglot pl ON b.idx = pl.idx
-    WHERE m.mid = #{mateId} AND m.status = '정산대기';
+		SELECT m.*, b.*, pl.*
+		FROM mate_paycheck m
+		JOIN booking b ON
+		m.car_num = b.bookingcarnum
+		JOIN parkinglot pl ON b.idx = pl.idx
+		WHERE
+		m.mid = #{mateId} AND m.status = '정산대기';
 	</select>
 
 	<update id="updateStatusToReserved">
@@ -113,23 +170,9 @@
 		SELECT * FROM booking WHERE bookingnum = #{bookingnum}
 	</select>
 
-	<select id="showMatebookingList" parameterType="String"
-		resultType="map">
-		select
-		a.*,
-		b.name as parkinglot_name
-		from
-		booking a
-		join
-		parkinglot b on a.idx = b.idx
-		where
-		a.status = '파킹메이트매칭완료'
-		and instand =
-		1
-	</select>
-
-	<select id="findParkinglotByName" parameterType="String"
-		resultType="com.pm.map.model.ParkingLotDTO">
+    
+  <!-- 주차장정보 가져오기 -->
+	<select id="findParkinglotByName" parameterType="String" resultType="com.pm.map.model.ParkingLotDTO">
 		select
 		*
 		from
@@ -138,6 +181,7 @@
 		name = #{name}
 	</select>
 
+	<!-- 메이트이용 시 매칭된 메이트정보 가져오기 -->
 	<select id="findMatcingMate" resultType="map">
 		select
 		m1.*,
@@ -154,20 +198,61 @@
 		where
 		m1.id = #{id}
 		and m1.mid is not null
-		and m1.car_num =
-		#{car_num}
-		and
-		m2.mate_use = 1
+		and m1.car_num = #{car_num}
+		and m2.mate_use = 1
 	</select>
 
-	<update id="updateOuttime" parameterType="int">
-		update
-		booking
-		SET
-		outtime = NOW()
-		WHERE
-		bookingnum = #{bookingnum}
-	</update>
 
+	<update id="updateInTime">
+		UPDATE booking
+		SET intime = NOW()
+		WHERE bookingnum =
+		#{bookingnum}
+	</update>
+	
+	<update id="updateStartTimePaycheck">
+		UPDATE mate_paycheck
+		SET starttime = NOW()
+		WHERE car_num = (
+        SELECT bookingcarnum FROM booking WHERE bookingnum = #{bookingnum}
+    	)
+	</update>
+	
+	<!-- 주차장만 이용 시 입차시간 업데이트 -->
+	<update id="updateIntime" parameterType="int">
+    	update
+    		booking
+    	SET
+    		intime = NOW()
+    	WHERE
+    		bookingnum = #{bookingnum}
+	</update>
+    
+	<!-- 출차관련 요금계산 정보조회 -->
+	<select id="findIntimeAndPrice2" parameterType="int">
+		select
+			a.intime,
+			a.price,
+			b.price2
+		from
+			booking a
+		join
+			parkinglot b
+		on
+			a.idx = b.idx
+		where
+			a.bookingnum = #{bookingnum}
+	</select>
+    
+	<!-- 주차장이용과 주차+메이트이용관련 출차시간 업데이트 -->
+	<update id="updateOuttime" parameterType="map">
+    	update
+    		booking
+    	SET
+    		outtime = NOW(),
+    		price = #{price}
+    	WHERE
+    		bookingnum = #{bookingnum}
+	</update>
 
 </mapper>
