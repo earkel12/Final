@@ -30,9 +30,7 @@ public interface BookingService {
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 	public int updateEndTime(int bookingnum) throws Exception;
 
-
 	public Map<String, Object> updateIntime(int bookingnum) throws Exception;
-	
 	public Map<String, Object> updateOuttime(int bookingnum) throws Exception;
 }
 

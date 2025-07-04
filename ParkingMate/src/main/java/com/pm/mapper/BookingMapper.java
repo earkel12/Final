@@ -39,3 +39,5 @@ public interface BookingMapper {
 	public int updateOuttime(Map<String, Object> param) throws Exception;
 
 }
+
+
