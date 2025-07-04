@@ -9,4 +9,7 @@
   	<select id = "userInfo" parameterType="String" resultType="String">
   		select name from user where id = #{id}
   	</select>
+  	<select id="selectTelById" resultType="String">
+    	SELECT tel FROM user WHERE id = #{id}
+	</select>
   </mapper>

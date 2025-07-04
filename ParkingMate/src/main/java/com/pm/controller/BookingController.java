@@ -181,7 +181,7 @@ public class BookingController {
 	@PostMapping("/booking/updateOuttime")
 	public String updateOuttime(@RequestParam("bookingnum") int bookingnum) {
 	    try {
-	        service.updateOuttime(bookingnum); // service → mapper → SQL update 수행
+	        service.updateOuttime(bookingnum);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }

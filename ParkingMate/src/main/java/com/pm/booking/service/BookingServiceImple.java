@@ -46,7 +46,7 @@ public class BookingServiceImple implements BookingService {
 	}
 
 	@Override
-	public void updateStatusToReserved(int bookingnum) {
+	public void updateStatusToReserved(int  bookingnum) {
 		 mapper.updateStatusToReserved(bookingnum);
 	}
 	@Override
@@ -76,7 +76,12 @@ public class BookingServiceImple implements BookingService {
 		List<Map<String, Object>> findMate = mapper.findMatcingMate(id, car_num);
 		return findMate;
 	}
-	
+	@Override
+	public int updateInTime(int bookingnum) throws Exception {
+		int result1 = mapper.updateInTime(bookingnum);
+	    int result2 = mapper.updateStartTimePaycheck(bookingnum);
+	    return result1 + result2;
+	}
 	@Override
 	public int updateOuttime(int bookingnum) throws Exception {
 		return mapper.updateOuttime(bookingnum);
@@ -89,6 +94,6 @@ public class BookingServiceImple implements BookingService {
 	@Override
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);
-
 	}
+	
 }

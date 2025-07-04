@@ -28,7 +28,9 @@ public interface BookingMapper {
 	public List<Map<String, Object>> showMatebookingList(String id)throws Exception;
 	public ParkingLotDTO findParkinglotByName(String name) throws Exception;
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
+	public int updateInTime(int bookingnum) throws Exception;
+	public int updateStartTimePaycheck(int bookingnum) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
-
+	
 }
