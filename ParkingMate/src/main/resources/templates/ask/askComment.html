@@ -3,33 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/ask/askComment.css}" />
 </head>
 <body>
-<h1>답변하기(관리자)</h1>
-<form name = "comment" action = "comment" method = "post">
-<fieldset th:each = "ask : ${askComment}">
-<input type = "hidden" name = "idx" th:value = "${ask.idx}">
-<div class = "userid">
-<label>문의자ID</label>
-<label th:text = "${ask.id}"></label>
-</div>
-<div class = "askType">
-<label>문의 유형</label>
-<label th:text = "${ask.type}"></label>
-</div>
-<div class = "askTitle">
-<label>문의 제목</label>
-<label th:text = "${ask.title}"></label>
-</div>
-<div>
-<label>문의 내용</label>
-<label th:text = "${ask.content}"></label>
-</div>
-<br>
-<textarea rows="8" cols="10" name = "comment"></textarea>
-<br>
-<input type = "submit" value = "답변하기">
-</fieldset>
-</form>
+<th:block th:include = "@{/header}"></th:block>
+    <h1>답변하기 (관리자)</h1>
+    <form name="comment" action="comment" method="post" class="comment-form">
+        <fieldset th:each="ask : ${askComment}">
+            <input type="hidden" name="idx" th:value="${ask.idx}" />
+
+            <section class="info-box">
+                <h2>문의 기본 정보</h2>
+                <div class="form-group">
+                    <label>문의자 ID</label>
+                    <span class="value" th:text="${ask.id}">userid</span>
+                </div>
+                <div class="form-group">
+                    <label>문의 유형</label>
+                    <span class="value" th:text="${ask.type}">type</span>
+                </div>
+                <div class="form-group">
+                    <label>문의 제목</label>
+                    <span class="value" th:text="${ask.title}">title</span>
+                </div>
+            </section>
+
+            <section class="content-box">
+                <h2>문의 내용</h2>
+                <p class="content" th:text="${ask.content}">content</p>
+            </section>
+
+            <section class="answer-box">
+                <label for="comment">답변 내용</label>
+                <textarea id="comment" name="comment" rows="8" placeholder="여기에 답변 내용을 입력하세요..."></textarea>
+            </section>
+
+            <div class="form-group btn-group">
+                <input type="submit" value="답변하기" />
+            </div>
+        </fieldset>
+    </form>
+    <th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

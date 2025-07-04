@@ -3,22 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/notice/noticeContent.css}">
 </head>
 <body>
-<div class = "title">
-제목: <span th:text = ${dto.title}></span>
+<th:block th:include = "@{/header}"></th:block>
+<div class="card">
+  <div class="title">
+    제목: <span th:text="${dto.title}"></span>
+  </div>
+
+  <div class="meta">
+    <div class="writedate">
+      작성날짜: <span th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+    <div class="readnum">
+      조회수: <span th:text="${dto.readnum}"></span>
+    </div>
+  </div>
+
+  <div class="content" th:text="${dto.content}"></div>
+
+  <div class="editButton">
+    <a th:href="@{/edit(idx=${dto.idx})}" th:if="${userid == 'admin'}">수정</a>
+    <a href="notice">뒤로가기</a>
+  </div>
 </div>
-<div class = "writedate">
-작성날짜: <span th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd HH:mm')}"></span>
-</div>
-<div class = "readnum">
-조회수: <span th:text = "${dto.readnum}"></span>
-</div>
-내용: <div class = "content" th:text = "${dto.content}" >
-</div>
-<div class = "editButton">
-<a th:href="@{/edit(idx=${dto.idx})}" th:if="${userid == 'admin'}">수정</a><br><br>
-<a href = "notice">뒤로가기</a>
-</div>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

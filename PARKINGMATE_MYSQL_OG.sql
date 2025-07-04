@@ -204,3 +204,5 @@ create table faq (
      question VARCHAR(100) NOT NULL,
      answer VARCHAR(1000) NOT NULL
 )ENGINE=InnoDB AUTO_INCREMENT=1;
+
+select id from user where name = '김두원' and tel = '없음';
