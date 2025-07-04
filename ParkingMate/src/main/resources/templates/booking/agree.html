@@ -3,58 +3,217 @@
 <head>
   <meta charset="UTF-8">
   <title>약관 동의</title>
+  <!-- 복잡한 DOM 조작, AJAX, 이벤트 처리 -->
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <!-- 결제api -->
   <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
   <style>
-    .terms { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-    .terms-title { font-weight: bold; }
-    .flex { display: flex; justify-content: space-between; align-items: center; }
-    #payBtn { background-color: gray; color: white; padding: 10px; border: none; cursor: not-allowed; }
-    #payBtn.active { background-color: blue; cursor: pointer; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #EEF1FF;
+  margin: 0;
+  color: #333;
+}
+
+.container {
+  background-color: #fff;
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; /* 간격 줄이기 */
+  font-weight: 500;
+  padding: 0 40px; /* 양쪽 여백 주면 가운데보다 바깥으로 길어 보임 */
+}
+
+.step {
+  position: relative;
+  flex: 1; /* 각 단계 너비 동일하게 */
+  text-align: center;
+  font-size: 20px; /* 사이 간격 줄이려면 글씨 크기도 살짝 줄이는 게 자연스러움 */
+  padding-bottom: 10px;
+}
+
+.step::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%; /* 글자보다 더 길게 */
+  height: 2px;
+  background-color: #ccc;
+}
+
+.step.active {
+  color: #4B55E1;
+}
+
+.step.active::after {
+  background-color: #4B55E1;
+}
+.terms {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.terms .flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
+
+.terms-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.terms-content {
+  display: none;
+  padding: 15px 20px;
+  font-size: 14px;
+  color: #555;
+  background-color: #fafafa;
+  border-top: 1px solid #ddd;
+}
+
+.terms.open .terms-content {
+  display: block;
+}
+/* 모두 동의 체크박스 스타일 */
+.agree-all {
+  
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+/* 결제 하단 영역 */
+.payment-bar {
+  border-top: 1px dashed #aaa;
+  padding: 20px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9faff;
+  
+}
+
+.payment-bar span {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #4B55E1;
+}
+
+#payBtn {
+  background-color: #4B55E1;
+  color: white;
+  padding: 10px 26px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#payBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#payBtn:not(:disabled):hover {
+  background-color: #3a44c4;
+}
   </style>
 </head>
 <body>
-  <h2>약관 동의</h2>
+<th:block th:include="@{/header}"></th:block>
+<div class="container">
+<div class="step-indicator">
+  <div class="step">  예약  </div>
+  <div class="step active">  약관동의  </div>
+  <div class="step">  결제  </div>
+</div>
 
-  <div class="terms">
-    <div class="flex">
-      <span class="terms-title">[필수] 서비스 이용약관 동의</span>
-      <label><input type="checkbox" class="agree" id="agree1"> 동의</label>
-    </div>
-  </div>
-
-  <div class="terms">
-    <div class="flex">
-      <span class="terms-title">[필수] 개인정보 수집 및 이용 동의</span>
-      <label><input type="checkbox" class="agree" id="agree2"> 동의</label>
-    </div>
-  </div>
-
-  <div class="terms">
-    <div class="flex">
-      <span class="terms-title">[필수] 위치정보 이용약관 동의</span>
-      <label><input type="checkbox" class="agree" id="agree3"> 동의</label>
-    </div>
-  </div>
-
-  <div class="terms">
-    <div class="flex">
-      <span class="terms-title">[선택] 마케팅 정보 수신 동의</span>
-      <label><input type="checkbox" id="agree4"> 동의</label>
-    </div>
-  </div>
+	<div class="terms" onclick="toggleTerms(this)">
+	  <div class="flex">
+	    <span class="terms-title">[필수] 서비스 이용약관 동의</span>
+	    <label><input type="checkbox" class="agree" id="agree1"> 동의</label>
+	  </div>
+	  <div class="terms-content">
+	    본 서비스는 회원에게 주차장 예약, 결제, 위치 안내 기능을 제공합니다.  
+	    회원은 서비스를 정상적으로 이용하기 위해 정확한 정보를 제공해야 하며,  
+	    서비스 이용 중 발생하는 문제에 대한 책임은 본인에게 있습니다.
+	  </div>
+	</div>
+	
+	<div class="terms" onclick="toggleTerms(this)">
+	  <div class="flex">
+	    <span class="terms-title">[필수] 개인정보 수집 및 이용 동의</span>
+	    <label><input type="checkbox" class="agree" id="agree2"> 동의</label>
+	  </div>
+	  <div class="terms-content">
+	    수집 항목: 이름, 연락처, 차량번호 등<br>
+	    이용 목적: 예약 확인, 고객 응대, 서비스 제공<br>
+	    보유 기간: 회원 탈퇴 후 1년간 보관 후 파기
+	  </div>
+	</div>
+	
+	<div class="terms" onclick="toggleTerms(this)">
+	  <div class="flex">
+	    <span class="terms-title">[필수] 위치정보 이용약관 동의</span>
+	    <label><input type="checkbox" class="agree" id="agree3"> 동의</label>
+	  </div>
+	  <div class="terms-content">
+	    위치정보는 약속 장소 및 주차장 안내 목적으로만 사용되며,  
+	    법령에 따라 필요한 경우에 한하여 외부에 제공될 수 있습니다.
+	  </div>
+	</div>
+	
+	<div class="terms" onclick="toggleTerms(this)">
+	  <div class="flex">
+	    <span class="terms-title">[선택] 마케팅 정보 수신 동의</span>
+	    <label><input type="checkbox" id="agree4"> 동의</label>
+	  </div>
+	  <div class="terms-content">
+	    이벤트, 할인 정보 등 다양한 혜택을 문자 또는 이메일로 안내드립니다.  
+	    동의하지 않아도 서비스 이용에 제한은 없습니다.
+	  </div>
+	</div>
 
   <hr>
 
-  <div style="margin-bottom:10px;">
-    <label><input type="checkbox" id="checkAll"> 모두 동의</label>
-  </div>
-
-  <div class="flex" style="border-top: 1px dashed #888; padding-top: 10px;">
-    <div>결제 금액: <span id="finalPrice" th:text="${total}">0</span> 원</div>
-    <button id="payBtn" disabled>결제하기</button>
-  </div>
-
+	<!-- ✅ 모두 동의 -->
+	<div class="agree-all">
+	  <label><input type="checkbox" id="checkAll"> 모두 동의</label>
+	</div>
+	
+	<!-- ✅ 결제 하단 영역 -->
+	<div class="payment-bar">
+	  <div>결제 금액: <span id="finalPrice" th:text="${total}">0</span> 원</div>
+	  <button id="payBtn" disabled>결제하기</button>
+	</div>
+</div>
   <script>
     const agreeChecks = document.querySelectorAll('.agree');
     const checkAll = document.getElementById('checkAll');
@@ -106,7 +265,7 @@
 	    buyer_postcode: "12345"
 	  }, function (rsp) {
 	    if (rsp.success) {
-	        alert("결제 성공! imp_uid: " + rsp.imp_uid);
+	        alert("1차결제 성공!");
 	        
 	        // 🟢 Ajax로 컨트롤러에 결제 성공 알리기
 	        $.ajax({
@@ -125,6 +284,15 @@
 	      }
 	    });
 	  });
+
+	function toggleTerms(el) {
+	  // 클릭 시, 현재 항목만 열고 나머지는 닫음
+	  document.querySelectorAll('.terms').forEach(term => {
+	    if (term !== el) term.classList.remove('open');
+	  });
+	  el.classList.toggle('open');
+	}
 	</script>
+<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

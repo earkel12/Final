@@ -1,3 +1,4 @@
+여러분 mate_paycheck테이블 설정값변경 등 변경된 db 드립니다.
 #테이블생성
 #순서대로 생성하기
 #유저테이블
@@ -79,7 +80,7 @@ CREATE TABLE parkingmate (
    picture VARCHAR(300) NOT NULL,
    addr VARCHAR(300) NOT NULL,
     bank VARCHAR(100) NOT NULL,
-   account bigint NOT NULL,
+   account BIGINT NOT NULL,
    id VARCHAR(50),
    #FOREIGN KEY 설정 (id -> user 테이블의 id 참조)
    CONSTRAINT fk_parkingmate_id foreign key(id) references user(id)
@@ -143,8 +144,8 @@ CREATE TABLE user_cars (
 CREATE TABLE mate_paycheck (
    idx INT AUTO_INCREMENT PRIMARY KEY, 
    id   VARCHAR(50),
-   starttime DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-   endtime DATETIME NOT NULL,
+   starttime DATETIME,
+   endtime DATETIME,
     -- 상태틑 2가지로 구분됨 1.정산대기 2.정산완료
    status VARCHAR(200) DEFAULT '정산대기' NOT NULL,
    price INT DEFAULT 0 NULL,

@@ -1,5 +1,9 @@
 package com.pm.booking.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +42,10 @@ public class BookingServiceImple implements BookingService {
 	public void updateStatus(String userid) throws Exception {
 		mapper.updateStatus(userid);
 	}
-
+	@Override
+	public void finalupdateStatus(String userid) throws Exception {
+		mapper.finalupdateStatus(userid);
+	}
 	
 	@Override
 	public int bookingCount(int idx) throws Exception {
@@ -54,15 +61,18 @@ public class BookingServiceImple implements BookingService {
 		return mapper.getBookingByNum(bookingnum);
 	}
 	
+
 	
-	
-	//메이트이용현황관련
+	//메이트이용현황관련	
 	@Override
-	public List<Map<String, Object>> showMatebookingList(String id) throws Exception {
-		List<Map<String, Object>> mateBookingList = mapper.showMatebookingList(id);
-		System.out.println("메이트 예약 리스트: " + mateBookingList);
-		
-		return mateBookingList;
+	public List<String> findBookingCarNumByUser(String id) throws Exception {
+		return mapper.findBookingCarNumByUser(id);
+	}
+	
+	@Override
+	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception {
+		List<Map<String, Object>> bookingInfoByCarnum = mapper.findBookingInfoByCarNum(id, bookingcarnum);
+	    return bookingInfoByCarnum;
 	}
 	
 	@Override
@@ -83,10 +93,69 @@ public class BookingServiceImple implements BookingService {
 	    return result1 + result2;
 	}
 	@Override
-	public int updateOuttime(int bookingnum) throws Exception {
-		return mapper.updateOuttime(bookingnum);
+	public Map<String, Object> updateIntime(int bookingnum) throws Exception {
+		
+		System.out.println("=== updateIntime Controller 진입 ===");
+		
+		int updateCount1 = mapper.updateIntime(bookingnum);
+		System.out.println("updateCount1:"+updateCount1);
+		
+		if(updateCount1==0) {
+			throw new IllegalAccessException("입차처리실패:오류발생 고객센터에 문의바랍니다.");
+		}
+		//클라이언트로 반환할 데이터 구성
+		Map<String, Object> result = new HashMap<>();
+		result.put("bookingnum", bookingnum);
+		result.put("success", true);
+		
+		return result;
 	}
 	
+	@Override
+	public Map<String, Object> updateOuttime(int bookingnum) throws Exception {
+		
+		System.out.println("=== updateOuttime Controller 진입 ===");
+		
+		Map<String, Object> findInfo = mapper.findIntimeAndPrice2(bookingnum);
+		  if (findInfo == null) {
+		        throw new IllegalStateException("해당 bookingnum에 대한 데이터가 없습니다.");
+		  }
+		
+		Timestamp intimeTimestamp = (Timestamp)findInfo.get("intime");
+		int price2 = (int)findInfo.get("price2");
+		
+		if(intimeTimestamp==null) {
+			throw new IllegalAccessException("입차시간이 정상적으로 등록되지 않았습니다. 고객센터로 연락바랍니다.");
+		}
+		
+		LocalDateTime intime = intimeTimestamp.toLocalDateTime();
+		//경과시간계산
+		long minutes = ChronoUnit.MINUTES.between(intime, LocalDateTime.now());
+		//30분단위 올림처리
+		long units=(long)Math.ceil((double)minutes/30);
+		int price=(int)(units*price2);
+		
+		//DB 업데이트 수행 (outtime = now, price = 계산된 금액)
+	    Map<String, Object> updateMap = new HashMap<>();
+	    updateMap.put("bookingnum", bookingnum);
+	    updateMap.put("price", price);
+	    
+	    int updateCount2 = mapper.updateOuttime(updateMap);
+	    System.out.println("updateCount2: " + updateCount2);
+
+	    if (updateCount2 == 0) {
+	        throw new IllegalStateException("출차 처리 실패: bookingnum 불일치 또는 업데이트 실패.");
+	    }
+	    //클라이언트 반환 데이터 구성
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("bookingnum", bookingnum);
+	    result.put("price", price);
+	    result.put("minutes", minutes);
+	    result.put("units", units);
+
+	    return result;
+	}
+
 	@Override
 	public List<BookingParkingDTO> getActiveInstadBookings() {
 		return mapper.selectActiveInstadBookings();
@@ -95,5 +164,9 @@ public class BookingServiceImple implements BookingService {
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId) {
 		return mapper.getBookingParkingListByMateId(mateId);
 	}
+<<<<<<< HEAD
 	
 }
+=======
+}
+>>>>>>> origin/feat/minorIssueFix
