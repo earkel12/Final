@@ -72,8 +72,21 @@
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
 		select count(*) from booking where idx = #{idx}
 	</select>
-
-    
+	
+	
+	
+	
+	
+	<!--0원이여도 결제완료상태 변경  -->
+	<select id="getBookingPriceById" parameterType="String" resultType="int">
+    	select
+    		price
+    	from
+    		booking
+    	where id = #{id}
+    	and bookingcarnum = #{bookingcarnum}
+    	and status != '주차장결제완료'
+	</select>
 	<!-- 메이트이용현황관련(사용자입장) -->
 	<!-- 예약접수된 유저차량번호 리스트조회 -->
 	<select id="findBookingCarNumByUser" parameterType="String" resultType="String">

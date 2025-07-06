@@ -22,7 +22,9 @@ public interface BookingService {
 
 	public List<BookingParkingDTO> getActiveInstadBookings();
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
-
+	
+	//0원이여도 결제상태완료로 변경
+	public int getBookingPriceById(String id, String bookingcarnum) throws Exception;
 	//메이트이용현황관련
 	public List<String> findBookingCarNumByUser(String id) throws Exception;
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception;

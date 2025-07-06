@@ -108,11 +108,17 @@ public class BookingController {
 	
 	@PostMapping("/finalpayment")
 	@ResponseBody
-	public String finalupdatePayment(HttpSession session) {
+	public String finalupdatePayment(HttpSession session, @RequestParam("bookingcarnum") String bookingcarnum) {
 	    String userId = (String) session.getAttribute("sid");
 	    try {
-	        service.finalupdateStatus(userId);  
-	        return "OK";
+	    	int price = service.getBookingPriceById(userId, bookingcarnum);
+	    	
+	    	 if (price == 0) {
+	             service.finalupdateStatus(userId); // 0원이면 상태 업데이트
+	             return "OK";
+	         } else {
+	             return "FAIL"; // 0원이 아닌 경우 결제 진행 필요
+	         }
 	    } catch (Exception e) {
 	        return "FAIL";
 	    }

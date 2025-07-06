@@ -1,0 +1,146 @@
+/* 컨테이너 정렬 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f8f9fc;
+    margin: 0;
+    padding: 0;
+}
+
+/* 탭 스타일 */
+.tab {
+    background-color: #ddd;
+    border: 1px solid #aaa;
+    padding: 10px 20px;
+    display: inline-block;
+    cursor: pointer;
+    margin: 20px 10px 10px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tab.active {
+    background-color: #4B55E1;
+    color: white;
+}
+
+.tab:hover:not(.active) {
+    background-color: #bbb;
+}
+
+/* 테이블 */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f4f6ff;
+    font-weight: 600;
+    color: #333;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+    transition: background 0.2s;
+}
+
+/* 리뷰 버튼 */
+.review-btn {
+    background: #B1B2FF;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.review-btn:hover {
+    background: #AAC4FF;
+}
+
+.review-btn:disabled {
+    background: #ccc;
+    cursor: default;
+}
+
+.table-wrapper {
+    width: fit-content;
+    margin: 0 auto; 
+}
+
+.filter-grid {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.filter-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.filter-item img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+}
+
+.filter-item div {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+.back-btn {
+  display: block;
+  margin: 30px auto 0 auto;
+  background: #777;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 14px; /* 추가 */
+  line-height: 1.4; /* 추가 */
+  border-radius: 10px; /* 둥글기 증가 */
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s; /* 호버 부드럽게 */
+  font-family: 'Noto Sans KR', sans-serif; /* 한글 가독성 개선 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 버튼 입체감 */
+}
+
+.back-btn:hover {
+  background: #555;
+  transform: translateY(-2px); /* 호버시 살짝 떠오르게 */
+}

@@ -2,86 +2,178 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/register/termsofuse.css">
+<script src="/js/involveRegister.js"></script>
 <script>
-	function validationAgreement() {
-		const required = ['terms1', 'terms2', 'terms3', 'terms4'];
+function toggleAgreeAll(checkbox) {
+    const termsNames = ['terms1', 'terms2', 'terms3', 'terms4', 'terms5'];
+
+    termsNames.forEach(name => {
+        const agreeRadio = document.querySelector(`input[name="${name}"][value="agree"]`);
+        const disagreeRadio = document.querySelector(`input[name="${name}"][value="disagree"]`);
+        if (checkbox.checked) {
+            if (agreeRadio) agreeRadio.checked = true;
+        } else {
+            if (agreeRadio) agreeRadio.checked = false;
+            if (disagreeRadio) disagreeRadio.checked = false;
+        }
+    });
+}
+function validationAgreement() {
+	const required = ['terms1', 'terms2', 'terms3', 'terms4'];
 		
-		for(let name of required) {
-			const selected = document.querySelector('input[name="'+name+'"]:checked');
-			if(!selected || selected.value!=='agree') {
-				alert("모든 약관에 동의하셔야 회원가입이 가능합니다.");
-				return false;
+	for(let name of required) {
+		const selected = document.querySelector('input[name="'+name+'"]:checked');
+		if(!selected || selected.value!=='agree') {
+			alert("필수 약관에 동의하셔야 회원가입이 가능합니다.");
+			return false;
 				
-			}
 		}
-		return true;
 	}
+	return true;
+}
 </script>
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
 <div>
 <h1>이 용 약 관 동 의</h1>
 <form name="termsofuseForm" action="/choosetermsofuse" method="get" onsubmit="return validationAgreement()" >
 	
 	<div>
-		<p>
-		이용약관 제1조: 19세 이상만 회원가입이 가능합니다.
-		</p>
+		<p>[필수] 이용약관 - 1</p>
+		<textarea readonly>
+이용약관 제1조: 19세 이상만 회원가입이 가능합니다.
+		</textarea>
 		<div>
 			<label>
 				<input type="radio" name="terms1" value="agree" required>동의
-			</label>
-			<label>
 				<input type="radio" name="terms1" value="disagree" required>동의안함
 			</label>
 		</div>
 	</div>
 	
 	<div>
-		<p>
-		개인정보 수집 및 이용에 동의합니다.
-		</p>
+		 <p>[필수] 이용약관 - 2</p>
+        <textarea readonly>
+본 약관은 파킹메이트(이하 "회사")가 제공하는 서비스 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.
+	
+	- 본 서비스는 회원가입을 통해 제공됩니다.
+	- 회원은 본인의 정보를 정확하게 제공해야 하며,
+	  타인의 정보를 도용해서는 안 됩니다.
+        </textarea>
 		<div>
 			<label>
 				<input type="radio" name="terms2" value="agree">동의
-			</label>
-			<label>
 				<input type="radio" name="terms2" value="disagree">동의안함
 			</label>
 		</div>
 	</div>
 	
 	<div>
-		<p>
-		마케팅관련 정보이용에 동의합니다.
-		</p>
+		<p>[필수] 개인정보 수집 및 이용</p>
+        <textarea readonly>
+회사는 아래와 같은 목적으로 개인정보를 수집 및 이용합니다.
+	
+	1. 수집 항목: 이름, 휴대전화번호, 이메일, 차량번호(선택),
+		      비밀번호 등
+	2. 수집 목적: 회원 식별 및 본인 확인
+        </textarea>
 		<div>
 			<label>
 				<input type="radio" name="terms3" value="agree">동의
-			</label>
-			<label>
 				<input type="radio" name="terms3" value="disagree">동의안함
 			</label>
 		</div>
 	</div>
 	
 	<div>
-		<p>
-		교통도로법관련하여 법을 준수할 것에 동의합니다.
-		</p>
+		<p>[필수] 교통도로법 준수</p>
+        <textarea readonly>
+회원은 주차 서비스 이용 시 교통도로법 및 관련 법령을 준수할 의무가 있습니다.
+        </textarea>
 		<div>
 			<label>
 				<input type="radio" name="terms4" value="agree">동의
-			</label>
-			<label>
 				<input type="radio" name="terms4" value="disagree">동의안함
 			</label>
 		</div>
 	</div>
-	<input type="button" value="돌아가기" onclick="window.location.href='/';">
+	
+	<div>
+        <p>[선택] 이벤트/혜택 정보 수신</p>
+        <textarea readonly>
+회사는 서비스 관련 다양한 혜택, 이벤트, 신규 서비스 안내 등의 정보를 이메일, 문자(SMS), 앱 푸시 등의 방법으로 제공할 수 있습니다.
+	
+	- 수신 항목: 서비스 안내, 할인 및 쿠폰 혜택, 제휴 프로모션 
+		     등 마케팅 정보
+	- 수신 방법: 이메일, 문자(SMS), 모바일 푸시 알림 등
+	- 보유 및 이용 기간: 수신 동의 철회 시까지
+        </textarea>
+        <div>
+            <label><input type="radio" name="terms5" value="agree" required>동의
+            <input type="radio" name="terms5" value="disagree" required>동의안함</label>
+        </div>
+    </div>
+    
+    <div class="agree-all-container">
+    <label>
+        <input type="checkbox" id="agreeAllCheckbox" onclick="toggleAgreeAll(this)">
+        전체 약관 동의
+    </label>
+	</div>
+
 	<input type="submit" value="다음">
+	<input type="button" value="돌아가기" onclick="window.location.href='/';">
 </form>
 </div>
+<div style="height: 30px;"></div>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

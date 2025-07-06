@@ -1,0 +1,202 @@
+/* mateUsagesStatus.css - 차량번호 탭 기반 정보 갱신 화면 */
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 24px;
+}
+
+/* 🚗 차량번호 탭 */
+.tab-container {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tab-item {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #EDEEFF;
+    color: #4B55E1;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+}
+
+.tab-item:hover {
+    background-color: #D2DAFF;
+}
+
+.tab-item.active {
+    background-color: #B1B2FF;
+    color: white;
+}
+
+/* 상단 영역 */
+.top-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 상태 메시지 박스 */
+.status-box {
+    background: #F0F1FF;
+    border: 2px solid #B1B2FF;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 예약 정보 박스 */
+.info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 800px;
+    margin: 0 auto;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #B1B2FF;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* 버튼 그룹 */
+.button-group-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px; /* 버튼 사이 간격 약간 확대 */
+    justify-content: center; /* ✅ 버튼 그룹을 가운데 정렬 */
+    margin-top: 10px; /* 위 요소와 간격 확보 */
+}
+
+.button-group-inline button {
+    padding: 12px 20px; /* ✅ 버튼 크기 확대 */
+    background-color: #B1B2FF;
+    color: white;
+    border: none;
+    border-radius: 8px; /* ✅ 더 둥글게 */
+    font-size: 1em; /* ✅ 글자 크기 확대 */
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.button-group-inline button:hover {
+    background-color: #8f95ff;
+    transform: scale(1.05); /* ✅ 살짝 커지도록 */
+}
+
+/* 하단 영역 */
+.bottom-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.map-box {
+    flex: 3;
+    min-width: 250px; /*최소 너비*/
+    height: 400px;
+    min-height: 300px; /*최소 높이*/
+    border: 2px solid #B1B2FF;
+    border-radius: 12px;
+    background: #EDEEFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mate-info-box {
+    flex: 1;
+    min-width: 200px;
+    border: 2px solid #B1B2FF;
+    border-radius: 12px;
+    padding: 16px;
+    background: #F9F9FF;
+    text-align: center;
+}
+
+.mate-info-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ddd;
+    display: block;
+    margin: 10px auto;
+}
+
+@media (max-width: 768px) {
+    .tab-list {
+        flex-direction: column;
+        align-items: center;
+    }
+    .bottom-section {
+        flex-direction: column;
+    }
+}
+
+/* 상단 메뉴바 */
+#floatingNav {
+    width: 100%;
+    background-color: #B1B2FF;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#floatingNav a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+    background-color: #AAC4FF;
+}

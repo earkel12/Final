@@ -2,141 +2,118 @@
 <html xmlns:th = http://www.thymeleaf.org>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script>
-let isIdAvailable = false; // 초기값: 사용 불가 상태
-
-function validateForm() {
-	const pwd = document.getElementById("pwd").value;
-	const repwd = document.getElementById("repwd").value;
-	
-	if(pwd!==repwd) {
-		alert("비밀번호가 일치하지 않습니다.");
-		return false;
-		document.getElementById("repwd").focus();
-
-	}
-
-    if (!isIdAvailable) {
-        alert("아이디를 확인하세요.");
-        document.getElementById("id").focus();
-        return false;
-    }
-
-    return true;
-	
-}
-function checkId() {
-    const idInput = document.getElementById("id");
-    const id = idInput.value.trim();
-    const msgSpan = document.getElementById("id-check-msg");
-
-    if (id === "") {
-        msgSpan.textContent = "아이디를 입력하세요.";
-        msgSpan.style.color = "red";
-        return;
-    }
-
-    fetch("/checkId?id=" + encodeURIComponent(id))
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes("사용 가능")) {
-                msgSpan.textContent = data;
-                msgSpan.style.color = "green";
-                isIdAvailable = true; // 사용 가능
-    
-            } else {
-                msgSpan.textContent = data;
-                msgSpan.style.color = "red";
-                isIdAvailable = false; // 중복됨
-       
-            }
-        })
-        .catch(error => {
-            msgSpan.textContent = "오류 발생: " + error;
-            msgSpan.style.color = "red";
-            isIdAvailable = false;
-            
-        });
-}
-function matchPwd() {
-	const pwdInput = document.getElementById("pwd");
-	const repwdInput = document.getElementById("repwd");
-	const msgSpan2 = document.getElementById("pwd-check-msg");
-	
-	if(pwdInput.value=="" && repwdInput.value=="") {
-		msgSpan2.textContent = "비밀번호를 입력하세요.";
-		msgSpan2.style.color = "red";
-	} else if(pwdInput.value==repwdInput.value) {
-		msgSpan2.textContent = "비밀번호가 일치합니다.";
-		msgSpan2.style.color = "green";
-	} else {
-		msgSpan2.textContent = "비밀번호가 일치하지 않습니다.";
-		msgSpan2.style.color = "red";
-	}
-	
-}
-function mergeResidentNum() {
-    const front = document.getElementById("resident_num1").value.replace(/[^0-9]/g, "");
-    const back = document.getElementById("resident_num2").value.replace(/[^0-9]/g, "");
-    const hiddenInput = document.getElementById("resident_num");
-
-    if (front.length <= 6 && back.length <= 7) {
-        hiddenInput.value = front+"-"+back;
-    }
-}
-</script>
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/register/register1.css">
+<script src="/js/involveRegister.js"></script>
 </head>
 <body>
-<h1>회 원 가 입</h1>
-<form name="registerForm" action="/registerForm" method="post" onsubmit="return validateForm()">
-<fieldset>
-	<legend>파킹메이트 회원등록</legend>
-	<table>
-		<tr>
-			<th>아이디:</th>
-			<td>
-   			<input type="text" id="id" name="id" required>
-    		<input type="button" value="ID체크하기" onclick="checkId()">
-    		<span id="id-check-msg"></span>
- 			</td>
-		</tr>
-		<tr>
-			<th>비밀번호:</th>
-			<td><input type="password" id="pwd" name="pwd" placeholder="비밀번호입력" required></td>
-		</tr>
-		<tr>
-			<th>비밀번호확인:</th>
-			<td><input type="password" id="repwd" name="repwd" oninput="matchPwd()" required>
-			<span id="pwd-check-msg"></span></td>
-		</tr>
-		<tr>
-			<th>이름:</th>
-			<td><input type="text" name="name" required></td>
-		</tr>
-		<tr>
-			<th>주민등록번호:</th>
-			<td><input type="text" id="resident_num1" maxlength="6" oninput="mergeResidentNum()" required>-
-			<input type="password" id="resident_num2" maxlength="7" oninput="mergeResidentNum()" required>
-			<input type="hidden" id="resident_num" name="resident_num">
-			</td>
-		</tr>
-		<tr>
-			<th>전화번호:</th>
-			<td><input type="text" name="tel" placeholder="-제외하고 입력하세요" required></td>
-		</tr>
-		<tr>
-			<th>이메일:</th>
-			<td><input type="text" name="email" required></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right">
-			<input type="submit" value="등록">
-			<input type="button" value="취소" onclick="window.location.href='/';">
-			</td>
-		</tr>
-	</table>
-</fieldset>
+<th:block th:include = "@{/header}"></th:block>
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<h1 align="center">회 원 가 입</h1>
+<form class="register-form" name="registerForm" action="/registerForm" method="post" onsubmit="return validateForm()">
+			
+			<label>아이디</label>
+			<div class="input-group">
+   			<input type="text" id="id" name="id" style="width: 250px;" required>
+    		<button type="button" class="small-btn" onclick="checkId()">중복 검사</button>
+ 			</div>
+ 			<span id="id-check-msg"></span>
+ 			
+		<label>비밀번호</label>
+		<input type="password" id="pwd" name="pwd" style="width: 250px;" required>
+		
+		<label>비밀번호확인</label>
+		<input type="password" id="repwd" name="repwd" oninput="matchPwd()" style="width: 250px;" required>
+		<span id="pwd-check-msg"></span>
+	
+	
+		<label>이름</label>
+		<div>
+		<input type="text" name="name" style="width: 150px;" required>
+		</div>
+		
+		<label>주민등록번호</label>
+		<div class="input-group">
+		<input type="text" id="resident_num1" maxlength="6" oninput="mergeResidentNum()" style="width: 180px;" required>-
+		<input type="password" id="resident_num2" maxlength="7" oninput="mergeResidentNum()" style="width: 180px;" required>
+		<input type="hidden" id="resident_num" name="resident_num">
+		</div>
+
+		<label>휴대전화번호</label>
+		<div class="input-group">
+		<select name="countryCode" style="width: 150px;">
+        <option value="+82">대한민국 +82</option>
+        <option value="+1">미국 +1</option>
+        <option value="+81">일본 +81</option>
+    	</select>
+    	<input type="text" name="tel" placeholder="-제외하고 입력하세요" required>
+    	</div>
+    	
+		<label>이메일 주소</label>
+    	<div class="input-group">
+		<input type="text" name="emailid" required>
+		<span>@</span>
+		<select name="emaildomain">
+            <option value="naver.com">naver.com</option>
+            <option value="gmail.com">gmail.com</option>
+            <option value="daum.net">daum.net</option>
+            <option value="custom">직접 입력</option>
+        </select>
+        <input type="hidden" id="emailFull" name="email">
+		</div>
+		
+		<div style="height: 40px;"></div>
+		<div align = "right">
+        <button type="submit">등록</button>
+        <button type="button" onclick="window.location.href='/'">취소</button>
+    </div>
 </form>
+
+<div style="height: 30px;"></div>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>
