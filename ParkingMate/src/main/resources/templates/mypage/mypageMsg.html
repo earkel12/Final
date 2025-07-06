@@ -1,26 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th= "http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>알림</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <script>
-window.alert('[[${msg}]]');
-let msg='[[${msg}]]';
+// Thymeleaf msg 주입
+let msg = '[[${msg}]]';
+
+// 알림 타입과 이동 경로 설정
+let icon = 'info';
+let redirectUrl = '/mypageMain';
+
 if (msg == "이미 등록된 차량번호입니다.") {
-    location.href = '/myCarAdd';
-  } else if(msg=="차량정보 수정실패") {
-    location.href = '/myCarInfoShow';
-  } else if(msg=="차량정보 수정완료") {
-	location.href = '/myCarList';
-  } else if(msg=="차량삭제성공" || msg=="차량삭제실패") {
-	location.href = '/myCarList';
-  } else {
-	location.href = '/mypageMain';
-  }
+    icon = 'warning';
+    redirectUrl = '/myCarAdd';
+} else if (msg == "차량정보 수정실패") {
+    icon = 'error';
+    redirectUrl = '/myCarInfoShow';
+} else if (msg == "차량정보 수정완료") {
+    icon = 'success';
+    redirectUrl = '/myCarList';
+} else if (msg == "차량삭제성공") {
+    icon = 'success';
+    redirectUrl = '/myCarList';
+} else if (msg == "차량삭제실패") {
+    icon = 'error';
+    redirectUrl = '/myCarList';
+}
+
+// SweetAlert2 호출
+Swal.fire({
+    icon: icon,
+    title: msg,
+    confirmButtonText: '확인'
+}).then(() => {
+    location.href = redirectUrl;
+});
 </script>
-</body>
-</html>
 </body>
 </html>

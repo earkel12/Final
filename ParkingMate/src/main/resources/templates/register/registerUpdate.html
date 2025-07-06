@@ -2,122 +2,89 @@
 <html xmlns:th = http://www.thymeleaf.org>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/register/register2.css">
+<script src="/js/involveRegister.js"></script>
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-let isIdAvailable = false; // 초기값: 사용 불가 상태
-
-function validateForm() {
-	const pwd = document.getElementById("pwd").value;
-	const repwd = document.getElementById("repwd").value;
-	
-	if(pwd!==repwd) {
-		alert("비밀번호가 일치하지 않습니다.");
-		return false;
-		document.getElementById("repwd").focus();
-
-	}
-
-    if (!isIdAvailable) {
-        alert("아이디를 확인하세요.");
-        document.getElementById("id").focus();
-        return false;
-    }
-	
-	return true;
-	
-}
-function checkId() {
-    const idInput = document.getElementById("id");
-    const id = idInput.value.trim();
-    const msgSpan = document.getElementById("id-check-msg");
-
-    if (id === "") {
-        msgSpan.textContent = "아이디를 입력하세요.";
-        msgSpan.style.color = "red";
-        return;
-    }
-
-    fetch("/checkId?id=" + encodeURIComponent(id))
-        .then(response => response.text())
-        .then(data => {
-            if (data.includes("사용 가능")) {
-                msgSpan.textContent = data;
-                msgSpan.style.color = "green";
-                isIdAvailable = true; // 사용 가능
+function openPwdUpdatePopup() {
+    const id = '[[${dto.id}]]';
+    const popupWidth = 400;
+    const popupHeight = 360;
     
-            } else {
-                msgSpan.textContent = data;
-                msgSpan.style.color = "red";
-                isIdAvailable = false; // 중복됨
-       
-            }
-        })
-        .catch(error => {
-            msgSpan.textContent = "오류 발생: " + error;
-            msgSpan.style.color = "red";
-            isIdAvailable = false;
-            
-        });
-}
-function matchPwd() {
-	const pwdInput = document.getElementById("pwd");
-	const repwdInput = document.getElementById("repwd");
-	const msgSpan2 = document.getElementById("pwd-check-msg");
-	
-	if(pwdInput.value=="" && repwdInput.value=="") {
-		msgSpan2.textContent = "비밀번호를 입력하세요.";
-		msgSpan2.style.color = "red";
-	} else if(pwdInput.value==repwdInput.value) {
-		msgSpan2.textContent = "비밀번호가 일치합니다.";
-		msgSpan2.style.color = "green";
-	} else {
-		msgSpan2.textContent = "비밀번호가 일치하지 않습니다.";
-		msgSpan2.style.color = "red";
-	}
-	
-}
-function mergeResidentNum() {
-    const front = document.getElementById("resident_num1").value.replace(/[^0-9]/g, "");
-    const back = document.getElementById("resident_num2").value.replace(/[^0-9]/g, "");
-    const hiddenInput = document.getElementById("resident_num");
-
-    if (front.length <= 6 && back.length <= 7) {
-        hiddenInput.value = front+"-"+back;
-    }
+ 	// 가운데 위치 계산
+    const left = (window.screen.width / 2) - (popupWidth / 2);
+    const top = (window.screen.height / 2) - (popupHeight / 2);
+    
+    window.open('/pwdUpdateFormPopup?id=' + id,
+    			'pwdUpdatePopup',
+    			`width=${popupWidth},height=${popupHeight},left=${left},top=${top}`);
+    
 }
 </script>
 </head>
 <body>
-<h1>회 원 가 입</h1>
+<th:block th:include = "@{/header}"></th:block>
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<h1>회원정보</h1>
 <form name="registerFormUpdate" action="/registerFormUpdate" method="post">
 <fieldset>
-	<legend>회원정보수정</legend>
 	<table>
 		<tr>
 			<th>아이디:</th>
-			<td>
-   			<input type="text" id="id" name="id" th:value="${dto.id}" readonly>
- 			</td>
+   			<td th:text="${dto.id}"></td>
 		</tr>
 		<tr>
-			<th>비밀번호:</th>
-			<td><input type="password" id="pwd" name="pwd" th:value="${dto.pwd}" placeholder="비밀번호입력"></td>
-		</tr>
-		<tr>
-			<th>비밀번호확인:</th>
-			<td><input type="password" id="repwd" name="repwd" th:value="${dto.pwd}" oninput="matchPwd()">
-			<span id="pwd-check-msg"></span></td>
+		<input type="button" value="비밀번호변경" onclick="openPwdUpdatePopup()">
 		</tr>
 		<tr>
 			<th>이름:</th>
-			<td><input type="text" name="name" th:value="${dto.name}" readonly></td>
-		</tr>
-		<tr>
-			<th>주민등록번호:</th>
-			<td><input type="text" id="resident_num1" maxlength="6" th:value="${resident1}" oninput="mergeResidentNum()" readonly>-
-			<input type="password" id="resident_num2" maxlength="7" th:value="${resident2}" oninput="mergeResidentNum()" readonly>
-			<input type="hidden" id="resident_num" name="resident_num">
-			</td>
+			<td th:text="${dto.name}"></td>
 		</tr>
 		<tr>
 			<th>전화번호:</th>
@@ -128,13 +95,15 @@ function mergeResidentNum() {
 			<td><input type="text" name="email" th:value="${dto.email}"></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right">
-			<input type="submit" value="등록">
+			<td class="button-cell" colspan="2" align="right">
 			<input type="button" value="취소" onclick="window.location.href='/userInfo';">
+			<input type="submit" value="등록">
 			</td>
 		</tr>
 	</table>
 </fieldset>
 </form>
+
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

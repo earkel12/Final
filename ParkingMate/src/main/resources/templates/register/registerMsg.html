@@ -1,22 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th= "http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>알림</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <script>
-window.alert('[[${msg}]]');
-let msg='[[${msg}]]';
-if (msg == "회원가입 축하드립니다.") {
-		location.href = '/';
-	} else if((msg == "회원가입에 실패하셨습니다.")) {
-		location.href = '/register';
-  	}else if(msg == "회원정보수정성공"){
-	  location.href = '/userInfo';
-  	} else if(msg == "회원정보수정실패") {
-	  location.href = '/registerUpdate';
-  	}
+// Thymeleaf msg 주입
+let msg = '[[${msg}]]';
+
+// 기본 알림 설정
+let icon = 'info';
+let redirectUrl = '/';
+
+// 조건별 아이콘 및 리다이렉트 경로 설정
+if (msg === "회원가입 축하드립니다.") {
+    icon = 'success';
+    redirectUrl = '/';
+} else if (msg === "회원가입에 실패하셨습니다.") {
+    icon = 'error';
+    redirectUrl = '/register';
+} else if (msg === "회원정보수정성공") {
+    icon = 'success';
+    redirectUrl = '/userInfo';
+} else if (msg === "회원정보수정실패") {
+    icon = 'error';
+    redirectUrl = '/registerUpdate';
+} else if (msg === "비밀번호변경 성공") {
+    icon = 'success';
+} else if (
+    msg === "현재 비밀번호가 일치하지 않습니다." ||
+    msg === "동일한 비밀번호는 변경하실 수 없습니다." ||
+    msg === "비밀번호 변경 실패 고객센터로 문의바랍니다." ||
+    msg === "새 비밀번호와 확인 비밀번호가 일치하지 않습니다."
+) {
+    icon = 'error';
+}
+
+// SweetAlert2 호출 및 처리
+Swal.fire({
+    icon: icon,
+    title: msg,
+    confirmButtonText: '확인'
+}).then(() => {
+    if (msg === "비밀번호변경 성공") {
+        window.close();
+    } else if (
+        msg === "현재 비밀번호가 일치하지 않습니다." ||
+        msg === "동일한 비밀번호는 변경하실 수 없습니다." ||
+        msg === "비밀번호 변경 실패 고객센터로 문의바랍니다." ||
+        msg === "새 비밀번호와 확인 비밀번호가 일치하지 않습니다."
+    ) {
+        window.close();
+        opener.openPwdUpdatePopup();
+    } else {
+        location.href = redirectUrl;
+    }
+});
 </script>
 </body>
 </html>

@@ -2,7 +2,10 @@
 <html xmlns:th = "http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/mypage/mycarList.css">
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function goToCarInfo(btn) {
         const carNum = btn.getAttribute('data-carNum');
@@ -11,53 +14,87 @@
 </script>
 </head>
 <body>
-<h1>내차량확인</h1>
-<article>
-<table border="1" width="550" cellspacing="0">
-	<thead>
-	 	<tr>
-            <th colspan="8" style="text-align: right;">
-                <button type="button" onclick="location.href='/myCarAdd'">차량 등록</button>
-            </th>
-        </tr>
-		<tr>
-			<th>차량번호</th>
-			<th>모델명</th>
-			<th>연식</th>
-			<th>유종</th>
-			<th>색상</th>
-			<th>수동/자동</th>
-			<th></th>
-			<th></th>
-		</tr>
-	</thead>
-	<tr th:if="${#lists.isEmpty(carList)}">
-		<td colspan="8" align="center">
-		등록된 차량이 없습니다.
-		</td>
-	</tr>
-	<tr th:each="dto:${carList}">
-		<td th:text="${dto.car_num}"></td>
-		<td th:text="${dto.modelname}"></td>
-		<td th:text="${dto.model_year}"></td>
-		<td th:text="${dto.gas_type}"></td>
-		<td th:text="${dto.color}"></td>
-		<td th:text="${dto.gear}"></td>
-	<form name="myCarInfoShow" action="/myCarInfoShow" method="get">
-		<td align="center">		
-			<input type="hidden" name="car_num" th:value="${dto.car_num}">
-		    <button type="submit">수정</button>
-		</td>
-	</form>
-	<form name="myCarDelete" action="/myCarDelete" method="get">
-		<td align="center">
-			<input type="hidden" name="car_num" th:value="${dto.car_num}">
-		    <button type="submit">삭제</button>
-		</td>
-	</form>
-	</tr>
+<th:block th:include="@{/header}"></th:block>
+
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<div class="mycarlist-container">
+  <div class="mycarlist-header">
+    <h1>내 차량 목록</h1>
+    <button class="register-btn"  onclick="location.href='/myCarAdd'" style="margin-bottom: 20px;">차량 등록</button>
+	</div>
 	
-</table>
-</article>
+    <div th:if="${#lists.isEmpty(carList)}" class="empty-message">
+        등록된 차량이 없습니다.
+    </div>
+	
+	 <div th:each="dto : ${carList}" class="mycar-card">
+        <h3><span th:text="${dto.car_num}"></span></h3>
+        <div class="mycar-info">
+		<div>차량 모델명: <span th:text="${dto.modelname}"></span></div>
+		<div>연식: <span th:text="${dto.model_year}"></span></div>
+		<div>유종: <span th:text="${dto.gas_type}"></span></div>
+		<div>색상: <span th:text="${dto.color}"></span></div>
+		<div>변속기: <span th:text="${dto.gear}"></span></div>
+	</div>
+	
+	<div class="mycar-buttons">
+		<form name="myCarInfoShow" action="/myCarInfoShow" method="get" style="display:inline;">		
+				<input type="hidden" name="car_num" th:value="${dto.car_num}">
+			    <button type="submit"  class="edit-btn">수정</button>
+		</form>
+		<form name="myCarDelete" action="/myCarDelete" method="get" style="display:inline;">
+				<input type="hidden" name="car_num" th:value="${dto.car_num}">
+			    <button type="submit" class="delete-btn">삭제</button>
+		</form>
+	</div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='/mypageMain'">뒤로 돌아가기</button>
+	</div>
+
+<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

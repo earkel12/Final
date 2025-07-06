@@ -61,7 +61,11 @@ public class BookingServiceImple implements BookingService {
 		return mapper.getBookingByNum(bookingnum);
 	}
 	
-
+	//0원이여도 결제상태완료로 변경
+	@Override
+	public int getBookingPriceById(String id, String bookingcarnum) throws Exception {
+		return mapper.getBookingPriceById(id, bookingcarnum);
+	}
 	
 	//메이트이용현황관련	
 	@Override
