@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.booking.model.UserCarDTO;
 import com.pm.com.model.CommentDTO;
 import com.pm.com.model.CommunityDTO;
 import com.pm.com.model.ReviewDTO;
@@ -256,4 +257,20 @@ public class CommunityController {
 		mav.setViewName("com/comMsg");
 		return mav;
 	}
+	
+	@GetMapping("/reviewContent")
+	public String reviewContent(Model model,@RequestParam("bookingnum") int bookingnum) {
+		
+		try {
+			ReviewDTO reviewContent = service.reviewContent(bookingnum);
+			model.addAttribute("content", reviewContent);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "com/reviewContent";
+	}
+	
+	
 }
