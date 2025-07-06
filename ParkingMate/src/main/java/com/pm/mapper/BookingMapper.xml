@@ -12,8 +12,7 @@
 		outtime, valet,
 		instand, price, status, obstacle, idx, id, ulatitude,
 		ulongitude)
-		VALUES (#{bookingdate}, #{bookingcarnum}, #{intime},
-		#{outtime},
+		VALUES (#{bookingdate}, #{bookingcarnum}, null, null,
 		#{valet}, #{instand}, #{price}, #{status}, #{obstacle},
 		#{idx}, #{id},
 		#{ulatitude}, #{ulongitude})

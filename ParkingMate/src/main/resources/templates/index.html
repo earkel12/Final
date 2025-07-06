@@ -215,7 +215,7 @@ function showLoginCheck() {
       <tr><th>요금</th><td id="price">-</td></tr>
       <tr><th>발렛</th><td id="valet">-</td></tr>
     </table>
-    <a href="booking" class="reserve-btn">예약하기</a>
+    <button id="reserveBtn" class="reserve-btn">예약하기</button>
   </div>
 </div>
 
@@ -301,18 +301,44 @@ function showLoginCheck() {
    	    window.location.href = `/search?keyword=${encodeURIComponent(keyword)}`;
    	  }
    	});
+    
+    
   });
 </script>
 <script th:inline="javascript">
+//예약 버튼 클릭
 /*<![CDATA[*/
-  const urlParams = new URLSearchParams(window.location.search);
-  const alertCode = urlParams.get('alert');
+  const sid = /*[[${session.sid}]]*/ null;
 
-  if (alertCode === '1') {
-    alert("먼저 주차장을 선택해주세요.");	
-  } else if (alertCode === '2') {
-    alert("로그인이 필요합니다.");
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    const reserveBtn = document.getElementById('reserveBtn');
+
+    if (reserveBtn) {
+      reserveBtn.addEventListener('click', function () {
+        const selectedName = document.getElementById('name').innerText;
+        const countText = document.getElementById('count').innerText;
+        const availableCount = parseInt(countText);
+
+        if (!sid) {
+          alert('로그인이 필요합니다.');
+          location.href = '/login';
+          return;
+        }
+
+        if (selectedName === '-' || selectedName === '') {
+          alert('먼저 주차장을 선택해주세요.');
+          return;
+        }
+
+        if (!isNaN(availableCount) && availableCount === 0) {
+          alert('만차입니다. 다른 주차장을 선택해주세요!');
+          return;
+        }
+
+        location.href = 'booking';
+      });
+    }
+  });
 /*]]>*/
 </script>
 <th:block th:include = "@{/footer}"></th:block>

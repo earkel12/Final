@@ -79,10 +79,6 @@ public class BookingController {
 	    // 2. 현재 시간 기준
 	    LocalDateTime now = LocalDateTime.now();
 	    booking.setBookingdate(now);
-	    booking.setIntime(now);  // 입차 시간도 현재로 설정
-
-	    // 3. 출차 시간 = 입차 + duration (단위: 시간)
-	    booking.setOuttime(now.plusHours(duration));
 
 	    // 4. 기타 정보
 	    booking.setStatus("예약접수");
