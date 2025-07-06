@@ -19,6 +19,7 @@ public interface NoticeMapper {
 	public int noticeDelete(int idx) throws Exception;
 	public int noticeUpdate(NoticeDTO dto) throws Exception;
 	public List<NoticeDTO> getPmNotice() throws Exception;
+	public int readnumUpdate(int idx) throws Exception;
 	
 	public int insertPmNotice(NoticeDTO dto) throws Exception;
 	public int insertPmNoticePoto(NoticePotoDTO potoDto) throws Exception;
