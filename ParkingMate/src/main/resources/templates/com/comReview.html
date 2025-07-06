@@ -1,45 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>리뷰</title>
+  <meta charset="UTF-8" />
+  <title>리뷰 목록</title>
+  <th:block th:include="@{/header}"></th:block>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+      background-color: #f5f7fa;
+      color: #2c3e50;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      border-left: 5px solid #B1B2FF;
+      padding-left: 15px;
+    }
+
+    table.review-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      table-layout: fixed;
+      word-break: break-word;
+    }
+
+    table.review-table thead {
+      background-color: #B1B2FF;
+      color: white;
+    }
+
+    table.review-table th, table.review-table td {
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 1px solid #e2e2e2;
+      word-wrap: break-word;
+    }
+
+    table.review-table td {
+      font-size: 14px;
+    }
+
+    table.review-table tbody tr:hover {
+      background-color: #f0f4ff;
+    }
+
+    .paging {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .paging a, .paging span {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 6px 12px;
+      color: #6C72FF;
+      text-decoration: none;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .paging a:hover {
+      background-color: #6C72FF;
+      color: white;
+      border-color: #555bff;
+    }
+
+    .paging .current {
+      background-color: #555bff;
+      color: white;
+      border-color: #555bff;
+      cursor: default;
+    }
+
+    .no-data {
+      padding: 40px 0;
+      text-align: center;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
-<th:block th:include = "@{/header}"></th:block>
-	<h1>리뷰</h1>
-	<form th:action="@{/comReview}" method="post">
-		<table border="1" cellspacing="0" width="550">
-			<thead>
-				<tr>
-					<th>예약번호</th>
-					<th>ID</th>
-					<th>평점</th>
-					<th>내용</th>
-					<th>작성일</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:if="${#lists.isEmpty(arr)}">
-					<td colspan="5" align="center">등록된 게시글이 없습니다.</td>
-				</tr>
-				<tr th:each="dto : ${arr}">
-					<td th:text="${dto.bookingnum}">번호</td>
-					<td th:text="${dto.id}">ID</td>
-					<td th:text="${dto.rating}">평점</td>
-					<td th:text="${dto.content}">내용</td>
-					<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">2025-06-20</td>
-				</tr>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="5" align="center" th:utext="${pageStr}"></td>
-					
-				</tr>
-			</tfoot>
-		</table>
-	</form>
-	
-	<a th:href="@{/community}">커뮤니티 메인</a>
-<th:block th:include = "@{/footer}"></th:block>
+<main>
+  <h1>리뷰</h1>
+
+  <form th:action="@{/comReview}" method="post">
+    <table class="review-table">
+      <thead>
+        <tr>
+          <th style="width: 10%;">예약번호</th>
+          <th style="width: 15%;">ID</th>
+          <th style="width: 10%;">평점</th>
+          <th style="width: 45%;">내용</th>
+          <th style="width: 20%;">작성일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:if="${#lists.isEmpty(arr)}">
+          <td colspan="5" class="no-data">등록된 리뷰가 없습니다.</td>
+        </tr>
+        <tr th:each="dto : ${arr}">
+          <td th:text="${dto.bookingnum}">예약번호</td>
+          <td th:text="${dto.id}">ID</td>
+          <td th:text="${dto.rating}">평점</td>
+          <td th:text="${dto.content}">내용</td>
+          <td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">작성일</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <div class="paging" th:utext="${pageStr}"></div>
+
+  <div class="btn-container">
+    <a th:href="@{/community}" class="btn">커뮤니티 메인</a>
+  </div>
+</main>
+<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

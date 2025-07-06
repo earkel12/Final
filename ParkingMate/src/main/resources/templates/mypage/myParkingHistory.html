@@ -76,9 +76,12 @@ function moveToMyParkingMateHistory() {
             <td th:text="${history.status}"></td>
             <td th:text="${history.obstacle == 1 ? 'O' : 'X'}"></td>
 			<td>
-			  <th:block th:if="${reviewList.contains(history.bookingnum)}">
-			    <button disabled>작성완료</button>
-			  </th:block>
+			 <th:block th:if="${reviewList.contains(history.bookingnum)}">
+			  <button class="done-review-btn"
+			          th:data-bookingnum="${history.bookingnum}">
+			    작성완료
+			  </button>
+			</th:block>
 			  <th:block th:unless="${reviewList.contains(history.bookingnum)}">
 			    <input type="button" value="리뷰쓰기"
 			           class="review-btn"
@@ -91,19 +94,29 @@ function moveToMyParkingMateHistory() {
     </tbody>
 </table>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const buttons = document.querySelectorAll(".review-btn");
+	document.addEventListener("DOMContentLoaded", function () {
+	  const buttons = document.querySelectorAll(".review-btn");
 
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const num = btn.dataset.bookingnum;
-        const date = encodeURIComponent(btn.dataset.bookingdate);
-        const name = encodeURIComponent(btn.dataset.parkinglot_name);
+	  buttons.forEach(btn => {
+	    btn.addEventListener("click", () => {
+	      const num = btn.dataset.bookingnum;
+	      const date = encodeURIComponent(btn.dataset.bookingdate);
+	      const name = encodeURIComponent(btn.dataset.parkinglot_name);
 
-        window.location.href = `/reviewWrite?bookingnum=${num}&bookingdate=${date}&parkinglot_name=${name}`;
-      });
-    });
-  });
+	      window.location.href = `/reviewWrite?bookingnum=${num}&bookingdate=${date}&parkinglot_name=${name}`;
+	    });
+	  });
+
+	  // ✅ 작성완료 버튼 이벤트
+	  const doneButtons = document.querySelectorAll(".done-review-btn");
+	  doneButtons.forEach(btn => {
+	    btn.addEventListener("click", () => {
+	      const num = btn.dataset.bookingnum;
+	      window.location.href = `/reviewContent?bookingnum=${num}`;
+	    });
+	  });
+	});
+
 </script>
 <th:block th:include = "@{/footer}"></th:block>
 </body>
