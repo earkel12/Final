@@ -1,0 +1,106 @@
+body {
+  font-family: 'Segoe UI', 'Pretendard', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.about-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.about-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #471396;
+  margin-bottom: 24px;
+}
+
+.about-description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 60px;
+}
+
+/* 가치 영역 */
+.about-values {
+  margin-bottom: 60px;
+  text-align: left;
+}
+
+.about-values h2 {
+  font-size: 24px;
+  color: #AAC4FF;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.about-values ul {
+  list-style: none;
+  padding: 0;
+  font-size: 16px;
+}
+
+.about-values li {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.about-values li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #AAC4FF;
+}
+
+/* 서비스 박스 */
+.about-services h2 {
+  font-size: 24px;
+  color: #AAC4FF;
+  margin-bottom: 30px;
+}
+
+.about-services {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.service-box {
+  width: 280px;
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+  text-align: center;
+}
+
+.service-box:hover {
+  transform: translateY(-5px);
+}
+
+.service-box img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 16px;
+}
+
+.service-box h3 {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.service-box p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
