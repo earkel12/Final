@@ -125,18 +125,18 @@ body {
 }
 
 .btn-primary {
-  background-color: #2a7ae2;
+  background-color: #B1B2FF;
   color: #fff;
 }
 
 .btn-danger {
-  background-color: #e53935;
+  background-color: #FEC5F6;
   color: #fff;
 }
 
 .btn-update {
-  background-color: #fbc02d;
-  color: #333;
+  background-color: #FBF3B9;
+  color: #fff;
 }
 
 .form-buttons button:hover {
