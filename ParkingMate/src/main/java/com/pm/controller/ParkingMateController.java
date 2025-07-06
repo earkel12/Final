@@ -53,7 +53,7 @@ public class ParkingMateController {
 
 	@Autowired
 	private MemberService memberservice;
-	
+
 	@Autowired
 	private ParkingMateService service;
 
@@ -67,18 +67,59 @@ public class ParkingMateController {
 	@GetMapping("/pm/main")
 	public ModelAndView pmMain(HttpSession session) throws Exception {
 		String userid = (String) session.getAttribute("sid");
+	
+		ModelAndView mav = new ModelAndView();
+		
+	    if (userid == null || userid.isEmpty()) {
+	        mav.addObject("msg", "로그인 후 이용 가능합니다.");
+	        mav.addObject("gourl", "/login");
+	        mav.setViewName("pm/pmMsg");
+	        return mav;
+	    }
 
-		if (userid == null || userid.isEmpty()) {
-			return new ModelAndView("redirect:/login");
-		}
+	    ParkingMateDTO parkingMate = service.getParkingMate(userid);
+	    if (parkingMate == null) {
+	        mav.addObject("msg", "파킹메이트 등록 후 이용 가능합니다.");
+	        mav.addObject("gourl", "/parkingmate");
+	        mav.setViewName("pm/pmMsg");
+	        return mav;
+	    }
+	    String addr = parkingMate.getAddr();
 
-		ParkingMateDTO dto = service.getParkingMate(userid);
-		if (dto == null) {
-			return new ModelAndView("redirect:/pm/register");
-		}
+	    if (addr != null && !addr.isBlank()) {
+	        String[] parts = addr.split(" ", 5);
+	        if (parts.length >= 4) {
+	            String mainAddr = String.join(" ", parts[0], parts[1], parts[2], parts[3]);
+	            String detailAddr = addr.replace(mainAddr, "").trim();
 
-		ModelAndView mav = new ModelAndView("pm/main");
-		return mav;
+	            mav.addObject("mainAddr", mainAddr);
+	            mav.addObject("addrDetail", detailAddr);
+	        } else {
+	            mav.addObject("mainAddr", addr);
+	            mav.addObject("addrDetail", "");
+	        }
+	    }
+
+	    Map<String, Object> summary = service.getTotalPmWorklog(userid);
+	    
+	    
+	    List<BookingParkingDTO> list = bookingservice.getActiveInstadBookings();
+
+	    Map<String, List<Integer>> rejectedMap = (Map<String, List<Integer>>) session.getAttribute("rejectedBookingsMap");
+	    List<Integer> rejected = (rejectedMap != null && rejectedMap.containsKey(userid))
+	            ? rejectedMap.get(userid)
+	            : Collections.emptyList();
+
+	    list.removeIf(item -> rejected.contains(Integer.parseInt(item.getBookingnum())));
+
+	    mav.addObject("instadList", list); // ✅ 메인 페이지로 전달
+	    
+	    mav.addObject("worklog", parkingMate);
+	    mav.addObject("parkingMate", parkingMate);
+	    mav.addObject("totalServiceCount", summary.get("totalServiceCount"));
+	    mav.addObject("totalPayCount", summary.get("totalPayCount"));
+	    mav.setViewName("pm/main");
+	    return mav;
 	}
 
 	@GetMapping("/parkingmate")
@@ -169,14 +210,14 @@ public class ParkingMateController {
 
 		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
 		ModelAndView mav = new ModelAndView("pm/usagehistory");
-		
+
 		if (!usageList.isEmpty()) {
-	        String userId = usageList.get(0).getId();
-	        String userTel = memberservice.getTelById(userId);
-	        mav.addObject("userId", userId);
-	        mav.addObject("userTel", userTel);
-	    }
-		
+			String userId = usageList.get(0).getId();
+			String userTel = memberservice.getTelById(userId);
+			mav.addObject("userId", userId);
+			mav.addObject("userTel", userTel);
+		}
+
 		mav.addObject("usageList", usageList);
 		return mav;
 	}
@@ -289,75 +330,77 @@ public class ParkingMateController {
 		mav.setViewName("pm/pmMsg");
 		return mav;
 	}
-	
+
 	@PostMapping("/pm/ocrupload")
 	@ResponseBody
 	public Map<String, Object> ocrUpload(@RequestParam("pictureFile") MultipartFile pictureFile) throws Exception {
-	    Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 
-	    if (pictureFile == null || pictureFile.isEmpty()) {
-	        result.put("success", false);
-	        result.put("message", "파일이 없습니다.");
-	        return result;
-	    }
+		if (pictureFile == null || pictureFile.isEmpty()) {
+			result.put("success", false);
+			result.put("message", "파일이 없습니다.");
+			return result;
+		}
 
-	    File uploadPath = new File(uploadDir, "ocr_temp");
-	    if (!uploadPath.exists()) uploadPath.mkdirs();
+		File uploadPath = new File(uploadDir, "ocr_temp");
+		if (!uploadPath.exists())
+			uploadPath.mkdirs();
 
-	    String originalFilename = pictureFile.getOriginalFilename();
-	    File savedFile = new File(uploadPath, originalFilename);
-	    pictureFile.transferTo(savedFile);
+		String originalFilename = pictureFile.getOriginalFilename();
+		File savedFile = new File(uploadPath, originalFilename);
+		pictureFile.transferTo(savedFile);
 
-	    // OCR 호출
-	    String ocrText = callOcrSpaceAPI(savedFile, ocrApiKey);
+		// OCR 호출
+		String ocrText = callOcrSpaceAPI(savedFile, ocrApiKey);
 
-	    // 면허번호 추출
-	    Pattern licensePattern = Pattern.compile("\\d{2}-\\d{2}-\\d{6}-\\d{2}");
-	    Matcher licenseMatcher = licensePattern.matcher(ocrText);
-	    String licenseNumber = licenseMatcher.find() ? licenseMatcher.group() : "";
+		// 면허번호 추출
+		Pattern licensePattern = Pattern.compile("\\d{2}-\\d{2}-\\d{6}-\\d{2}");
+		Matcher licenseMatcher = licensePattern.matcher(ocrText);
+		String licenseNumber = licenseMatcher.find() ? licenseMatcher.group() : "";
 
-	    // 차량정보 추출
-	    String vehicleInfo = null;
-	    String[] lines = ocrText.split("\\r?\\n");
-	    List<String> licenseKeywords = List.of("1종대형", "1종보통", "1종소형", "2종보통", "2종소형", "원동기");
-	    for (String line : lines) {
-	        for (String keyword : licenseKeywords) {
-	            if (line.contains(keyword)) {
-	                vehicleInfo = line.trim();
-	                break;
-	            }
-	        }
-	        if (vehicleInfo != null) break;
-	    }
+		// 차량정보 추출
+		String vehicleInfo = null;
+		String[] lines = ocrText.split("\\r?\\n");
+		List<String> licenseKeywords = List.of("1종대형", "1종보통", "1종소형", "2종보통", "2종소형", "원동기");
+		for (String line : lines) {
+			for (String keyword : licenseKeywords) {
+				if (line.contains(keyword)) {
+					vehicleInfo = line.trim();
+					break;
+				}
+			}
+			if (vehicleInfo != null)
+				break;
+		}
 
-	    // 주소 추출 - matches() 대신 find()로 변경 및 간단히
-	    String address = null;
-	    Pattern addrPattern = Pattern.compile(".*(시|도)?\\s*[가-힣0-9]+(구|군)\\s*[가-힣0-9]*(동|읍|면|로|길).*");
-	    
-	    for (int i = 0; i < lines.length; i++) {
-	        String line = lines[i].trim();
-	        Matcher m = addrPattern.matcher(line);
-	        if (m.find()) {
-	            // 상세주소가 다음 줄에 있을 수도 있으니 이어붙이기
-	            String nextLine = (i + 1 < lines.length) ? lines[i + 1].trim() : "";
-	            // 괄호로 된 상세주소가 있을 경우 합치기
-	            if (!nextLine.isEmpty() && (nextLine.startsWith("(") || nextLine.matches("\\d+.*"))) {
-	                address = line + " " + nextLine;
-	            } else {
-	                address = line;
-	            }
-	            break;
-	        }
-	    }
-	    result.put("success", true);
-	    result.put("ocrText", ocrText);
-	    result.put("licenseNumber", licenseNumber);
-	    result.put("vehicleInfo", vehicleInfo);
-	    result.put("address", address);
+		// 주소 추출 - matches() 대신 find()로 변경 및 간단히
+		String address = null;
+		Pattern addrPattern = Pattern.compile(".*(시|도)?\\s*[가-힣0-9]+(구|군)\\s*[가-힣0-9]*(동|읍|면|로|길).*");
 
-	    return result;
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i].trim();
+			Matcher m = addrPattern.matcher(line);
+			if (m.find()) {
+				// 상세주소가 다음 줄에 있을 수도 있으니 이어붙이기
+				String nextLine = (i + 1 < lines.length) ? lines[i + 1].trim() : "";
+				// 괄호로 된 상세주소가 있을 경우 합치기
+				if (!nextLine.isEmpty() && (nextLine.startsWith("(") || nextLine.matches("\\d+.*"))) {
+					address = line + " " + nextLine;
+				} else {
+					address = line;
+				}
+				break;
+			}
+		}
+		result.put("success", true);
+		result.put("ocrText", ocrText);
+		result.put("licenseNumber", licenseNumber);
+		result.put("vehicleInfo", vehicleInfo);
+		result.put("address", address);
+
+		return result;
 	}
-	
+
 	@GetMapping("/pm/settlement")
 	public ModelAndView showPmSettlement(HttpSession session, @RequestParam(required = false) String startDate,
 			@RequestParam(required = false) String endDate) throws Exception {
@@ -402,7 +445,8 @@ public class ParkingMateController {
 	}
 
 	@PostMapping("/pm/matching/accept")
-	public ModelAndView accept(@RequestParam int bookingnum, HttpSession session) {
+	public ModelAndView accept(@RequestParam int bookingnum, @RequestParam(required = false) Double pmlatitude,
+			@RequestParam(required = false) Double pmlongitude, HttpSession session) throws Exception {
 		String mateId = (String) session.getAttribute("sid");
 		ModelAndView mav = new ModelAndView("pm/pmMsg");
 
@@ -413,26 +457,34 @@ public class ParkingMateController {
 			return mav;
 		}
 
-		bookingservice.updateStatusToReserved(bookingnum);
 		BookingDTO booking = bookingservice.getBookingByNum(bookingnum);
+		BookingDTO booking2 = new BookingDTO();
+		booking2.setBookingnum(bookingnum);
+		booking2.setPmlatitude(pmlatitude);
+		booking2.setPmlongitude(pmlongitude);
 
-		LocalDateTime intime = booking.getIntime();
-		LocalDateTime outtime = booking.getOuttime();
-		Date starttime = Date.from(intime.atZone(ZoneId.systemDefault()).toInstant());
-		Date endtime = Date.from(outtime.atZone(ZoneId.systemDefault()).toInstant());
+		boolean result = service.acceptBooking(booking2, mateId);
 
-		MatePayCheckDTO dto = new MatePayCheckDTO();
-		dto.setId(booking.getId());
-		dto.setMid(mateId);
-		dto.setCar_num(booking.getBookingcarnum());
-		dto.setStarttime(starttime);
-		dto.setEndtime(endtime);
-		dto.setStatus("정산대기");
-		dto.setPrice(booking.getPrice());
+		if (result) {
+			Date starttime = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+			Date endtime = null;
 
-		service.insertMatePayCheck(dto);
+			MatePayCheckDTO dto = new MatePayCheckDTO();
+			dto.setId(booking.getId());
+			dto.setMid(mateId);
+			dto.setCar_num(booking.getBookingcarnum());
+			dto.setStarttime(starttime);
+			dto.setEndtime(endtime);
+			dto.setStatus("정산대기");
+			dto.setPrice(booking.getPrice());
+			service.insertMatePayCheck(dto);
 
-		mav.setViewName("redirect:/pm/matching");
+			mav.addObject("msg", "예약이 성공적으로 수락되었습니다.");
+			mav.addObject("gourl", "/pm/settlement");
+		} else {
+			mav.addObject("msg", "예약 수락에 실패했습니다. 다시 시도해주세요.");
+			mav.addObject("gourl", "/pm/matching");
+		}
 		return mav;
 	}
 
@@ -474,31 +526,32 @@ public class ParkingMateController {
 
 		List<BookingParkingDTO> usageList = bookingservice.getBookingParkingListByMateId(mateId);
 		ModelAndView mav = new ModelAndView("pm/parking");
-		
+
 		if (!usageList.isEmpty()) {
-	        String userId = usageList.get(0).getId();
-	        String userTel = memberservice.getTelById(userId);
-	        mav.addObject("userId", userId);
-	        mav.addObject("userTel", userTel);
-	    }
-		
+			String userId = usageList.get(0).getId();
+			String userTel = memberservice.getTelById(userId);
+			mav.addObject("userId", userId);
+			mav.addObject("userTel", userTel);
+		}
+
 		mav.addObject("usageList", usageList);
 		return mav;
 	}
-	
+
 	@PostMapping("/pm/completeParking")
-	public ModelAndView completeParking(@RequestParam("bookingnum") int bookingnum) throws Exception {
-		ModelAndView mav = new ModelAndView();
-		int updateEndtime = bookingservice.updateEndTime(bookingnum);
-		if(updateEndtime != 2) {
+	public ModelAndView completeParking(@RequestParam("car_num") String car_num) throws Exception {
+		boolean success = service.settleMatePaycheck(car_num);
+		ModelAndView mav = new ModelAndView("pm/pmMsg");
+
+		if (success) {
+			mav.addObject("msg", "입차 처리가 완료되었습니다!");
+			mav.addObject("gourl", "/pm/settlement");
+
+		} else {
 			mav.addObject("msg", "입차 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
 			mav.addObject("gourl", "parking");
-		}else {
-		    mav.addObject("msg", "입차 처리가 완료되었습니다!");
-		    mav.addObject("gourl", "/pm/settlement"); 
 		}
-		mav.setViewName("pm/pmMsg");
-	    return mav; 
+		return mav;
 	}
 
 	public String callOcrSpaceAPI(File imageFile, String apiKey) throws Exception {

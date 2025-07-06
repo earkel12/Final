@@ -32,7 +32,6 @@ public interface BookingMapper {
 	public ParkingLotDTO findParkinglotByName(String name) throws Exception;
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 
-	public int updateEndTime(int bookingnum) throws Exception;
 	public int updateStartTimePaycheck(int bookingnum) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
 	

@@ -213,14 +213,6 @@
 		and m1.car_num = #{car_num}
 		and m2.mate_use = 1
 	</select>
-
-
-	<update id="updateEndTime">
-		UPDATE booking
-		SET intime = NOW()
-		WHERE bookingnum =
-		#{bookingnum}
-	</update>
 	
 	<update id="updateStartTimePaycheck">
 		UPDATE mate_paycheck
