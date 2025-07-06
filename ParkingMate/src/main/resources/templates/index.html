@@ -113,6 +113,72 @@ body {
 .reserve-btn:hover {
   background-color: #AAC4FF;
 }
+/* 서비스 박스 */
+.about-services h2 {
+  font-size: 24px;
+  color: #AAC4FF;
+  margin-bottom: 30px;
+}
+
+.about-services {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.service-box {
+  width: 280px;
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+  text-align: center;
+}
+
+.service-box:hover {
+  transform: translateY(-5px);
+}
+
+.service-box img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 16px;
+}
+
+.service-box h3 {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.service-box p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+.about-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.about-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #471396;
+  margin-bottom: 24px;
+}
+
+.about-description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 60px;
+}
 </style>
 <script>
   /*window.addEventListener('scroll', function () {
@@ -171,7 +237,7 @@ function showLoginCheck() {
 </style>
 <nav id="floatingNav">
   <ul>
-    <li><a href="/">회사소개</a></li>
+    <li><a href="companyProfile">회사소개</a></li>
     <li><a href="search">예약하기</a></li>
     <li><a href="mateUsagesStatus">이용현황</a></li>
     <li><a href="notice">공지사항</a></li>
@@ -218,8 +284,33 @@ function showLoginCheck() {
     <button id="reserveBtn" class="reserve-btn">예약하기</button>
   </div>
 </div>
-
-
+<section class="about-section">
+    <h1 class="about-title">우리는 공간을 찾고, 나누고, 효율화합니다</h1>
+    <p class="about-description">
+      ParkingMate는 도심의 주차난을 해결하기 위해<br>
+      비어있는 주차 공간을 발굴하고, 사용자 간 공유하며,<br>
+     특히 바쁜 도심 속에서 주차 대기 시간을 줄이고,<br>
+    오래 기다릴 시간이 부족한 분들을 위한 빠르고 편리한 점문 주차 대행 서비스를 제공합니다.
+    </p>
+</section>
+    <div class="about-services">
+      <h2>🚗 주요 서비스</h2>
+      <div class="service-box">
+        <img src="/img/parkingnusiness.png" alt="주차장 공유 아이콘">
+        <h3>주차장 공유</h3>
+        <p>남는 주차 공간을 등록하고 필요한 사용자에게 시간 단위로 공유합니다.</p>
+      </div>
+      <div class="service-box">
+        <img src="/img/Pm.png" alt="주차 대행 아이콘">
+        <h3>주차 대행</h3>
+        <p>이용자가 차량을 맡기면, 전문 기사가 대신 주차 및 반환을 도와드립니다.</p>
+      </div>
+      <div class="service-box">
+        <img src="/img/parkingLot.png" alt="주차장 정보 아이콘">
+        <h3>주차장 정보</h3>
+        <p>내 주변 주차장, 가격, 혼잡도 등 실시간 정보를 제공합니다.</p>
+      </div>
+    </div>
 <script>
   kakao.maps.load(function () {
     const mapContainer = document.getElementById('map');
