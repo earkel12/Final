@@ -2,7 +2,8 @@
 <html xml:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>차량검색</title>
+<title>차량모델검색</title>
+<link rel="stylesheet" href="/css/mypage/tofindcarpopup.css">
 <script>
 function selectModel(el) {
     const modelName = el.getAttribute("data-modelname");
@@ -16,6 +17,8 @@ function selectModel(el) {
 </script>
 </head>
 <body>
+<div class="findcar-container">
+<p>브랜드명과 모델명을 구분하여 원하시는 검색어로 검색하세요</p>
 <form action="/findCarModelName" method="post">
 	<select name="fkey">
 		<option value="brandname">브랜드명</option>
@@ -45,5 +48,6 @@ function selectModel(el) {
 		</tr>
 	</tbody>
 </table>
+</div>
 </body>
 </html>

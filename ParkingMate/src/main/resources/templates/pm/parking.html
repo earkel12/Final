@@ -319,6 +319,7 @@ h1 {
 
     <form th:action="@{/pm/completeParking}" method="post" style="text-align:center;">
       <input type="hidden" name="bookingnum" th:value="${usageList[0].bookingnum}" />
+      <input type="hidden" name="car_num" th:value="${usageList[0].bookingcarnum}" />
       <button type="submit" class="complete-btn">차량 주차 완료</button>
     </form>
 

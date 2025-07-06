@@ -63,6 +63,12 @@ public class RegisterController {
 	    return exists ? "이미 사용 중인 아이디입니다." : "사용 가능한 아이디입니다.";
 	}
 	
+	@GetMapping("/pwdUpdateFormPopup")
+	public String pwdUpdateForm(@RequestParam String id, Model model) {
+	    model.addAttribute("id", id);
+	    return "register/pwdUpdateFormPopup";
+	}
+	
 	@PostMapping("/registerForm")
 	public ModelAndView registerForm(MemberDTO dto) {
 
@@ -107,6 +113,37 @@ public class RegisterController {
 		mav.setViewName("register/registerMsg");
 		return mav;
 	}
+	
+	@PostMapping("/pwdUpdate")
+	public ModelAndView pwdUpdate(@RequestParam String id, @RequestParam String currentPwd, @RequestParam String pwd, @RequestParam String confirmPwd) throws Exception {
+		System.out.println("비밀번호변경요청ID:"+id);
 		
-
+		String msg = null;
+		
+		if (!pwd.equals(confirmPwd)) {
+	        msg = "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.";
+	    } else {
+		try {
+			int result = service.pwdUpdate(id, currentPwd, pwd);
+			 if (result == 1) {
+	                msg = "비밀번호변경 성공";
+	            } else if (result == -1) {
+	                msg = "현재 비밀번호가 일치하지 않습니다.";
+	            } else if (result == -2) {
+	                msg = "동일한 비밀번호는 변경하실 수 없습니다.";
+	            } else {
+	                msg = "비밀번호 변경 실패 고객센터로 문의바랍니다.";
+	            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "비밀번호 변경 중 오류가 발생했습니다.";
+			}
+	    }
+		
+		ModelAndView mav = new ModelAndView("register/registerMsg");
+	    mav.addObject("msg", msg);
+	    return mav;
+	}
+	
+	
 }

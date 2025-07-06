@@ -2,32 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>주차장이용내역</title>
-<style>
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th, td {
-    border-bottom: 1px dotted #000;
-    text-align: center;
-    padding: 8px;
-}
-th {
-    background-color: #f2f2f2;
-}
-.tab {
-    background-color: #ddd;
-    border: 1px solid #aaa;
-    padding: 10px;
-    display: inline-block;
-    cursor: pointer;
-    margin-right: 5px;
-}
-.tab.active {
-    background-color: #bbb;
-}
-</style>
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/mypage/myparkingHistory.css">
+<script src="/js/involveParkingHistory_review.js"></script>
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function moveToMyParkingMateHistory() {
     window.location.href = '/myParkingMateHistory';
@@ -36,9 +15,60 @@ function moveToMyParkingMateHistory() {
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
-<div>
-    <div class="tab active">주차장이용내역</div>
-    <div class="tab" onclick="moveToMyParkingMateHistory()">주차대행이용내역</div>
+
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<div class="table-wrapper">
+<div class="filter-grid">
+    <div class="filter-item" onclick="goToFilter('all')">
+        <div>전체내역</div>
+    </div>
+    <div class="filter-item" onclick="goToFilter('valet')">
+        <div>파킹메이트내역</div>
+    </div>
 </div>
 
 <table>
@@ -64,17 +94,17 @@ function moveToMyParkingMateHistory() {
     	</td>
     <tbody>
         <tr th:each="history : ${bookingList}">
-            <td th:text="${history.bookingnum}"></td>
-            <td th:text="${history.bookingdate}"></td>
-            <td th:text="${history.bookingcarnum}"></td>
-            <td th:text="${history.parkinglot_name}"></td>
-            <td th:text="${history.intime}"></td>
-            <td th:text="${history.outtime}"></td>
-            <td th:text="${history.valet == 1 ? 'O' : 'X'}"></td>
-			<td th:text="${history.instand == 1 ? 'O' : 'X'}"></td>
-            <td th:text="${history.price}"></td>
-            <td th:text="${history.status}"></td>
-            <td th:text="${history.obstacle == 1 ? 'O' : 'X'}"></td>
+            <td th:text="${history['bookingnum']}"></td>
+			<td th:text="${history['bookingdate']}"></td>
+			<td th:text="${history['bookingcarnum']}"></td>
+			<td th:text="${history['parkinglot_name']}"></td>
+			<td th:text="${history['intime']}"></td>
+			<td th:text="${history['outtime']}"></td>
+			<td th:text="${history['valet'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${history['instand'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${history.['price'] != 0 ? #numbers.formatInteger(history.['price'], 3, 'COMMA') + '원' : '0원'}"></td>
+			<td th:text="${history['status']}"></td>
+			<td th:text="${history['obstacle'] == 1 ? 'O' : 'X'}"></td>
 			<td>
 			 <th:block th:if="${reviewList.contains(history.bookingnum)}">
 			  <button class="done-review-btn"
@@ -93,6 +123,7 @@ function moveToMyParkingMateHistory() {
         </tr>
     </tbody>
 </table>
+
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
 	  const buttons = document.querySelectorAll(".review-btn");
@@ -118,6 +149,13 @@ function moveToMyParkingMateHistory() {
 	});
 
 </script>
+
+	<div>
+    	<button class="back-btn" onclick="window.location.href='/mypageMain'">뒤로 돌아가기</button>
+	</div>
+</div>
+
+<div style="height: 30px;"></div>
 <th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

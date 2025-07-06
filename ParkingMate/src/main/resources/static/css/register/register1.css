@@ -1,0 +1,68 @@
+/* register.css - 파킹메이트 회원가입 페이지 전용 */
+
+form.register-form {
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+form.register-form label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+form.register-form input[type="text"],
+form.register-form input[type="password"],
+form.register-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+form.register-form .input-group,
+form.register-form .ssn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+form.register-form .input-group button {
+    white-space: nowrap;
+}
+
+form.register-form .button-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+form.register-form button,
+form.register-form input[type="submit"],
+form.register-form input[type="button"] {
+    background-color: #B1B2FF;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+form.register-form button:hover,
+form.register-form input[type="submit"]:hover,
+form.register-form input[type="button"]:hover {
+    background-color: #8f95ff;
+    transform: translateY(-2px);
+}

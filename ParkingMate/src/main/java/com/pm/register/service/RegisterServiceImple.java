@@ -40,5 +40,18 @@ public class RegisterServiceImple implements RegisterService {
 		int count = mapper.registerFormUpdate(map);
 		return count;
 	}
+	
+	@Override
+	public int pwdUpdate(String id, String currentPwd, String pwd) throws Exception {
+		String dbPwd = mapper.findPwdById(id);
+
+		if (!dbPwd.equals(currentPwd)) {
+	        return -1; // 현재 비밀번호 불일치
+	    }
+	    if (dbPwd.equals(pwd)) {
+	        return -2; // 이전과 동일
+	    }
+	    return mapper.pwdUpdate(id, pwd); // 성공 시 1 반환
+	}
 
 }

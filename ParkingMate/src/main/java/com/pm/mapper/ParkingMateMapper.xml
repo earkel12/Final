@@ -89,4 +89,19 @@
 		FROM mate_paycheck m
 		WHERE mid = #{mid} AND m.status = '정산대기'
 	</select>
+	
+	<update id="updateBookingWithPmLocation">
+		UPDATE booking
+		SET pmlatitude = #{pmlatitude},
+		pmlongitude = #{pmlongitude},
+		status = '파킹메이트매칭완료'
+		WHERE bookingnum = #{bookingnum}
+	</update>
+	<update id="updateEndtimeAndStatus" parameterType="String">
+    UPDATE mate_paycheck
+    SET endtime = NOW(),
+        status = '정산완료'
+    WHERE car_num = #{car_num}
+      AND status = '정산대기'
+</update>
 </mapper>

@@ -1,0 +1,98 @@
+/* tofindcarpopup.css - 차량검색 팝업 전용 */
+
+.findcar-container {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.findcar-container h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #4B55E1;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.findcar-container p {
+    font-size: 14px;
+    color: #202124;
+    background: #f8f9fa;
+    padding: 10px 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    line-height: 1.6;
+    font-weight: 500;
+    display: block;
+    width: fit-content;
+    margin: 16px auto 20px auto; /* 상 좌우 하 좌우 */
+    text-align: center;
+}
+
+.findcar-container form {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.findcar-container select,
+.findcar-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.findcar-container input[type="submit"] {
+    background: #B1B2FF;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.findcar-container input[type="submit"]:hover {
+    background: #AAC4FF;
+}
+
+.findcar-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.findcar-container th,
+.findcar-container td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.findcar-container th {
+    background: #f0f2ff;
+    font-weight: 600;
+}
+
+.findcar-container button {
+    background: #B1B2FF;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.findcar-container button:hover {
+    background: #AAC4FF;
+}

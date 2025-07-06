@@ -206,3 +206,4 @@ create table faq (
 )ENGINE=InnoDB AUTO_INCREMENT=1;
 
 select id from user where name = '김두원' and tel = '없음';
+

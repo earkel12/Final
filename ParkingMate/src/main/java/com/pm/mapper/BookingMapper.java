@@ -24,13 +24,14 @@ public interface BookingMapper {
 	public BookingDTO getBookingByNum(int bookingnum);
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
 	
+	//0원이여도 결제완료상태 변경
+	public int getBookingPriceById(@Param("id") String id, @Param("bookingcarnum") String bookingcarnum) throws Exception;
 	//메이트이용현황관련
 	public List<String> findBookingCarNumByUser(String id) throws Exception;
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception;
 	public ParkingLotDTO findParkinglotByName(String name) throws Exception;
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 
-	public int updateEndTime(int bookingnum) throws Exception;
 	public int updateStartTimePaycheck(int bookingnum) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
 	

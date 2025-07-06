@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
 
@@ -19,4 +20,6 @@ public interface ParkingMateMapper {
 	public int insertMatePayCheck(MatePayCheckDTO dto);
 	public List<MatePayCheckDTO> selectMateUsageList(String mid);
 	public int getSettlementWaitingCount(String mid);
+	public int updateBookingWithPmLocation(int bookingnum, Double pmlatitude, Double pmlongitude, String mateId);
+	public int updateEndtimeAndStatus(String car_num) throws Exception;
 }

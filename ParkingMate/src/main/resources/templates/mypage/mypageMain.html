@@ -1,18 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ParkingMate</title>
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="/css/mypage/mypageMain.css">
+
 </head>
 <body>
-<h1>마이페이지메인</h1>
-<h3>차량정보</h3>
-<ul>
-<li><a href="myCarAdd">내차량등록</a></li>
-<li><a href="myCarList">내챠랑확인하기</a></li>
-<li><a href="userInfo">회원정보</a></li>
-<li><a href="myParkingHistory">주차장이용내역</a></li>
-</ul>
-<br>
+<th:block th:include = "@{/header}"></th:block>
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<div class="mypage-container">
+    <ul class="mypage-list">
+        <li><a href="myCarAdd">내차량등록</a></li>
+        <li><a href="myCarList">내차량확인하기</a></li>
+        <li><a href="userInfo">회원정보</a></li>
+        <li><a href="myParkingHistory">주차장이용내역</a></li>
+    </ul>
+
+    <button class="back-button" onclick="window.location.href='/'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        뒤로 돌아가기
+    </button>
+</div>
+
+<th:block th:include = "@{/footer}"></th:block>
+
 </body>
 </html>
