@@ -38,6 +38,9 @@ import com.pm.notice.service.NoticeService;
 
 import com.pm.page.PageModule;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -178,21 +181,40 @@ public class NoticeController {
 		return mav;
 	}
 
-
+	
 	@GetMapping("/content")
-	public ModelAndView contentSelect(int idx, HttpSession session) {
-			ModelAndView mav = new ModelAndView();
-			String userid = (String)session.getAttribute("sid");
-		try {
-			NoticeDTO dto = service.contentSelect(idx);
-			mav.addObject("userid",userid);
-			mav.addObject("dto", dto);
-			mav.setViewName("notice/content");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return mav;
+	public ModelAndView contentSelect(int idx, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+	    ModelAndView mav = new ModelAndView();
+	    String userid = (String)session.getAttribute("sid");
+	    
+	    try {
+	        String cookieName = "noticeRead_" + idx;
+	        boolean hasRead = false;
+
+	        if (request.getCookies() != null) {
+	            for (Cookie cookie : request.getCookies()) {
+	                if (cookieName.equals(cookie.getName())) {
+	                    hasRead = true;
+	                    break;
+	                }
+	            }
+	        }
+	        if (!hasRead) {
+	            service.readnumUpdate(idx); 
+	            Cookie cookie = new Cookie(cookieName, "true");
+	            cookie.setMaxAge(24 * 60 * 60);
+	            cookie.setPath("/");
+	            response.addCookie(cookie);
+	        }
+	        
+	        NoticeDTO dto = service.contentSelect(idx);
+	        mav.addObject("userid", userid);
+	        mav.addObject("dto", dto);
+	        mav.setViewName("notice/content");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return mav;
 	}
 
 	@GetMapping("/delete")

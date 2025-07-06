@@ -63,6 +63,12 @@ public class NoticeServiceImple implements NoticeService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public int readnumUpdate(int idx) throws Exception {
+		int count = mapper.readnumUpdate(idx);
+		return count;
+	}
 
 	@Override
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception {
