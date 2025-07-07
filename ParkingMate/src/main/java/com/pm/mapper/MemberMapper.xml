@@ -22,5 +22,38 @@
   	<select id="selectTelById" resultType="String">
     	SELECT tel FROM user WHERE id = #{id}
 	</select>
-
+	
+	
+	<!-- 관리자모드 회원리스트확인 -->
+	<select id="checkMemberListByAdmin" resultType="map">
+		select
+			a.id,
+			a.name,
+			substring(a.resident_num, 1, 6) as birth,
+			a.tel,
+			a.email,
+			count(b.bookingnum) as booking_count
+		from
+			user a
+		left join
+			booking b 
+		on a.id = b.id
+		group by a.id, a.name, birth, a.tel, a.email
+		order by a.id
+	</select>
+	<!-- 관리자모드 특정회원예약내역확인 -->
+	<select id="findBookingListById" parameterType="String" resultType="map">
+		select
+		 	a.*,
+		 	b.name as parkinglot_name
+		 from
+		 	booking a
+		 join
+		 	parkinglot b on a.idx = b.idx
+		 where
+		 	a.id = #{id}
+		 order by
+		 	a.bookingdate desc
+	</select>
+	
   </mapper>
