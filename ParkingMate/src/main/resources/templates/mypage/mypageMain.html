@@ -55,14 +55,27 @@
   </ul>
 </nav>
 
-<div class="mypage-container">
-    <ul class="mypage-list">
-        <li><a href="myCarAdd">내차량등록</a></li>
-        <li><a href="myCarList">내차량확인하기</a></li>
-        <li><a href="userInfo">회원정보</a></li>
-        <li><a href="myParkingHistory">주차장이용내역</a></li>
-    </ul>
-
+<div class="mypage-container" >
+	<div th:if="${session.pmid == null}">
+	    <ul class="mypage-list">
+	        <li><a href="myCarAdd">내차량등록</a></li>
+	        <li><a href="myCarList">내차량확인하기</a></li>
+	        <li><a href="userInfo">회원정보</a></li>
+	        <li><a href="myParkingHistory">주차장이용내역</a></li>
+	        <li><a href="pm/register">파킹메이트등록</a></li>
+	    </ul>
+	</div>
+	<div th:if="${session.pmid != null}">
+	    <ul class="mypage-list">
+	        <li><a href="myCarAdd">내차량등록</a></li>
+	        <li><a href="myCarList">내차량확인하기</a></li>
+	        <li><a href="userInfo">회원정보</a></li>
+	        <li><a href="myParkingHistory">주차장이용내역</a></li>
+	        <li><a href="pm/main">파킹메이트</a></li>
+	    </ul>
+	</div>
+	
+	
     <button class="back-button" onclick="window.location.href='/'">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>

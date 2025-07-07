@@ -76,5 +76,11 @@ public class ParkingMateServiceImple implements ParkingMateService {
         int updated = mapper.updateEndtimeAndStatus(car_num);
         return updated > 0;
     }
+    
+    @Override
+    public String parkingmateById(String userid) throws Exception {
+    	
+    	return mapper.parkingmateById(userid);
+    }
 }
 

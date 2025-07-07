@@ -104,4 +104,9 @@
     WHERE car_num = #{car_num}
       AND status = '정산대기'
 </update>
+
+	
+	<select id="parkingmateById" parameterType="String" resultType="String">
+		select id from parkingmate where id=#{id}
+	</select>
 </mapper>

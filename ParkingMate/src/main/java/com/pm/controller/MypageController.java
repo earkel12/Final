@@ -19,15 +19,36 @@ import com.pm.booking.model.BookingDTO;
 import com.pm.mypage.model.Car_TypeDTO;
 import com.pm.mypage.model.User_CarsDTO;
 import com.pm.mypage.service.MypageService;
+import com.pm.pm.service.ParkingMateService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MypageController {
 
 	@Autowired
 	private MypageService service;
+	@Autowired
+	private ParkingMateService pmservice;
 	
 	@GetMapping("/mypageMain")
-	public String MypageMain() {
+	public String MypageMain(HttpSession session) {
+		String userid = (String)session.getAttribute("sid");
+		
+		String pm;
+		try {
+			pm = pmservice.parkingmateById(userid);
+			if(pm.isEmpty()) {
+				
+				session.setAttribute("pmid", null);
+			} else {
+				
+				session.setAttribute("pmid", pm);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "mypage/mypageMain";
 	}
 	
