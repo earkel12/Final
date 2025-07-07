@@ -1,26 +1,69 @@
-//파킹메이트 회원가입/회원정보수정 전용
+// 파킹메이트 회원가입/회원정보수정 전용
 
 let isIdAvailable = false;
 
 function validateForm() {
     const pwd = document.getElementById("pwd").value;
     const repwd = document.getElementById("repwd").value;
+    const tel = document.querySelector('input[name="tel"]').value.trim();
+    const resident1 = document.getElementById("resident_num1").value.trim();
+    const resident2 = document.getElementById("resident_num2").value.trim();
+    const emailId = document.querySelector('input[name="emailid"]').value.trim();
+    const emailDomain = document.querySelector('select[name="emaildomain"]').value;
+
+    if (pwd.length < 5) {
+        Swal.fire({
+            icon: 'error',
+            title: '비밀번호 오류',
+            text: '비밀번호는 5자리 이상이어야 합니다.'
+        });
+        document.getElementById("pwd").focus();
+        return false;
+    }
 
     if (pwd !== repwd) {
-        alert("비밀번호가 일치하지 않습니다.");
+        Swal.fire({
+            icon: 'error',
+            title: '비밀번호 불일치',
+            text: '비밀번호가 일치하지 않습니다.'
+        });
         document.getElementById("repwd").focus();
         return false;
     }
 
     if (!isIdAvailable) {
-        alert("아이디 중복 확인이 필요합니다.");
+        Swal.fire({
+            icon: 'warning',
+            title: '아이디 확인 필요',
+            text: '아이디 중복 확인이 필요합니다.'
+        });
         document.getElementById("id").focus();
         return false;
     }
-	
-	if (!mergeEmail()) {
-	        return false; // 이메일 입력이 취소되면 제출 방지
-	    }
+
+    if (resident1.length !== 6 || resident2.length !== 7) {
+        Swal.fire({
+            icon: 'error',
+            title: '주민등록번호 오류',
+            text: '주민등록번호 앞 6자리, 뒤 7자리를 정확히 입력해주세요.'
+        });
+        return false;
+    }
+
+    const telRegex = /^\d{10,11}$/;
+    if (!telRegex.test(tel)) {
+        Swal.fire({
+            icon: 'error',
+            title: '전화번호 오류',
+            text: '전화번호는 숫자만 포함하여 10~11자리로 입력해주세요.'
+        });
+        document.querySelector('input[name="tel"]').focus();
+        return false;
+    }
+
+    if (!mergeEmail()) {
+        return false;
+    }
 
     return true;
 }
@@ -82,25 +125,48 @@ function mergeResidentNum() {
         hiddenInput.value = front + "-" + back;
     }
 }
+function toggleCustomEmailInput() {
+    const emailDomainSelect = document.getElementById("emaildomain");
+    const customEmailInput = document.getElementById("customEmailDomain");
+
+    if (emailDomainSelect.value === "custom") {
+        customEmailInput.style.display = "inline-block";
+        customEmailInput.required = true;
+    } else {
+        customEmailInput.style.display = "none";
+        customEmailInput.value = "";
+        customEmailInput.required = false;
+    }
+}
 function mergeEmail() {
-	// 이메일 아이디와 도메인 합치기
-	const emailId = document.querySelector('input[name="emailid"]').value.trim();
-	const emailDomainSelect = document.querySelector('select[name="emaildomain"]');
-	const selectedDomain = emailDomainSelect.value;
+    const emailId = document.querySelector('input[name="emailid"]').value.trim();
+    const emailDomainSelect = document.getElementById("emaildomain");
+    let selectedDomain = emailDomainSelect.value;
 
-	let emailDomain = selectedDomain;
-	if (selectedDomain === "custom") {
-	    // 직접 입력 선택 시 사용자 입력 받기
-	    emailDomain = prompt("사용하실 이메일 도메인을 직접 입력해주세요:");
-	if (!emailDomain) {
-	    alert("이메일 도메인을 입력해주세요.");
-	    return false;
-	}
-	    emailDomain = emailDomain.trim();
-	} 
+    if (selectedDomain === "custom") {
+        selectedDomain = document.getElementById("customEmailDomain").value.trim();
+        if (!selectedDomain) {
+            Swal.fire({
+                icon: 'warning',
+                title: '입력 필요',
+                text: '이메일 도메인을 입력해주세요.'
+            });
+            return false;
+        }
+    }
 
-	const fullEmail = `${emailId}@${emailDomain}`;
-	document.getElementById("emailFull").value = fullEmail;
+    const fullEmail = `${emailId}@${selectedDomain}`;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-	return true;
+    if (!emailRegex.test(fullEmail)) {
+        Swal.fire({
+            icon: 'error',
+            title: '이메일 오류',
+            text: '유효한 이메일 형식으로 입력해주세요.'
+        });
+        return false;
+    }
+
+    document.getElementById("emailFull").value = fullEmail;
+    return true;
 }
