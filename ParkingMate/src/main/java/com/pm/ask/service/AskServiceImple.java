@@ -65,13 +65,17 @@ public class AskServiceImple implements AskService {
 		return mapper.resultContent(idx);
 	}
 	
-@Override
-	public int getTotalCnt() {
-		return mapper.getTotalCnt();
+	@Override
+		public int getTotalCnt() {
+			return mapper.getTotalCnt();
+		}
+	
+	@Override
+	public int getTotalCnt2() {
+		return mapper.getTotalCnt2();
 	}
-
-@Override
-public int getTotalCnt2() {
-	return mapper.getTotalCnt2();
-}
+	@Override
+	public List<AskDTO> myAskInfo(String id) throws Exception {
+		return mapper.myAskInfo(id);
+	}
 }

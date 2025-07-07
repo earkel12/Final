@@ -7,6 +7,10 @@
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
+
+    <h1 th:if = "${userid == 'admin'}">답변하기 (관리자)</h1>
+    <h1 th:if = "${userid != 'admin'}" th:text = "${userid+'님의 문의내역'}"></h1>
+
 <!-- 상단 메뉴 -->
 <style>
 /* 상단 메뉴바 */
@@ -55,6 +59,7 @@
 
     <h1>답변하기 (관리자)</h1>
     <form name="comment" action="comment" method="post" class="comment-form">
+    <div class = "container">
         <fieldset th:each="ask : ${askComment}">
             <input type="hidden" name="idx" th:value="${ask.idx}" />
 
@@ -81,13 +86,17 @@
 
             <section class="answer-box">
                 <label for="comment">답변 내용</label>
-                <textarea id="comment" name="comment" rows="8" placeholder="여기에 답변 내용을 입력하세요..."></textarea>
+                <textarea id="comment" name="comment" rows="8" placeholder="여기에 답변 내용을 입력하세요..."  th:readonly="${userid != 'admin'}" th:text="${ask.comment}" required></textarea>
             </section>
 
-            <div class="form-group btn-group">
-                <input type="submit" value="답변하기" />
+            <div class="form-group btn-group" th:if = "${userid == 'admin'}">
+                <input type="submit" value="답변하기" >
+            </div>
+             <div class="form-group btn-group">
+               	<a href = "javascript:history.back()" class = "backBut" style = "">돌아가기</a>
             </div>
         </fieldset>
+        </div>
     </form>
     <th:block th:include = "@{/footer}"></th:block>
 </body>

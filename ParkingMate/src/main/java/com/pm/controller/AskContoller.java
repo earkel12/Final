@@ -147,4 +147,21 @@ public class AskContoller {
 		mav.setViewName("ask/resultContent");
 		return mav;
 	}
+	
+	@GetMapping("myAskInfo")
+	public ModelAndView myAskInfo(HttpSession session) {
+		List<AskDTO> askList = null;
+		String userid =	 (String)session.getAttribute("sid");
+		try {
+			askList = service.myAskInfo(userid);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("askList", askList);
+		mav.addObject("userid", userid);
+		mav.setViewName("mypage/myAskList");
+		return mav;
+	}
 }

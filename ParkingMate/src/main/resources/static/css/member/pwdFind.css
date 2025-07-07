@@ -1,1 +1,90 @@
-@charset "UTF-8";
+/* pwdFind.css */
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #fdfdfd;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  margin: 40px 0 20px;
+  font-weight: 500;
+}
+
+.idFindNotice {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+form[name="pwdFind"] {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.nameBox,
+.emailBox {
+  margin-bottom: 20px;
+}
+
+.emailBox .submitbut {
+  padding-top: 20px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #B1B2FF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #D2DAFF;
+}
+
+.useridResult {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.useridResult strong {
+  color: red;
+  font-weight: bold;
+}
+
+.useridResult a {
+  text-decoration: underline;
+  color: #0070f3;
+  font-size: 13px;
+}
+
+.notice {
+  color: red;
+}
