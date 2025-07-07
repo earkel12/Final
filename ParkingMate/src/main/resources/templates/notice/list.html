@@ -43,7 +43,7 @@
 <nav id="floatingNav" th:if="${session.sid == 'admin'}">
   <ul>
     <li><a href="companyProfile">회사소개관리</a></li>
-    <li><a href="">회원관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
     <li><a href="parkingLotRegister">주차장관리</a></li>
     <li><a href="notice">공지사항관리</a></li>
     <li><a href="faq">FAQ관리</a></li>
@@ -53,12 +53,11 @@
 </nav>
 <nav id="floatingNav" th:if="${session.sid != 'admin'}">
   <ul>
-    <li><a href="companyProfile">회사소개</a></li>
-    <li><a href="search">예약하기</a></li>
-    <li><a href="mateUsagesStatus">이용현황</a></li>
+  <ul>
     <li><a href="notice">공지사항</a></li>
-    <li><a href="community">커뮤니티</a></li>
-    <li><a href="mypageMain">마이페이지</a></li>
+    <li><a href="faq">FAQ</a></li>
+    <li><a href="askWrite">문의하기</a></li>
+  </ul>
   </ul>
 </nav>
 <h1>공지사항</h1>

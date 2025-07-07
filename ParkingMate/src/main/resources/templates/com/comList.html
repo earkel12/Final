@@ -154,7 +154,18 @@ table.community-table a:hover {
   background-color: #AAC4FF;
 }
 </style>
-<nav id="floatingNav">
+<nav id="floatingNav" th:if="${session.sid == 'admin'}">
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+<nav id="floatingNav" th:if="${session.sid != 'admin'}">
   <ul>
     <li><a href="comReview">리뷰</a></li>
     <li><a href="comList">커뮤니티</a></li>
