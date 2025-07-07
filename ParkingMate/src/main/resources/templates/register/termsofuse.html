@@ -5,71 +5,12 @@
 <title>ParkingMate</title>
 <link rel="stylesheet" href="/css/register/termsofuse.css">
 <script src="/js/involveRegister.js"></script>
-<script>
-function toggleAgreeAll(checkbox) {
-    const termsNames = ['terms1', 'terms2', 'terms3', 'terms4', 'terms5'];
-
-    termsNames.forEach(name => {
-        const agreeRadio = document.querySelector(`input[name="${name}"][value="agree"]`);
-        const disagreeRadio = document.querySelector(`input[name="${name}"][value="disagree"]`);
-        if (checkbox.checked) {
-            if (agreeRadio) agreeRadio.checked = true;
-        } else {
-            if (agreeRadio) agreeRadio.checked = false;
-            if (disagreeRadio) disagreeRadio.checked = false;
-        }
-    });
-}
-function validationAgreement() {
-	const required = ['terms1', 'terms2', 'terms3', 'terms4'];
-		
-	for(let name of required) {
-		const selected = document.querySelector('input[name="'+name+'"]:checked');
-		if(!selected || selected.value!=='agree') {
-			alert("필수 약관에 동의하셔야 회원가입이 가능합니다.");
-			return false;
-				
-		}
-	}
-	return true;
-}
-</script>
+<script src="/js/involvetermsofuse.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+
 <th:block th:include = "@{/header}"></th:block>
-<style>
-/* 상단 메뉴바 */
-#floatingNav {
-  width: 100%;
-  background-color: #B1B2FF;
-  padding: 15px 0;
-  display: flex;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-#floatingNav ul {
-  display: flex;
-  gap: 50px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#floatingNav a {
-  text-decoration: none;
-  color: white;
-  font-weight: 600;
-  font-size: 16px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  transition: background 0.2s;
-}
-
-#floatingNav a:hover {
-  background-color: #AAC4FF;
-}
-</style>
 
 <nav id="floatingNav">
   <ul>
@@ -84,7 +25,7 @@ function validationAgreement() {
 
 <div>
 <h1>이 용 약 관 동 의</h1>
-<form name="termsofuseForm" action="/choosetermsofuse" method="get" onsubmit="return validationAgreement()" >
+<form name="termsofuseForm" action="/choosetermsofuse" method="get" onsubmit="return validationAgreement()">
 	
 	<div>
 		<p>[필수] 이용약관 - 1</p>
@@ -173,7 +114,7 @@ function validationAgreement() {
 	<input type="button" value="돌아가기" onclick="window.location.href='/';">
 </form>
 </div>
-<div style="height: 30px;"></div>
-<th:block th:include = "@{/footer}"></th:block>
+<div style="height: 50px;"></div>
+<th:block th:include = "@{/footer}" ></th:block>
 </body>
 </html>
