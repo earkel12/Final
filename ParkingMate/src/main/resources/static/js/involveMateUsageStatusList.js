@@ -1,4 +1,3 @@
-// SweetAlert2 적용
 function updateIntime(btn) {
     console.log("버튼 클릭됨");
 

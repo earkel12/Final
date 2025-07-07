@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>알림</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<script th:inline="javascript">
+    Swal.fire({
+        icon: 'info',
+        title: '안내',
+        text: '현재 이용중인 예약건이 없습니다.',
+        confirmButtonColor: '#4B55E1',
+        confirmButtonText: '확인'
+    }).then(() => {
+        window.location.href = '/';
+    });
+</script>
+</body>
+</html>

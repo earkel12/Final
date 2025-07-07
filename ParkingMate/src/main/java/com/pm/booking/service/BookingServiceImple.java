@@ -42,9 +42,14 @@ public class BookingServiceImple implements BookingService {
 	public void updateStatus(String userid) throws Exception {
 		mapper.updateStatus(userid);
 	}
+	//0원결제상태변경 로직 추가 후 파킹메이트 결제상태변경이 안되어 쿼리문변경 후 메소드 파라미터 변경
+	//그에 따라 오버라이딩 내용 변경
 	@Override
-	public void finalupdateStatus(String userid) throws Exception {
-		mapper.finalupdateStatus(userid);
+	public void finalupdateStatus(String id, String bookingcarnum) throws Exception {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("id", id);
+	    param.put("bookingcarnum", bookingcarnum);
+	    mapper.finalupdateStatus(param);
 	}
 	
 	@Override
@@ -65,6 +70,13 @@ public class BookingServiceImple implements BookingService {
 	@Override
 	public int getBookingPriceById(String id, String bookingcarnum) throws Exception {
 		return mapper.getBookingPriceById(id, bookingcarnum);
+	}
+	@Override
+	public void updateBookingStatusIfPriceZero(String id, String bookingcarnum) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+	    param.put("id", id);
+	    param.put("bookingcarnum", bookingcarnum);
+	    mapper.updateBookingStatusIfPriceZero(param);
 	}
 	
 	//메이트이용현황관련	

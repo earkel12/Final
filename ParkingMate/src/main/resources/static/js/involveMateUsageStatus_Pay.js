@@ -3,29 +3,49 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!paymentBtn) return;
 
     paymentBtn.addEventListener("click", () => {
-        tryPayment(); // ✅ 함수로 깔끔하게 호출
+        tryPayment(); // 함수호출
     });
 });
+
 function tryPayment() {
     const lastpayText = document.getElementById('lastpay').textContent;
     const finalPrice = parseInt(lastpayText.replace(/[^0-9]/g, '') || "0", 10);
 
+    // 차량번호 추출
+    const activeTab = document.querySelector('.tab-item.active');
+    if (!activeTab) {
+        Swal.fire({
+            icon: 'error',
+            title: '차량 번호 오류',
+            text: '선택된 차량 번호가 없습니다. 다시 시도해 주세요.',
+            confirmButtonColor: '#4B55E1'
+        });
+        return;
+    }
+    const selectedCarNum = activeTab.textContent.trim();
+    if (!selectedCarNum) {
+        Swal.fire({
+            icon: 'error',
+            title: '차량 번호 오류',
+            text: '차량 번호를 읽을 수 없습니다. 다시 시도해 주세요.',
+            confirmButtonColor: '#4B55E1'
+        });
+        return;
+    }
+    console.log("selectedCarNum:", selectedCarNum);
+
     if (finalPrice === 0) {
-        // 0원일 경우 결제 없이 상태 업데이트 후 완료 처리
+        // 0원 결제 시 결제 생략 및 상태 업데이트
         Swal.fire({
             icon: 'info',
             title: '결제 생략',
             text: '결제금액이 0원이므로 결제없이 완료 처리됩니다.',
             confirmButtonColor: '#4B55E1'
         }).then(() => {
-			//차량번호 가져오기
-			const selectedCarNum = document.querySelector('.tab-item.active').textContent.trim();
-			console.log(selectedCarNum);
-			
             $.ajax({
                 url: "/finalpayment",
                 method: "POST",
-				data: { bookingcarnum: selectedCarNum },
+                data: { bookingcarnum: selectedCarNum },
                 success: function () {
                     Swal.fire({
                         icon: 'success',
@@ -47,7 +67,7 @@ function tryPayment() {
             });
         });
     } else {
-        // 0원이 아닐 경우 실제 결제 진행
+        // 유료 결제 처리
         const IMP = window.IMP;
         IMP.init("imp84584038");
 
@@ -73,6 +93,7 @@ function tryPayment() {
                     $.ajax({
                         url: "/finalpayment",
                         method: "POST",
+                        data: { bookingcarnum: selectedCarNum },
                         success: function () {
                             window.location.href = "/";
                         },

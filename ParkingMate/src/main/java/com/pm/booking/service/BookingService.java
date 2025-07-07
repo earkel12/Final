@@ -14,7 +14,8 @@ public interface BookingService {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
 	public void updateStatus(String userid) throws Exception;
-	public void finalupdateStatus(String userid) throws Exception;
+	//0원결제상태변경 로직 추가 후 파킹메이트 결제상태변경이 안되어 쿼리문변경 후 메소드 파라미터 변경
+	public void finalupdateStatus(String id, String bookingcarnum) throws Exception;
 	public int bookingCount(int idx) throws Exception;
 
 	public void updateStatusToReserved(@Param("bookingnum") int bookingnum);
@@ -25,6 +26,7 @@ public interface BookingService {
 	
 	//0원이여도 결제상태완료로 변경
 	public int getBookingPriceById(String id, String bookingcarnum) throws Exception;
+	public void updateBookingStatusIfPriceZero(String id, String bookingcarnum) throws Exception;
 	//메이트이용현황관련
 	public List<String> findBookingCarNumByUser(String id) throws Exception;
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception;
