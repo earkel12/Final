@@ -85,7 +85,7 @@ tr:hover {
 
 .table-wrapper {
     width: fit-content;
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 .filter-grid {
@@ -143,4 +143,36 @@ tr:hover {
 .back-btn:hover {
   background: #555;
   transform: translateY(-2px); /* 호버시 살짝 떠오르게 */
+}
+
+/* 관리자모드-회원관리-검색창 */
+.search-bar {
+    max-width: 400px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-bar button {
+    padding: 8px 16px;
+    background-color: #B1B2FF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.search-bar button:hover {
+    background-color: #AAC4FF;
 }

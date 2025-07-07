@@ -1,6 +1,7 @@
 package com.pm.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.member.model.MemberDTO;
 import com.pm.member.service.MemberService;
 
@@ -139,4 +141,34 @@ public class MemberController {
 		mav.setViewName("member/pwdFind");
 		return mav;
 	}
+	
+	
+	
+	
+	
+	//관리자모드-회원리스트
+	@GetMapping("/memberListAdminMode")
+	public String memberListAdminMode(HttpSession session, Model model) throws Exception {
+		String id = (String) session.getAttribute("sid");
+		if(id == null || !id.equals("admin")) {
+			return "redirect:/";
+		}
+		
+		List<Map<String, Object>> memberList = service.checkMemberListByAdmin();
+		model.addAttribute("memberList", memberList);
+		return "member/memberListAdminMode";
+	}
+	//관리자모드-특정회원예약내역확인
+	@GetMapping("/memberBookingListAdminMode")
+	public String memberBookingListAdminMode(@RequestParam("id") String memberid, HttpSession session, Model model) throws Exception {
+	    String id = (String) session.getAttribute("sid");
+	    if (id == null || !id.equals("admin")) {
+	        return "redirect:/";
+	    }
+	    List<Map<String, Object>> bookingList = service.findBookingListById(memberid);
+	    model.addAttribute("bookingList", bookingList);
+	    return "member/memberBookingListAdminMode";
+	}
+	
+	
 }
