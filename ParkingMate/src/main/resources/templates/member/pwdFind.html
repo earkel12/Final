@@ -3,29 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="css/member/pwdFind.css" />
 </head>
 <body>
-<h2>비밀번호 찾기</h2>
-<form name = "pwdFind" action = "pwdFind" method = "post">
-<div class = "pwd">
-<label>아이디</label>
-<input type = "text" name = "id" th:value="${param.userid}" required>
-<br>
-<label>이름</label>
-<input type = "text" name = "name" required>
-<br>
-<label>전화번호</label>
-<input type = "text" name = "tel" required>
-<input type = "submit" value = "비밀번호찾기">
+<th:block th:include="@{/header}"></th:block>
+
+<h1>비밀번호 찾기</h1>
+
+<div class="idFindNotice">
+  <p>가입할 때 등록했던 정보를 입력해주세요.</p>
 </div>
-<div class = "userpwdResult">
-<p th:if = "${userpwd != null}">회원님의 비밀번호는 <strong th:text = "${userpwd}"></strong> 입니다.
-<a th:href = "@{/login(userid = ${userid})}">로그인</a>
-</p>
-  <p th:if="${userpwd == null} and ${userpwdSel}">
-    일치하는 비밀번호가 없습니다.
-  </p>
-</div>
+
+<form name="pwdFind" action="pwdFind" method="post">
+  <div class="nameBox">
+    <label>아이디</label>
+    <input type="text" name="id" th:value="${param.userid}" required />
+  </div>
+  <div class="emailBox">
+    <label>이름</label>
+    <input type="text" name="name" required />
+  </div>
+  <div class="emailBox">
+    <label>전화번호</label>
+    <input type="text" name="tel" required />
+    <div class="submitbut">
+      <input type="submit" value="확인하기" />
+    </div>
+  </div>
+
+  <div class="useridResult">
+    <p th:if="${userpwd != null}">
+      회원님의 비밀번호는 <strong th:text="${userpwd}"></strong> 입니다.
+      <br />
+      <a th:href="@{/login(userid=${userid})}">로그인</a>
+    </p>
+    <p th:if="${userpwd == null} and ${userpwdSel}" class="notice">
+      일치하는 비밀번호가 없습니다.
+    </p>
+  </div>
 </form>
+<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>

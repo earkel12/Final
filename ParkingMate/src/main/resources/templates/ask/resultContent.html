@@ -12,7 +12,7 @@
   <form name="resultContent" action="result" method="get" class="result-form">
     <fieldset th:each="ask : ${askContent}">
       <input type="hidden" name="idx" th:value="${ask.idx}" />
-
+	<div class = "container">
       <div class="form-row">
         <label>문의자 ID</label>
         <span th:text="${ask.id}"></span>
@@ -41,6 +41,7 @@
       <div class="form-row center">
         <input type="submit" value="돌아가기" class="btn-back" />
       </div>
+   </div>
     </fieldset>
   </form>
 <th:block th:include = "@{/footer}"></th:block>

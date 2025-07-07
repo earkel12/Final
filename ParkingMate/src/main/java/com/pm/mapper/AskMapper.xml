@@ -34,4 +34,8 @@
   	   <select id = "getTotalCnt2" resultType="int">
   		select count(*) from ask where division = 1 order by idx desc
   	   </select>
+  	   
+  	   <select id = "myAskInfo" parameterType="String" resultType="com.pm.ask.model.AskDTO">
+  	   	select * from ask where id = #{id} order by idx desc
+  	   </select>
   </mapper>

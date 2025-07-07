@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 문의내역</title>
+  <link rel="stylesheet" th:href="@{/css/ask/askList.css}" />
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+  
+</head>
+<body>
+  <th:block th:include="@{/header}"></th:block>
+<nav id="floatingNav" th:if="${session.sid == 'admin'}">
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+<nav id="floatingNav" th:if="${session.sid != 'admin'}">
+  <ul>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="faq">FAQ</a></li>
+    <li><a href="askWrite">문의하기</a></li>
+  </ul>
+</nav>
+  <div class="ask-container">
+    <div class="ask-header">
+      <h1 th:text="${userid + ' 님의 문의내역'}">문의내역</h1>
+    </div>
+
+    <table class="ask-table">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>유형</th>
+          <th>제목</th>
+          <th>답변 상태</th>
+          <th>상세 보기</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="ask : ${askList}">
+          <td th:text="${ask.idx}"></td>
+          <td th:text="${ask.type}">유형</td>
+          <td th:text="${ask.title}">제목</td>
+          <td th:text="${ask.comment != null ? '답변 완료' : '미답변'}"
+              th:classappend="${ask.comment != null} ? 'answered' : 'not-answered'">상태</td>
+          <td>
+            <a th:href="@{/askComment(idx=${ask.idx})}" 
+			   class="btn-reply"
+			   th:attr="data-comment=${ask.comment}, data-title=${ask.title}"
+			   onclick="return handleCommentClick(event, this)">확인하기</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <th:block th:include="@{/footer}"></th:block>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function handleCommentClick(event, element) {
+    const comment = element.getAttribute('data-comment');
+    const title = element.getAttribute('data-title');
+
+    if (!comment || comment.trim() === "") {
+      // 답변이 없으면 alert만 띄우고 이동 막기
+      Swal.fire({
+        icon: 'warning',
+        title: '답변 준비 중',
+        text: '아직 문의 답변 처리가 완료되지 않았습니다.',
+        confirmButtonText: '확인'
+      });
+      event.preventDefault(); // 페이지 이동 방지
+      return false;
+    }
+
+    // 답변 있으면 이동 허용 (return true 생략 가능)
+    return true;
+  }
+</script>
+
+</body>
+</html>

@@ -14,4 +14,5 @@ public interface AskService {
 	public List<AskDTO> resultContent(int idx) throws Exception;
 	public int getTotalCnt();
 	public int getTotalCnt2();
+	public List<AskDTO> myAskInfo(String id) throws Exception;
 }
