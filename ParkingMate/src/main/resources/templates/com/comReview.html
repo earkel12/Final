@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>리뷰 목록</title>
-  <th:block th:include="@{/header}"></th:block>
+
   <style>
     * {
       box-sizing: border-box;
@@ -99,6 +99,46 @@
   </style>
 </head>
 <body>
+  <th:block th:include="@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="comReview">리뷰</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
 <main>
   <h1>리뷰</h1>
 
@@ -114,10 +154,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:if="${#lists.isEmpty(arr)}">
+        <tr th:if="${#lists.isEmpty(arr2)}">
           <td colspan="5" class="no-data">등록된 리뷰가 없습니다.</td>
         </tr>
-        <tr th:each="dto : ${arr}">
+        <tr th:each="dto : ${arr2}">
           <td th:text="${dto.bookingnum}">예약번호</td>
           <td th:text="${dto.id}">ID</td>
           <td th:text="${dto.rating}">평점</td>
@@ -128,11 +168,7 @@
     </table>
   </form>
 
-  <div class="paging" th:utext="${pageStr}"></div>
-
-  <div class="btn-container">
-    <a th:href="@{/community}" class="btn">커뮤니티 메인</a>
-  </div>
+  <div class="paging" th:utext="${pageStr2}"></div>
 </main>
 <th:block th:include="@{/footer}"></th:block>
 </body>

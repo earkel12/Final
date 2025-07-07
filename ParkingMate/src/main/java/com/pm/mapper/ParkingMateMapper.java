@@ -22,4 +22,6 @@ public interface ParkingMateMapper {
 	public int getSettlementWaitingCount(String mid);
 	public int updateBookingWithPmLocation(int bookingnum, Double pmlatitude, Double pmlongitude, String mateId);
 	public int updateEndtimeAndStatus(String car_num) throws Exception;
+	
+	public String parkingmateById(String userid) throws Exception;
 }

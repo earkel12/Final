@@ -91,7 +91,48 @@
 </head>
 <body>
   <th:block th:include="@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="myCarAdd">차량등록</a></li>
+    <li><a href="myCarList">차량목록</a></li>
+    <li><a href="userInfo">userInfo</a></li>    
+    <li><a href="myParkingHistory">주차장내역보기</a></li>
+    <li><a href="/">문의내역</a></li>
+  </ul>
+</nav>
   <h1>리뷰 작성</h1>
 
   <form action="/reviewWrite" method="post">

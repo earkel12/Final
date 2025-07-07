@@ -11,7 +11,6 @@
 body {
 	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
 	background: #eef2f7;
-	padding: 40px 20px;
 	color: #2c3e50;
 }
 
@@ -190,7 +189,49 @@ h1 {
 
 <body>
 	<th:block th:include="@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/companyProfile">회사소개</a></li>
+    <li><a href="/search">예약하기</a></li>
+    <li><a href="/mateUsagesStatus">이용현황</a></li>
+    <li><a href="/notice">공지사항</a></li>
+    <li><a href="/community">커뮤니티</a></li>
+    <li><a href="/mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
 	<header>
 		<h1>파킹메이트 메인</h1>
 	</header>

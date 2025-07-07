@@ -4,14 +4,9 @@
 <meta charset="UTF-8">
 <title>ParkingMate</title>
 <link rel="stylesheet" href="/css/mypage/myparkingHistory.css">
-<script src="/js/involveParkingHistory_review.js"></script>
 <script src="/js/checkSession.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-function moveToMyParkingMateHistory() {
-    window.location.href = '/myParkingMateHistory';
-}
-</script>
+
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
@@ -52,23 +47,17 @@ function moveToMyParkingMateHistory() {
 
 <nav id="floatingNav">
   <ul>
-    <li><a href="myCarAdd">차량등록</a></li>
-    <li><a href="myCarList">차량목록</a></li>
-    <li><a href="userInfo">userInfo</a></li>    
-    <li><a href="myParkingHistory">주차장내역보기</a></li>
-    <li><a href="myAskInfo">문의내역</a></li>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
   </ul>
 </nav>
 
-<div class="table-wrapper" style="min-height: 375px;">
-<div class="filter-grid">
-    <div class="filter-item" onclick="goToFilter('all')">
-        <div>전체내역</div>
-    </div>
-    <div class="filter-item" onclick="goToFilter('valet')">
-        <div>파킹메이트내역</div>
-    </div>
-</div>
+<div class="table-wrapper" style="min-height: 365px;">
 
 <table>
     <thead>
@@ -104,53 +93,12 @@ function moveToMyParkingMateHistory() {
 			<td th:text="${history.['price'] != 0 ? #numbers.formatInteger(history.['price'], 3, 'COMMA') + '원' : '0원'}"></td>
 			<td th:text="${history['status']}"></td>
 			<td th:text="${history['obstacle'] == 1 ? 'O' : 'X'}"></td>
-			<td>
-			 <th:block th:if="${reviewList.contains(history.bookingnum)}">
-			  <button class="done-review-btn"
-			          th:data-bookingnum="${history.bookingnum}">
-			    작성완료
-			  </button>
-			</th:block>
-			  <th:block th:unless="${reviewList.contains(history.bookingnum)}">
-			    <input type="button" value="리뷰쓰기"
-			           class="review-btn"
-			           th:data-bookingnum="${history.bookingnum}"
-			           th:data-bookingdate="${history.bookingdate}"
-			           th:data-parkinglot_name="${history.parkinglot_name}">
-			  </th:block>
-			</td>
         </tr>
     </tbody>
 </table>
 
-<script>
-	document.addEventListener("DOMContentLoaded", function () {
-	  const buttons = document.querySelectorAll(".review-btn");
-
-	  buttons.forEach(btn => {
-	    btn.addEventListener("click", () => {
-	      const num = btn.dataset.bookingnum;
-	      const date = encodeURIComponent(btn.dataset.bookingdate);
-	      const name = encodeURIComponent(btn.dataset.parkinglot_name);
-
-	      window.location.href = `/reviewWrite?bookingnum=${num}&bookingdate=${date}&parkinglot_name=${name}`;
-	    });
-	  });
-
-	  // 작성완료 버튼 이벤트
-	  const doneButtons = document.querySelectorAll(".done-review-btn");
-	  doneButtons.forEach(btn => {
-	    btn.addEventListener("click", () => {
-	      const num = btn.dataset.bookingnum;
-	      window.location.href = `/reviewContent?bookingnum=${num}`;
-	    });
-	  });
-	});
-
-</script>
-
 	<div>
-    	<button class="back-btn" onclick="window.location.href='/mypageMain'">뒤로 돌아가기</button>
+    	<button class="back-btn" onclick="window.location.href='/memberListAdminMode'">뒤로 돌아가기</button>
 	</div>
 </div>
 

@@ -104,6 +104,13 @@ public class CommunityServiceImple implements CommunityService {
 		return mapper.reviewContent(bookingnum);
 	}
 	
+	@Override
+	public int getTotalCnt2() {
+		int totalCnt = sqlSessionTemplate.selectOne("com.pm.mapper.CommunityMapper.getTotalCnt2");
+		return totalCnt == 0 ? 1 : totalCnt;
+	}
+	
+	
 	
 	@Override
 	public int getSearchCount(String type, String keyword) {
