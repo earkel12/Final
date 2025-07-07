@@ -5,8 +5,55 @@
     <title>문의 목록 (관리자 전용)</title>
    <link rel="stylesheet" th:href="@{/css/ask/askList.css}" />
 </head>
-<th:block th:include = "@{/header}"></th:block>
+
 <body>
+<th:block th:include = "@{/header}"></th:block>
+<!-- 상단 메뉴 -->
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav" >
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+
     <a href="result" class="btn-result">문의 처리 결과</a>
     <h1>고객 문의 목록</h1>
     <table class="ask-table">

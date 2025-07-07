@@ -157,6 +157,45 @@ input[type="reset"]:hover {
 </style>
 </head>
 <body>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="comReview">리뷰</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
 	<main>
 		<h1>커뮤니티 글쓰기</h1>
 

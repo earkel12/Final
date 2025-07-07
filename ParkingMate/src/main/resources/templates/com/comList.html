@@ -1,154 +1,217 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>리뷰 목록</title>
-  <th:block th:include="@{/header}"></th:block>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<title>커뮤니티 목록</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+* {
+	box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
-      background-color: #f5f7fa;
-      color: #2c3e50;
-    }
+body {
+	margin: 0;
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #2c3e50;
+}
 
-    main {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+main {
+	max-width: 1000px;
+	margin: 40px auto;
+	padding: 0 20px;
+}
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 25px;
-      border-left: 5px solid #B1B2FF;
-      padding-left: 15px;
-    }
+h1 {
+	font-size: 28px;
+	margin-bottom: 25px;
+	border-left: 5px solid #B1B2FF;
+	padding-left: 15px;
+}
 
-    table.review-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    }
+table.community-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
 
-    table.review-table thead {
-      background-color: #B1B2FF;
-      color: white;
-    }
+table.community-table thead {
+	background-color: #B1B2FF;
+	color: white;
+}
 
-    table.review-table th,
-    table.review-table td {
-      padding: 14px 16px;
-      text-align: center;
-      border-bottom: 1px solid #e2e2e2;
-    }
+table.community-table th, table.community-table td {
+	padding: 14px 16px;
+	text-align: center;
+	border-bottom: 1px solid #e2e2e2;
+}
 
-    table.review-table tbody tr:hover {
-      background-color: #f0f4ff;
-    }
+table.community-table tbody tr:hover {
+	background-color: #f0f4ff;
+}
 
-    .no-data {
-      text-align: center;
-      padding: 40px 0;
-      color: #888;
-    }
+table.community-table a {
+	color: #2c3e50;
+	text-decoration: none;
+	font-weight: 500;
+	cursor: pointer;
+}
 
-    .paging {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-    }
+table.community-table a:hover {
+	text-decoration: underline;
+}
 
-    .paging a,
-    .paging span {
-      display: inline-block;
-      margin: 0 5px;
-      padding: 6px 12px;
-      color: #6C72FF;
-      text-decoration: none;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      cursor: pointer;
-    }
+.table-wrapper {
+	margin-top: 20px;
+}
 
-    .paging a:hover {
-      background-color: #6C72FF;
-      color: white;
-      border-color: #555bff;
-    }
+.write-button-wrapper {
+	text-align: right;
+	margin-top: 12px;
+}
 
-    .paging .current {
-      background-color: #555bff;
-      color: white;
-      border-color: #555bff;
-      cursor: default;
-    }
+.write-button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #6C72FF;
+	color: white;
+	border-radius: 6px;
+	text-decoration: none;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
 
-    .community-btn {
-      text-align: right;
-      margin-top: 25px;
-    }
+.write-button:hover {
+	background-color: #555bff;
+}
 
-    .community-btn a {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #6C72FF;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
+.paging {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 14px;
+}
 
-    .community-btn a:hover {
-      background-color: #555bff;
-    }
-  </style>
+.paging a, .paging span {
+	display: inline-block;
+	margin: 0 5px;
+	padding: 6px 12px;
+	color: #6C72FF;
+	text-decoration: none;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+}
+
+.paging a:hover {
+	background-color: #6C72FF;
+	color: white;
+	border-color: #555bff;
+}
+
+.paging .current {
+	background-color: #555bff;
+	color: white;
+	border-color: #555bff;
+	cursor: default;
+}
+</style>
 </head>
 <body>
-  <main>
-    <h1>리뷰 목록</h1>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-    <div class="table-wrapper">
-      <table class="review-table">
-        <thead>
-          <tr>
-            <th>예약번호</th>
-            <th>ID</th>
-            <th>평점</th>
-            <th>내용</th>
-            <th>작성일</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:if="${#lists.isEmpty(arr)}">
-            <td colspan="5" class="no-data">등록된 리뷰가 없습니다.</td>
-          </tr>
-          <tr th:each="dto : ${arr}">
-            <td th:text="${dto.bookingnum}">예약번호</td>
-            <td th:text="${dto.id}">ID</td>
-            <td th:text="${dto.rating}">평점</td>
-            <td th:text="${dto.content}">내용</td>
-            <td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">작성일</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="paging" th:utext="${pageStr}"></div>
-    </div>
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-    <div class="community-btn">
-      <a th:href="@{/community}">커뮤니티 메인</a>
-    </div>
-  </main>
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
 
-  <th:block th:include="@{/footer}"></th:block>
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="comReview">리뷰</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+	<main>
+		<div
+			style="display: flex; justify-content: space-between; align-items: flex-end;">
+			<h1>커뮤니티</h1>
+
+			<form th:action="@{/comList}" method="get"
+				style="display: flex; gap: 8px;">
+				<select name="type" th:value="${type}"
+					style="padding: 6px 8px; font-size: 14px;">
+					<option value="title" th:selected="${type == 'title'}">제목</option>
+					<option value="id" th:selected="${type == 'id'}">작성자</option>
+				</select> <input type="text" name="keyword" th:value="${keyword}"
+					placeholder="검색어 입력"
+					style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" />
+				<button type="submit"
+					style="padding: 6px 12px; background-color: #6C72FF; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+					검색</button>
+			</form>
+		</div>
+
+		<div class="table-wrapper">
+			<table class="community-table">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>조회수</th>
+						<th>작성일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${#lists.isEmpty(arr)}">
+						<td colspan="5">등록된 게시글이 없습니다.</td>
+					</tr>
+					<tr th:each="dto : ${arr}">
+						<td th:text="${dto.idx}">번호</td>
+						<td><a th:href="@{'/comment'(idx=${dto.idx})}"
+							th:text="${dto.title}">제목</a></td>
+						<td th:text="${dto.id}">작성자</td>
+						<td th:text="${dto.readnum}">조회수</td>
+						<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">작성일</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="paging" th:utext="${pageStr}"></div>
+		</div>
+		<div class="write-button-wrapper" th:if="${userid != null}">
+			<a href="/communityWrite" class="write-button">글쓰기</a>
+		</div>
+	</main>
+	<a th:href="@{/community}">커뮤니티 메인</a>
+	<th:block th:include="@{/footer}"></th:block>
 </body>
 </html>
