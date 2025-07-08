@@ -127,76 +127,67 @@ public class BookingServiceImple implements BookingService {
 	
 	@Override
 	public Map<String, Object> updateOuttime(int bookingnum) throws Exception {
-		
-		System.out.println("=== updateOuttime Controller 진입 ===");
-		
-		Map<String, Object> findInfo = mapper.findIntimeAndPrice2(bookingnum);
-		  if (findInfo == null) {
-		        throw new IllegalStateException("해당 bookingnum에 대한 데이터가 없습니다.");
-		  }
-		
-		  Object intimeObj = findInfo.get("intime");
-		  Timestamp intimeTimestamp = null;
+	    System.out.println("=== updateOuttime Controller 진입 ===");
 
-		  if (intimeObj instanceof Timestamp) {
-		      intimeTimestamp = (Timestamp) intimeObj;
-		  } else if (intimeObj instanceof String) {
-		      try {
-		          intimeTimestamp = Timestamp.valueOf((String) intimeObj);
-		      } catch (IllegalArgumentException e) {
-		          // 포맷이 맞지 않을 경우 LocalDateTime으로 파싱 후 Timestamp로 변환
-		          try {
-		              LocalDateTime ldt = LocalDateTime.parse((String) intimeObj, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		              intimeTimestamp = Timestamp.valueOf(ldt);
-		          } catch (Exception ex) {
-		              throw new IllegalStateException("intime 문자열을 Timestamp로 변환 실패: " + intimeObj, ex);
-		          }
-		      }
-		  } else if (intimeObj != null) {
-		      throw new IllegalStateException("Unknown type for intime: " + intimeObj.getClass());
-		  }
-		  
-		int price2 = (int)findInfo.get("price2");
-		
-		if(intimeTimestamp==null) {
-			throw new IllegalAccessException("입차시간이 정상적으로 등록되지 않았습니다. 고객센터로 연락바랍니다.");
-		}
-		
-		LocalDateTime intime = intimeTimestamp.toLocalDateTime();
-		//경과시간계산
-		long minutes = ChronoUnit.MINUTES.between(intime, LocalDateTime.now());
-		//30분단위 올림처리
-		long units=(long)Math.ceil((double)minutes/30);
-		int price=(int)(units*price2);
-		
-		// 이미 결제된 금액 가져오기
-		int alreadyPaidPrice = (int) findInfo.get("price");
+	    Map<String, Object> findInfo = mapper.findIntimeAndPrice2(bookingnum);
+	    if (findInfo == null) {
+	        throw new IllegalStateException("해당 bookingnum에 대한 데이터가 없습니다.");
+	    }
 
-		// ★ DB에 저장할 최종 누적 결제 금액
-	    int totalprice = alreadyPaidPrice + price;
-		
-		//DB 업데이트 수행 (outtime = now, price = 계산된 금액)
+	    Timestamp intimeTimestamp = toTimestamp(findInfo.get("intime"));
+	    if (intimeTimestamp == null) {
+	        throw new IllegalAccessException("입차시간이 정상적으로 등록되지 않았습니다. 고객센터로 연락바랍니다.");
+	    }
+
+	    LocalDateTime intime = intimeTimestamp.toLocalDateTime();
+	    long minutes = ChronoUnit.MINUTES.between(intime, LocalDateTime.now());
+	    long units = (long) Math.ceil((double) minutes / 30);
+	    int pricePerUnit = (int) findInfo.get("price2");
+	    int additionalPrice = (int) (units * pricePerUnit);
+
+	    int alreadyPaidPrice = (int) findInfo.get("price");
+	    int totalprice = alreadyPaidPrice + additionalPrice;
+
 	    Map<String, Object> updateMap = new HashMap<>();
 	    updateMap.put("bookingnum", bookingnum);
-	    updateMap.put("totalprice", totalprice);
-	    
-	    int updateCount2 = mapper.updateOuttime(updateMap);
-	    System.out.println("updateCount2: " + updateCount2);
+	    updateMap.put("price", totalprice); // DB에는 누적금액 저장
 
-	    if (updateCount2 == 0) {
+	    int updateCount = mapper.updateOuttime(updateMap);
+	    System.out.println("updateCount: " + updateCount);
+	    if (updateCount == 0) {
 	        throw new IllegalStateException("출차 처리 실패: bookingnum 불일치 또는 업데이트 실패.");
 	    }
-	    //클라이언트 반환 데이터 구성
+
 	    Map<String, Object> result = new HashMap<>();
+	    result.put("success", true);
 	    result.put("bookingnum", bookingnum);
-	    result.put("price", price);
+	    result.put("price", additionalPrice); // 화면에는 추가 결제금액만 표시
 	    result.put("minutes", minutes);
 	    result.put("units", units);
-	    //문자열로 포맷하여 outtime 전달
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	    result.put("outtime", LocalDateTime.now().format(formatter));;
+	    result.put("outtime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
 	    return result;
+	}
+
+
+	private Timestamp toTimestamp(Object intimeObj) {
+	    if (intimeObj instanceof Timestamp) {
+	        return (Timestamp) intimeObj;
+	    } else if (intimeObj instanceof String) {
+	        try {
+	            return Timestamp.valueOf((String) intimeObj);
+	        } catch (IllegalArgumentException e) {
+	            try {
+	                LocalDateTime ldt = LocalDateTime.parse((String) intimeObj, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	                return Timestamp.valueOf(ldt);
+	            } catch (Exception ex) {
+	                throw new IllegalStateException("intime 문자열을 Timestamp로 변환 실패: " + intimeObj, ex);
+	            }
+	        }
+	    } else if (intimeObj != null) {
+	        throw new IllegalStateException("Unknown type for intime: " + intimeObj.getClass());
+	    }
+	    return null;
 	}
 	
 	@Override

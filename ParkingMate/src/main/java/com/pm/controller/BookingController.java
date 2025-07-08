@@ -311,11 +311,9 @@ public class BookingController {
 	        result2.put("minutes", data.get("minutes"));
 
 	        // 출차시간 응답에 포함
-	        Timestamp outtimeTimestamp = (Timestamp) data.get("outtime");
-	        if (outtimeTimestamp != null) {
-	            LocalDateTime outtimeLdt = outtimeTimestamp.toLocalDateTime();
-	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            result2.put("outtime", outtimeLdt.format(formatter));
+	        String outtimeStr = (String) data.get("outtime");
+	        if (outtimeStr != null && !outtimeStr.isEmpty()) {
+	            result2.put("outtime", outtimeStr);
 	        } else {
 	            result2.put("outtime", "-");
 	        }
