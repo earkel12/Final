@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class ParkingMateServiceImple implements ParkingMateService {
     @Autowired
     private ParkingMateMapper mapper;
 
+    @Autowired
+    private SqlSession sqlSession;
+    
     @Override
     public int insertParkingMate(ParkingMateDTO dto) throws Exception{
         int count = mapper.insertParkingMate(dto);
@@ -73,8 +77,10 @@ public class ParkingMateServiceImple implements ParkingMateService {
     }
     @Override
     public boolean settleMatePaycheck(String car_num) throws Exception {
-        int updated = mapper.updateEndtimeAndStatus(car_num);
-        return updated > 0;
+        ParkingMateMapper mapper = sqlSession.getMapper(ParkingMateMapper.class);
+    	int updated = mapper.updateEndtimeAndStatus(car_num);
+        int updated2 = mapper.updateBookingEndtime(car_num);
+        return (updated == 1 && updated2 == 1);
     }
     
     @Override

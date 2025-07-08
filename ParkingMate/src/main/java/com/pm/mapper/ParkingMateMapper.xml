@@ -42,7 +42,7 @@
 		<if test="endDate != null and endDate != ''">
 			and endtime &lt;= #{endDate}
 		</if>
-		order by starttime desc 
+		order by starttime desc
 	</select>
 
 	<select id="totalPmWorklog" resultType="map">
@@ -87,16 +87,19 @@
 		resultType="int">
 		SELECT COUNT(*)
 		FROM mate_paycheck m
-		WHERE mid = #{mid} AND m.status = '정산대기'
+		WHERE mid = #{mid} AND
+		m.status = '정산대기'
 	</select>
-	
+
 	<update id="updateBookingWithPmLocation">
 		UPDATE booking
 		SET pmlatitude = #{pmlatitude},
 		pmlongitude = #{pmlongitude},
 		status = '파킹메이트매칭완료'
-		WHERE bookingnum = #{bookingnum}
+		WHERE bookingnum =
+		#{bookingnum}
 	</update>
+<<<<<<< HEAD
 	<update id="updateEndtimeAndStatus" parameterType="String">
     UPDATE mate_paycheck
     SET endtime = NOW(),
@@ -105,8 +108,26 @@
       AND status = '정산대기'
 	</update>
 
+=======
+>>>>>>> 27b0b83908fec8903d1047398cda662e288263e0
 	
-	<select id="parkingmateById" parameterType="String" resultType="String">
+	<update id="updateEndtimeAndStatus" parameterType="String">
+		UPDATE mate_paycheck
+		SET endtime = NOW(),
+		status = '정산완료'
+		WHERE car_num = #{car_num}
+		AND status = '정산대기'
+	</update>
+	
+	<update id="updateBookingEndtime" parameterType="String">
+		UPDATE booking
+		SET outtime = NOW(),
+		status = '파킹메이트매칭완료'
+		WHERE bookingcarnum = #{car_num}
+	</update>
+
+	<select id="parkingmateById" parameterType="String"
+		resultType="String">
 		select id from parkingmate where id=#{id}
 	</select>
 </mapper>
