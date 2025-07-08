@@ -178,7 +178,7 @@ public class BookingServiceImple implements BookingService {
 		//DB 업데이트 수행 (outtime = now, price = 계산된 금액)
 	    Map<String, Object> updateMap = new HashMap<>();
 	    updateMap.put("bookingnum", bookingnum);
-	    updateMap.put("price", totalprice);
+	    updateMap.put("totalprice", totalprice);
 	    
 	    int updateCount2 = mapper.updateOuttime(updateMap);
 	    System.out.println("updateCount2: " + updateCount2);

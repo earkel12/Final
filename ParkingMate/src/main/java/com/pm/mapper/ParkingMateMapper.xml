@@ -99,7 +99,7 @@
 		WHERE bookingnum =
 		#{bookingnum}
 	</update>
-<<<<<<< HEAD
+
 	<update id="updateEndtimeAndStatus" parameterType="String">
     UPDATE mate_paycheck
     SET endtime = NOW(),
@@ -108,9 +108,6 @@
       AND status = '정산대기'
 	</update>
 
-=======
->>>>>>> 27b0b83908fec8903d1047398cda662e288263e0
-	
 	<update id="updateEndtimeAndStatus" parameterType="String">
 		UPDATE mate_paycheck
 		SET endtime = NOW(),
