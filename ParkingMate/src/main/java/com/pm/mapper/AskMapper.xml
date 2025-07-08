@@ -20,7 +20,7 @@
 	  </update>
 	  
 	  <select id = "accomplishedAskList" resultType="com.pm.ask.model.AskDTO">
-	  	select * from ask where division = 1 order by idx desc
+	  	select * from ask where division = 1 order by idx desc LIMIT #{start}, #{end}
 	  </select>
 	  
 	  <select id = "resultContent" parameterType="int" resultType="com.pm.ask.model.AskDTO">
