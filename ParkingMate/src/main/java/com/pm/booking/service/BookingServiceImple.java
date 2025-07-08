@@ -87,8 +87,10 @@ public class BookingServiceImple implements BookingService {
 	
 	@Override
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception {
-		List<Map<String, Object>> bookingInfoByCarnum = mapper.findBookingInfoByCarNum(id, bookingcarnum);
-	    return bookingInfoByCarnum;
+		Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("id", id);
+	    paramMap.put("bookingcarnum", bookingcarnum);
+	    return mapper.findBookingInfoByCarNumWithEndtime(paramMap);
 	}
 	
 	@Override

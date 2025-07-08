@@ -30,6 +30,7 @@ public interface BookingService {
 	//메이트이용현황관련
 	public List<String> findBookingCarNumByUser(String id) throws Exception;
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception;
+
 	public ParkingLotDTO findParkinglotByName(String name) throws Exception;
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 

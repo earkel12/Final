@@ -1,5 +1,6 @@
 package com.pm.controller;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -171,6 +172,17 @@ public class BookingController {
 		
 		try {
 			bookingInfoByCarnum = service.findBookingInfoByCarNum(id, bookingcarnum);
+			
+			//intime업데이트
+			for (Map<String, Object> booking : bookingInfoByCarnum) {
+		        Timestamp ts = (Timestamp) booking.get("display_intime");
+		        if (ts != null) {
+		            LocalDateTime ldt = ts.toLocalDateTime();
+		            booking.put("display_intime", ldt);
+		            booking.put("intime", ldt);  // thymeleaf 조건 작동
+		        }
+		    }
+			
 		} catch (Exception e) {
 			System.out.println("메이트이용현황 오류발생! 고객센터에 연락바랍니다.");
 			e.printStackTrace();

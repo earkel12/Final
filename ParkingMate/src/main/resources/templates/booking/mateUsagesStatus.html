@@ -52,34 +52,35 @@
 	
     <!-- 상단 -->
     <div class="top-section">
-    	<!-- 상태메세지박스 -->
-        <div class="status-box">
-    		<!-- 출차 완료 상태 (최우선) -->
-		    <span th:if="${booking['outtime'] != null}">
-		        출차 완료! 이용시간:
-		        <span th:text="${booking['intime'] != null ? T(java.time.Duration).between(booking['intime'].toLocalDateTime(), booking['outtime'].toLocalDateTime()).toMinutes() : 0}"></span>분
-		    </span>
-		
-		    <!-- 입차 완료 상태 -->
-		    <span th:if="${booking['intime'] != null and booking['outtime'] == null}">
-		        입차 완료!
-		    </span>
-		
-		    <!-- instand == 1 + findMate 상태 표시 (입차/출차가 아닌 경우만) -->
-		    <span th:if="${booking['intime'] == null and booking['instand'] == 1 and !#lists.isEmpty(findMate)}">
-		        파킹메이트 매칭완료!
-		    </span>
-		
-		    <span th:if="${booking['intime'] == null and booking['instand'] == 1 and #lists.isEmpty(findMate)}">
-		        파킹메이트 매칭 중
-		    </span>
-		
-		    <!-- instand != 1 상태 표시 (입차/출차가 아닌 경우만) -->
-		    <span th:if="${booking['intime'] == null and booking['instand'] != 1}"
-		          th:text="${#lists.isEmpty(findMate) ? '파킹메이트결제완료' : '파킹메이트 매칭완료!'}">
-		    </span>
-		</div>
-		
+    <!-- 상태메세지박스 -->
+    <div class="status-box">
+
+        <!-- 출차 완료 상태 (최우선) -->
+        <span th:if="${booking['intime'] != null and booking['outtime'] != null}">
+            출차 완료! 이용시간:
+            <span th:text="${T(java.time.Duration).between(booking['intime'], booking['outtime']).toMinutes()}"></span>분
+        </span>
+
+        <!-- 입차 완료 상태 -->
+        <span th:if="${booking['intime'] != null and booking['outtime'] == null}">
+            입차 완료!
+        </span>
+
+        <!-- instand == 1 + findMate 상태 표시 (입차/출차가 아닌 경우만) -->
+        <span th:if="${booking['intime'] == null and booking['instand'] == 1 and !#lists.isEmpty(findMate)}">
+            파킹메이트 매칭완료!
+        </span>
+
+        <span th:if="${booking['intime'] == null and booking['instand'] == 1 and #lists.isEmpty(findMate)}">
+            파킹메이트 매칭 중
+        </span>
+
+        <!-- instand != 1 상태 표시 (입차/출차가 아닌 경우만) -->
+        <span th:if="${booking['intime'] == null and booking['instand'] != 1}"
+              th:text="${#lists.isEmpty(findMate) ? '파킹메이트결제완료' : '파킹메이트 매칭완료!'}">
+        </span>
+    </div>
+
 		<!-- 예약정보 -->
         <div class="info-box" th:each="booking : ${bookingInfoByCarnum}">
             <div class="info-item">
@@ -88,7 +89,7 @@
             </div>
             <div class="info-item">
                 <span>입차시간:</span> 
-                <span th:text="${intime!=null?#dates.format(intime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 14:18</span>
+                <span th:text="${booking['display_intime'] != null ? #temporals.format(booking['display_intime'], 'yyyy-MM-dd HH:mm:ss') : '-'}">-</span>
             </div>
             <div class="info-item">
                 <span>출차시간:</span> 

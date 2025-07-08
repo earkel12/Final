@@ -118,7 +118,6 @@
 		where
 			id = #{id}
 		and status != '주차장결제완료'
-		and status = '파킹메이트결제완료'
 	</select>
 	<!-- 차량번호별 내용조회 -->
 	<select id="findBookingInfoByCarNum" parameterType="String" resultType="map">
@@ -134,6 +133,22 @@
     	where
         	a.id = #{id}
     	and a.bookingcarnum = #{bookingcarnum}
+	</select>
+	<!--차량번호별 내용조회 보완  -->
+	<select id="findBookingInfoByCarNumWithEndtime" parameterType="map" resultType="map">
+    SELECT
+        b.*,
+        p.name AS parkinglot_name,
+        COALESCE(b.intime, mp.endtime) AS display_intime
+    FROM
+        booking b
+    JOIN
+        parkinglot p ON b.idx = p.idx
+    LEFT JOIN
+        mate_paycheck mp ON b.bookingcarnum = mp.car_num AND b.id = mp.id
+    WHERE
+        b.id = #{id}
+        AND b.bookingcarnum = #{bookingcarnum}
 	</select>
 
 	<!-- 메이트이용현황관련 -->
