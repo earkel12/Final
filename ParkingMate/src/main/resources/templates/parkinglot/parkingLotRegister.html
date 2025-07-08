@@ -97,9 +97,9 @@
         </select>
       </td>
     </tr>
-    <tr><th>제한 높이</th><td><input type="text" name="maxheight"></td></tr>
-    <tr><th>제한 넓이</th><td><input type="text" name="maxwidth"></td></tr>
-    <tr><th>제한 중량</th><td><input type="text" name="maxweight"></td></tr>
+    <tr><th>제한 높이</th><td><input type="text" name="maxheight" required></td></tr>
+    <tr><th>제한 넓이</th><td><input type="text" name="maxwidth" required></td></tr>
+    <tr><th>제한 중량</th><td><input type="text" name="maxweight" required></td></tr>
     <tr><th>위도</th><td><input type="text" name="latitude" id="latitude" readonly required></td></tr>
     <tr><th>경도</th><td><input type="text" name="longitude" id="longitude" readonly required></td></tr>
   </table>
@@ -229,10 +229,16 @@ function handleSubmit(type) {
 	      alert("위도와 경도가 같을 수 없습니다. 다시 지도에서 선택해주세요.");
 	      return false;
 	    }
+	    
+	    if (!form.checkValidity()) {
+	        form.reportValidity();  // 브라우저가 어떤 필드가 잘못되었는지 알려줌
+	        return false;
+	      }
 
-	    form.action = "parkingLotInsert";
-	    form.submit();
-	    return true;
+	      form.action = "parkingLotInsert";
+	      form.submit();  // 이제 유효성 검사가 선행됨
+	      return true;
+	    
 
 	  } else if (type === 'delete') {
 	    if (confirm("정말 삭제하시겠습니까?")) {
