@@ -2,6 +2,7 @@ package com.pm.booking.service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -134,7 +135,27 @@ public class BookingServiceImple implements BookingService {
 		        throw new IllegalStateException("해당 bookingnum에 대한 데이터가 없습니다.");
 		  }
 		
-		Timestamp intimeTimestamp = (Timestamp)findInfo.get("intime");
+		  Object intimeObj = findInfo.get("intime");
+		  Timestamp intimeTimestamp = null;
+
+		  if (intimeObj instanceof Timestamp) {
+		      intimeTimestamp = (Timestamp) intimeObj;
+		  } else if (intimeObj instanceof String) {
+		      try {
+		          intimeTimestamp = Timestamp.valueOf((String) intimeObj);
+		      } catch (IllegalArgumentException e) {
+		          // 포맷이 맞지 않을 경우 LocalDateTime으로 파싱 후 Timestamp로 변환
+		          try {
+		              LocalDateTime ldt = LocalDateTime.parse((String) intimeObj, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		              intimeTimestamp = Timestamp.valueOf(ldt);
+		          } catch (Exception ex) {
+		              throw new IllegalStateException("intime 문자열을 Timestamp로 변환 실패: " + intimeObj, ex);
+		          }
+		      }
+		  } else if (intimeObj != null) {
+		      throw new IllegalStateException("Unknown type for intime: " + intimeObj.getClass());
+		  }
+		  
 		int price2 = (int)findInfo.get("price2");
 		
 		if(intimeTimestamp==null) {
@@ -171,8 +192,17 @@ public class BookingServiceImple implements BookingService {
 	    result.put("price", price);
 	    result.put("minutes", minutes);
 	    result.put("units", units);
+	    //문자열로 포맷하여 outtime 전달
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    result.put("outtime", LocalDateTime.now().format(formatter));;
 
 	    return result;
+	}
+	
+	@Override
+	public void addCalculatedPriceToBooking(int bookingnum, int additionalPrice) throws Exception {
+		mapper.addCalculatedPriceToBooking(bookingnum, additionalPrice);
+		
 	}
 
 	@Override

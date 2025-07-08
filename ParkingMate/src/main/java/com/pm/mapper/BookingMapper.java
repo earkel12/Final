@@ -38,6 +38,7 @@ public interface BookingMapper {
 
 	public int updateStartTimePaycheck(int bookingnum) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
+	public void addCalculatedPriceToBooking(@Param("bookingnum") int bookingnum, @Param("additionalPrice") int additionalPrice) throws Exception;
 	
 	public int updateIntime(int bookingnum) throws Exception;
 	public Map<String, Object> findIntimeAndPrice2(int bookingnum) throws Exception;

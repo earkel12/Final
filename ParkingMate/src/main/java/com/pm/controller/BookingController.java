@@ -2,6 +2,7 @@ package com.pm.controller;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,15 +174,21 @@ public class BookingController {
 		try {
 			bookingInfoByCarnum = service.findBookingInfoByCarNum(id, bookingcarnum);
 			
-			//intime업데이트
+			// intime, outtime 업데이트
 			for (Map<String, Object> booking : bookingInfoByCarnum) {
-		        Timestamp ts = (Timestamp) booking.get("display_intime");
-		        if (ts != null) {
-		            LocalDateTime ldt = ts.toLocalDateTime();
-		            booking.put("display_intime", ldt);
-		            booking.put("intime", ldt);  // thymeleaf 조건 작동
-		        }
-		    }
+			    Timestamp ts = (Timestamp) booking.get("display_intime");
+			    if (ts != null) {
+			        LocalDateTime ldt = ts.toLocalDateTime();
+			        booking.put("display_intime", ldt);
+			        booking.put("intime", ldt);  // thymeleaf 조건 작동
+			    }
+
+			    Timestamp ots = (Timestamp) booking.get("outtime");
+			    if (ots != null) {
+			        LocalDateTime oldt = ots.toLocalDateTime();
+			        booking.put("outtime", oldt);  // outtime도 LocalDateTime으로 변환
+			    }
+			}
 			
 		} catch (Exception e) {
 			System.out.println("메이트이용현황 오류발생! 고객센터에 연락바랍니다.");
@@ -285,26 +292,40 @@ public class BookingController {
 	@PostMapping("/booking/updateOuttime")
 	@ResponseBody
 	public Map<String, Object> updateOuttime(@RequestParam("bookingnum") int bookingnum, HttpSession session) {
-		System.out.println("bookingnum: " + bookingnum);
+	    System.out.println("bookingnum: " + bookingnum);
 
-		Map<String, Object> result2 = new HashMap<>();
+	    Map<String, Object> result2 = new HashMap<>();
 	    try {
-	    	String id = (String) session.getAttribute("sid");
-	    	if(id==null) {
-	    		result2.put("success", false);
+	        String id = (String) session.getAttribute("sid");
+	        if(id == null) {
+	            result2.put("success", false);
 	            result2.put("error", "세션 만료. 로그인 필요");
 	            result2.put("redirect", "/login");
 	            return result2;
-	    	}
-	    	Map<String, Object> data = service.updateOuttime(bookingnum);
-	    	result2.put("success", true);
+	        }
+
+	        Map<String, Object> data = service.updateOuttime(bookingnum);
+
+	        result2.put("success", true);
 	        result2.put("price", data.get("price"));
 	        result2.put("minutes", data.get("minutes"));
+
+	        // 출차시간 응답에 포함
+	        Timestamp outtimeTimestamp = (Timestamp) data.get("outtime");
+	        if (outtimeTimestamp != null) {
+	            LocalDateTime outtimeLdt = outtimeTimestamp.toLocalDateTime();
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	            result2.put("outtime", outtimeLdt.format(formatter));
+	        } else {
+	            result2.put("outtime", "-");
+	        }
+
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	        e.printStackTrace();
 	        result2.put("success", false);
 	        result2.put("error", e.getMessage());
 	    }
 	    return result2;
 	}
+
 }

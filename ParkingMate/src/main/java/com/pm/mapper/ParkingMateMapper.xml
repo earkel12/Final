@@ -103,7 +103,7 @@
         status = '정산완료'
     WHERE car_num = #{car_num}
       AND status = '정산대기'
-</update>
+	</update>
 
 	
 	<select id="parkingmateById" parameterType="String" resultType="String">

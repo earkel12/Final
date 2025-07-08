@@ -36,5 +36,7 @@ public interface BookingService {
 
 	public Map<String, Object> updateIntime(int bookingnum) throws Exception;
 	public Map<String, Object> updateOuttime(int bookingnum) throws Exception;
+	public void addCalculatedPriceToBooking(int bookingnum, int additionalPrice) throws Exception;
+
 }
 

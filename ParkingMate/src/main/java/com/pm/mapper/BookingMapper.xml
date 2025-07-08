@@ -294,5 +294,11 @@
     	WHERE
     		bookingnum = #{bookingnum}
 	</update>
+	<!-- booking 테이블 기존 price에 추가 결제금액을 합산하여 업데이트 -->
+	<update id="addCalculatedPriceToBooking" parameterType="map">
+    	UPDATE booking
+    	SET price = price + #{additionalPrice}
+    	WHERE bookingnum = #{bookingnum}
+	</update>
 
 </mapper>

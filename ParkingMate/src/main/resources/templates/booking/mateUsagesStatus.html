@@ -89,32 +89,51 @@
             </div>
             <div class="info-item">
                 <span>입차시간:</span> 
-                <span th:text="${booking['display_intime'] != null ? #temporals.format(booking['display_intime'], 'yyyy-MM-dd HH:mm:ss') : '-'}">-</span>
+                <span th:text="${intime != null ? #temporals.format(intime, 'yyyy-MM-dd HH:mm:ss') : '-'}"></span>
+
+
             </div>
             <div class="info-item">
                 <span>출차시간:</span> 
-                <span th:text="${outtime!=null?#dates.format(outtime, 'yyyy-MM-dd HH:mm:ss'):'-'}">2025-07-01 15:00</span>
+                <span id="outtime-display" th:text="${outtime != null ? #temporals.format(outtime, 'yyyy-MM-dd HH:mm:ss') : '-'}"></span>
+
             </div>
             <div class="info-item">
                 <span>결제금액:</span> 
-                <span th:text="${booking.price != 0 ? #numbers.formatInteger(booking.price, 3, 'COMMA') + '원' : '0원'}" id="lastpay"></span>
+                <span id="lastpay" th:text="${booking['outtime'] != null ? (#numbers.formatInteger(booking.price, 3, 'COMMA') + '원') : '0원'}"></span>
             </div>
             
                 <div class="button-group-inline">
 				    <!-- 입차하기 -->
-				    <input type="hidden" id="bookingnum-[[${booking.bookingnum]]" th:value="${booking.bookingnum}">
-				    <button type="button" id="intimeBtn-[[${booking.bookingnum]]" th:if="${booking['intime'] == null and booking['instand'] != 1}"
-				    	onclick="updateIntime(this)">입차하기</button>
+				    <input type="hidden"
+				        th:id="'bookingnum-' + ${booking.bookingnum}"
+				        th:value="${booking.bookingnum}">
+				    <button type="button"
+				        th:id="'intimeBtn-' + ${booking.bookingnum}"
+				        th:if="${booking['intime'] == null and booking['instand'] != 1}"
+				        onclick="updateIntime(this)">입차하기</button>
+				
 				    <!-- 출차하기 -->
-				    <input type="hidden" id="bookingnum-[[${booking.bookingnum}]]" th:value="${booking.bookingnum}">
-				    <button type="button" id="outtimeBtn-[[${booking.bookingnum}]]" th:if="${booking['intime'] != null and booking['outtime'] == null}" 
-    					onclick="updateOuttime(this)">출차하기</button>
-    				<!-- 결제하기 -->
+				    <input type="hidden"
+				        th:id="'bookingnum-' + ${booking.bookingnum}"
+				        th:value="${booking.bookingnum}">
+				    <button type="button"
+				        th:id="'outtimeBtn-' + ${booking.bookingnum}"
+				        th:if="${booking['intime'] != null and booking['outtime'] == null}"
+				        th:attr="data-bookingnum=${booking.bookingnum}"
+				        onclick="updateOuttime(this)">출차하기</button>
+				
+				    <!-- 결제하기 -->
 				    <button type="button" id="paymentBtn">결제하기</button>
 				</div>
         </div>
     </div>
-
+	
+	<!-- ✅ 추가: 입차완료 상태 JS 전달 -->
+    <script th:inline="javascript">
+        const isEntered = /*[[${booking['intime'] != null and booking['outtime'] == null}]]*/ false;
+    </script>
+	
     <!-- 하단 -->
     <div class="bottom-section">
         <div class="map-box" id="map">
@@ -160,6 +179,9 @@
 			        title: name
 			    });
 				
+			    
+			 	// 사용자/메이트 마커 및 거리, 선 표시 제약 조건 적용
+	            if (!isEntered) {
 			 	// 유저 마커
 			    const userMarker = new kakao.maps.Marker({
 			        position: new kakao.maps.LatLng(userLat, userLng),
@@ -237,6 +259,8 @@
 			    });
 
 			    polyline.setMap(map);
+	          }
+			 	
 			    const infowindow = new kakao.maps.InfoWindow({
 			        content:
 			        	`<div style="

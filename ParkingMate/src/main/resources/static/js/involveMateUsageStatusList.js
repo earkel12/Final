@@ -64,7 +64,7 @@ function updateIntime(btn) {
 }
 
 function updateOuttime(btn) {
-    const bookingnum = btn.previousElementSibling.value;
+    const bookingnum = btn.getAttribute("data-bookingnum");
     console.log("전달된 bookingnum:", bookingnum);
 
     Swal.fire({
@@ -78,6 +78,7 @@ function updateOuttime(btn) {
         cancelButtonText: '취소'
     }).then((result) => {
         if (!result.isConfirmed) {
+            console.log("사용자가 취소함");
             return;
         }
 
@@ -87,14 +88,18 @@ function updateOuttime(btn) {
             data: { bookingnum: bookingnum },
             success: function(response) {
                 if (response.success) {
+                    document.getElementById("lastpay").textContent = `${response.price.toLocaleString()}원`;
+                    document.getElementById("outtime-display").textContent = response.outtime;
+                    document.getElementById("outtimeBtn-" + bookingnum).style.display = "none";
+
                     Swal.fire({
                         icon: 'success',
                         title: '출차 완료',
-                        html: `요금: <b>${response.price}원</b><br>이용 시간: <b>${response.minutes}분</b>`,
+                        html: `요금: <b>${response.price.toLocaleString()}원</b><br>이용 시간: <b>${response.minutes}분</b>`,
                         confirmButtonColor: '#4B55E1'
-                    }).then(() => {
-                        window.location.reload();
                     });
+
+                    btn.disabled = true;
                 } else {
                     Swal.fire({
                         icon: 'error',
