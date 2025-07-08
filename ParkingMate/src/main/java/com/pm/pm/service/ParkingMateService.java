@@ -20,6 +20,5 @@ public interface ParkingMateService {
 	public int getSettlementWaitingCount(String mid);
 	public boolean acceptBooking(BookingDTO booking, String mateId) throws Exception;
 	public boolean settleMatePaycheck(String car_num) throws Exception;
-	
 	public String parkingmateById(String userid) throws Exception;
 }
