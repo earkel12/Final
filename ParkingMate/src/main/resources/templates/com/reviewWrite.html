@@ -51,7 +51,8 @@
     }
 
     input[type="submit"],
-    input[type="reset"] {
+    input[type="reset"], 
+    input[type="button"]{
       padding: 10px 20px;
       margin: 5px;
       font-size: 16px;
@@ -64,7 +65,8 @@
     }
 
     input[type="submit"]:hover,
-    input[type="reset"]:hover {
+    input[type="reset"]:hover
+    input[type="button"]:hover {
       background-color: #8f91ff;
     }
 
@@ -87,6 +89,7 @@
     #myform input[type="radio"]:checked + label {
       text-shadow: 0 0 0 gold;
     }
+    
   </style>
 </head>
 <body>
@@ -128,8 +131,8 @@
   <ul>
     <li><a href="myCarAdd">차량등록</a></li>
     <li><a href="myCarList">차량목록</a></li>
-    <li><a href="userInfo">userInfo</a></li>    
-    <li><a href="myParkingHistory">주차장내역보기</a></li>
+    <li><a href="userInfo">회원정보</a></li>    
+    <li><a href="myParkingHistory">이용내역</a></li>
     <li><a href="/">문의내역</a></li>
   </ul>
 </nav>
@@ -173,9 +176,10 @@
 
       <!-- ✅ 넷째 줄: 버튼 -->
       <tr>
-        <td colspan="2" style="text-align: center;">
+        <td colspan="3" style="text-align: center;">
           <input type="reset" value="초기화">
           <input type="submit" value="등록">
+          <input type="button" value="취소" onclick="window.location.href='/myParkingHistory'">
         </td>
       </tr>
     </table>

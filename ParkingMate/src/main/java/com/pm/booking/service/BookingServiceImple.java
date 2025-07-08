@@ -146,10 +146,16 @@ public class BookingServiceImple implements BookingService {
 		long units=(long)Math.ceil((double)minutes/30);
 		int price=(int)(units*price2);
 		
+		// 이미 결제된 금액 가져오기
+		int alreadyPaidPrice = (int) findInfo.get("price");
+
+		// ★ DB에 저장할 최종 누적 결제 금액
+	    int totalprice = alreadyPaidPrice + price;
+		
 		//DB 업데이트 수행 (outtime = now, price = 계산된 금액)
 	    Map<String, Object> updateMap = new HashMap<>();
 	    updateMap.put("bookingnum", bookingnum);
-	    updateMap.put("price", price);
+	    updateMap.put("price", totalprice);
 	    
 	    int updateCount2 = mapper.updateOuttime(updateMap);
 	    System.out.println("updateCount2: " + updateCount2);
