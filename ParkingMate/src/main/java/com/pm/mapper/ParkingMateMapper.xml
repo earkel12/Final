@@ -118,7 +118,7 @@
 	
 	<update id="updateBookingEndtime" parameterType="String">
 		UPDATE booking
-		SET outtime = NOW(),
+		SET intime = NOW(),
 		status = '파킹메이트매칭완료'
 		WHERE bookingcarnum = #{car_num}
 	</update>
