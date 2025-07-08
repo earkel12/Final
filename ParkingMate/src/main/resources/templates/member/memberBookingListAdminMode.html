@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/mypage/myparkingHistory.css">
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+<th:block th:include = "@{/header}"></th:block>
+
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+
+<div class="table-wrapper" style="min-height: 365px;">
+
+<table>
+    <thead>
+        <tr>
+            <th>예약번호</th>
+            <th>예약일자</th>
+            <th>예약차량번호</th>
+            <th>이용주차장</th>
+            <th>입차시간</th>
+            <th>출차시간</th>
+            <th>발렛유무</th>
+            <th>대행유무</th>
+            <th>결제금액</th>
+            <th>상태구분</th>
+            <th>장애인여부</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tr th:if="${#lists.isEmpty(bookingList)}">
+    	<td colspan="12" align="center">
+    	이용한 주차장내역이 없습니다.
+    	</td>
+    <tbody>
+        <tr th:each="history : ${bookingList}">
+            <td th:text="${history['bookingnum']}"></td>
+			<td th:text="${history['bookingdate']}"></td>
+			<td th:text="${history['bookingcarnum']}"></td>
+			<td th:text="${history['parkinglot_name']}"></td>
+			<td th:text="${history['intime']}"></td>
+			<td th:text="${history['outtime']}"></td>
+			<td th:text="${history['valet'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${history['instand'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${history.['price'] != 0 ? #numbers.formatInteger(history.['price'], 3, 'COMMA') + '원' : '0원'}"></td>
+			<td th:text="${history['status']}"></td>
+			<td th:text="${history['obstacle'] == 1 ? 'O' : 'X'}"></td>
+        </tr>
+    </tbody>
+</table>
+
+	<div>
+    	<button class="back-btn" onclick="window.location.href='/memberListAdminMode'">뒤로 돌아가기</button>
+	</div>
+</div>
+
+<div style="height: 30px;"></div>
+<th:block th:include = "@{/footer}"></th:block>
+</body>
+</html>

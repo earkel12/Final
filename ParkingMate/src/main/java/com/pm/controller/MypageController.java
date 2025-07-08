@@ -19,15 +19,36 @@ import com.pm.booking.model.BookingDTO;
 import com.pm.mypage.model.Car_TypeDTO;
 import com.pm.mypage.model.User_CarsDTO;
 import com.pm.mypage.service.MypageService;
+import com.pm.pm.service.ParkingMateService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MypageController {
 
 	@Autowired
 	private MypageService service;
+	@Autowired
+	private ParkingMateService pmservice;
 	
 	@GetMapping("/mypageMain")
-	public String MypageMain() {
+	public String MypageMain(HttpSession session) {
+		String userid = (String)session.getAttribute("sid");
+		
+		String pm;
+		try {
+			pm = pmservice.parkingmateById(userid);
+			if(pm.isEmpty()) {
+				
+				session.setAttribute("pmid", null);
+			} else {
+				
+				session.setAttribute("pmid", pm);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "mypage/mypageMain";
 	}
 	
@@ -63,18 +84,25 @@ public class MypageController {
 	}
 	
 	@GetMapping("/myParkingMateHistory")
-	public String checkMyParkingMateHistoryList(@SessionAttribute("sid")String id, Model model) {
+	public String checkMyParkingMateHistoryList(@SessionAttribute("sid")String id, @RequestParam(value = "status", required = false) String status, Model model) {
+		
 		
 		System.out.println("이용자ID:"+id);
+		System.out.println("가져온 상태값:" + status);
 		
 		List<Map<String, Object>> bookingParkingMateList = null;
-		
+		//리뷰
+		List<Integer> reviewList= null;
 		try {
 			bookingParkingMateList=service.checkMyParkingMateHistoryList(id);
+			//리뷰
+			reviewList=service.checkReview(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		model.addAttribute("bookingParkingMateList", bookingParkingMateList);
+		//리뷰
+		model.addAttribute("reviewList", reviewList);
 		return "mypage/myParkingMateHistory";
 	}
 	

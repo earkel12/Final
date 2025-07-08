@@ -118,4 +118,12 @@
     VALUES (#{id}, #{bookingnum}, now(), #{rating}, #{content}, #{upload})
 	</insert>
 	
+	<select id="reviewContent" parameterType="int" resultType="com.pm.com.model.ReviewDTO">
+	select * from review where bookingnum=#{bookingnum}
+	</select>
+	
+	<select id="getTotalCnt2" resultType="int">
+	select count(*) from
+	review
+	</select>
 </mapper>

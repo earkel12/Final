@@ -12,12 +12,12 @@
 		outtime, valet,
 		instand, price, status, obstacle, idx, id, ulatitude,
 		ulongitude)
-		VALUES (#{bookingdate}, #{bookingcarnum}, #{intime},
-		#{outtime},
+		VALUES (#{bookingdate}, #{bookingcarnum}, null, null,
 		#{valet}, #{instand}, #{price}, #{status}, #{obstacle},
 		#{idx}, #{id},
 		#{ulatitude}, #{ulongitude})
 	</insert>
+	
 	<select id="carbyid" parameterType="String"
 		resultType="com.pm.booking.model.UserCarDTO">
 		SELECT uc.car_num, uc.modelname
@@ -30,6 +30,7 @@
 		WHERE b.bookingcarnum =
 		uc.car_num
 		AND b.status != '전체결제완료'
+		AND b.status != '예약접수'
 		);
 
 
@@ -51,9 +52,9 @@
 		SET
 		booking.status = '파킹메이트결제완료'
 	</update>
-	
+	<!-- 0원결제쿼리문 추가 후 설정 시 파킹메이트결제관련 상태변경불가하여 쿼리문및 파라미터타입 변경 -->
 	<update id="finalupdateStatus" parameterType="String">
-		UPDATE booking
+  	<!--  UPDATE booking
 		JOIN (
 		SELECT bookingnum
 		FROM (
@@ -67,14 +68,46 @@
 		ON booking.bookingnum
 		= sub2.bookingnum
 		SET
-		booking.status = '주차장결제완료'
+		booking.status = '주차장결제완료' -->
+		update
+			booking
+    	set
+    		status = '주차장결제완료'
+    	where
+    		id = #{id}
+      	and bookingcarnum = #{bookingcarnum}
+      	and status != '주차장결제완료';
 	</update>
 	
 	<select id="bookingCount" parameterType="Integer" resultType="Integer">
-		select count(*) from booking where idx = #{idx}
+		select count(*) from booking where idx = #{idx} AND status != '예약접수'
 	</select>
-
-    
+	
+	
+	
+	
+	
+	<!--0원이여도 결제완료상태 변경  -->
+	<select id="getBookingPriceById" parameterType="String" resultType="int">
+    	select
+    		price
+    	from
+    		booking
+    	where id = #{id}
+    	and bookingcarnum = #{bookingcarnum}
+    	for update;
+	</select>
+	<update id="updateBookingStatusIfPriceZero" parameterType="map">
+    update
+    	booking
+    set
+    	status = '주차장결제완료'
+    where
+    	id = #{id}
+    and bookingcarnum = #{bookingcarnum}
+    and price = 0
+    and status != '주차장결제완료'
+	</update>
 	<!-- 메이트이용현황관련(사용자입장) -->
 	<!-- 예약접수된 유저차량번호 리스트조회 -->
 	<select id="findBookingCarNumByUser" parameterType="String" resultType="String">
@@ -201,14 +234,6 @@
 		and m1.car_num = #{car_num}
 		and m2.mate_use = 1
 	</select>
-
-
-	<update id="updateEndTime">
-		UPDATE booking
-		SET intime = NOW()
-		WHERE bookingnum =
-		#{bookingnum}
-	</update>
 	
 	<update id="updateStartTimePaycheck">
 		UPDATE mate_paycheck

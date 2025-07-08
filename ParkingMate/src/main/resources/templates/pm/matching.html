@@ -243,6 +243,49 @@ footer {
 </style>
 </head>
 <body>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="main">메인</a></li>
+    <li><a href="worklog">근무관리</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="settlement">정산내역</a></li>
+    <li><a href="usagehistory">이용현황</a></li>
+    <li><a href="matching">메이트매칭</a></li>
+  </ul>
+</nav>
 	<div class="wrapper">
 
 		<header>
@@ -274,7 +317,9 @@ footer {
 								th:attr="data-waiting-count=${waitingCount}"
 								onsubmit="return checkSettlement(this);">
 								<input type="hidden" name="bookingnum"
-									th:value="${item.bookingnum}" /> <input type="submit"
+									th:value="${item.bookingnum}" /> <input type="hidden"
+									name="pmlatitude" class="pmlatitude" /> <input type="hidden"
+									name="pmlongitude" class="pmlongitude" /> <input type="submit"
 									value="수락" />
 							</form>
 							<form th:action="@{/pm/matching/reject}" method="post">
@@ -327,7 +372,10 @@ footer {
 						</p>
 						<p>
 							<strong>도착지 주소:</strong> <span class="cell-start-addr">-</span>
+<<<<<<< HEAD
 							
+=======
+>>>>>>> bd34ce20815ecbe5d50f1520fd8cc70d167653d5
 						</p>
 					</div>
 				</div>
@@ -496,13 +544,25 @@ const usageList = [];
       // ✅ 위치 데이터 읽기
       const ulat = parseFloat(item.getAttribute('data-ulat'));
       const ulng = parseFloat(item.getAttribute('data-ulng'));
-      const pmlat = parseFloat(item.getAttribute('data-pmlat'));
-      const pmlng = parseFloat(item.getAttribute('data-pmlng'));
-
-      // ✅ usageList 대체
       const startPos = new kakao.maps.LatLng(ulat, ulng);
-      const endPos = new kakao.maps.LatLng(pmlat, pmlng);
+      
+   // ✅ 도착지: 기본은 홍대입구, GPS 허용 시 GPS로 대체
+      const defaultEndPos = new kakao.maps.LatLng(37.557674, 126.923552);
 
+      if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const gpsEndPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          drawMapWithCustomPoints(startPos, gpsEndPos, item);  // GPS 허용 시
+        },
+        (error) => {
+          drawMapWithCustomPoints(startPos, defaultEndPos, item);  // GPS 거부 시
+        }
+      );
+    } else {
+      drawMapWithCustomPoints(startPos, defaultEndPos, item);  // GPS 미지원 브라우저
+    }
+      
       drawMapWithCustomPoints(startPos, endPos, item);
     }
   }
@@ -558,6 +618,23 @@ const usageList = [];
 	      });
 	    }
 	  });
+	}
+  function checkSettlement(form) {
+	  // 'form'은 수락 버튼이 포함된 form 요소
+	  const accordionItem = form.closest('.accordion-item');
+	  if (!accordionItem) return false;
+
+	  // data-ulat, data-ulng 읽기
+	  const lat = accordionItem.getAttribute('data-ulat');
+	  const lng = accordionItem.getAttribute('data-ulng');
+
+	  // hidden input 찾아서 값 넣기
+	  form.querySelector('.pmlatitude').value = lat;
+	  form.querySelector('.pmlongitude').value = lng;
+
+	  // 기존 체크 로직 있으면 여기서 처리
+	  // 예: return true;
+	  return true;
 	}
 </script>
 

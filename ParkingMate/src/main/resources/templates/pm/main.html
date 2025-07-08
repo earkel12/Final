@@ -3,98 +3,372 @@
 <head>
 <meta charset="UTF-8" />
 <title>파킹메이트</title>
-<th:block th:include="@{/header}"></th:block>
+<!-- 카카오 지도 SDK -->
+<script
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=bef1fdbfb5b4d0c4519859a35fd0e1c4&autoload=false&libraries=services"></script>
+
 <style>
-  body {
-    font-family: 'Segoe UI', '맑은 고딕', sans-serif;
-    background-color: #eef2f7;
-    margin: 40px 20px;
-    color: #2c3e50;
-  }
-  header h1 {
-    margin-bottom: 30px;
-    font-weight: 700;
-  }
-  .card-container {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  .card {
-    flex: 1 1 18%;
-    min-width: px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    padding: 24px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    user-select: none;
-  }
-  .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  }
-  .card div.icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-  }
-  .card div.title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #34495e;
-  }
-  .card a {
-    margin-top: 15px;
-    display: inline-block;
-    text-decoration: none;
-    font-weight: 600;
-    color: #6C72FF;
-    transition: color 0.3s ease;
-  }
-  .card a:hover {
-    color: #4a52d1;
-  }
+body {
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background: #eef2f7;
+	color: #2c3e50;
+}
+
+h1 {
+	text-align: center;
+	font-size: 32px;
+	color: #3a2cad;
+	margin-bottom: 40px;
+}
+
+.summary {
+	background: white;
+	padding: 20px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	font-size: 18px;
+	color: #2c3e50;
+	flex: 1; /* 높이 비율 조절 */
+	overflow-y: auto;
+}
+
+.summary div {
+	font-size: 18px;
+	margin-bottom: 12px;
+}
+
+.summary div span {
+	font-weight: 700;
+	color: #6c72ff;
+}
+
+/* 메인 컨테이너: 좌우 분할 */
+.main-container {
+	position: relative;
+	display: flex;
+	max-width: 1200px;
+	margin: 0 auto;
+	gap: 30px;
+	height: 600px;
+}
+
+.left-panel {
+	flex: 7;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.map-message {
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10; /* 위로 띄움 */
+	background: rgba(255, 255, 255, 0.85);
+	padding: 8px 16px;
+	border-radius: 12px;
+	font-size: 18px;
+	font-weight: 700;
+	color: #6C72FF;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	pointer-events: none;
+	user-select: none;
+	width: fit-content;
+	max-width: 90%;
+	text-align: center;
+}
+/* 왼쪽 지도 */
+#my-map {
+	flex: 2; /* 요약정보보다 크게, 필요에 따라 조절 */
+	border-radius: 15px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	border: 1px solid #ccc;
+	height: 100%;
+}
+.card-list {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 600px;  /* main-container 높이와 같게 */
+  overflow-y: auto;   /* 높이를 넘으면 스크롤 */
+  padding-right: 10px;
+}
+/* 오른쪽 카드 리스트 */
+.card {
+  background: linear-gradient(135deg, #B1B2FF 0%, #6C72FF 100%);
+  border-radius: 20px;
+ 
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  user-select: none;
+  font-weight: 700;
+  font-size: 22px;
+  color: white;
+  height: 140px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  background: linear-gradient(135deg, #4a52d1 0%, #6c72ff 100%);
+}
+
+/* 카드 안에 바로가기 링크 스타일 */
+.card a {
+  margin-top: 14px;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.3s ease;
+  align-self: center;
+}
+
+.card a:hover {
+  color: #d1d4ff;
+}
+/* 모바일 대응 */
+@media ( max-width : 768px) {
+	.main-container {
+		flex-direction: column;
+		height: auto;
+	}
+	#my-map {
+		height: 400px;
+		width: 100%;
+	}
+	.card-list {
+		flex-direction: row;
+		overflow-x: auto;
+		height: auto;
+		padding-right: 0;
+		gap: 12px;
+	}
+	.card {
+		min-width: 160px;
+		flex: none;
+		font-size: 18px;
+		padding: 20px 16px;
+	}
+}
+
+.main-container {
+	position: relative; /* info-box가 절대 위치로 작동하려면 필요 */
+}
+
+#location-error-msg {
+	 display: none;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff6b6b;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  z-index: 9999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 </style>
 </head>
+
 <body>
-<header><h1>파킹메이트 메인</h1></header>
-  	<div class="card-container">
-	    <div class="card" th:onclick="|location.href='@{/pm/worklog}'|">
-	      <div class="icon">📝</div>
-	      <div class="title">근무관리</div>
-	      <a th:href="@{/pm/worklog}">바로가기</a>
-	    </div>
-	
-	    <div class="card" th:onclick="|location.href='@{/pm/notice}'|">
-	      <div class="icon">📢</div>
-	      <div class="title">공지사항</div>
-	      <a th:href="@{/pm/notice}">바로가기</a>
-	    </div>
-	
-	    <div class="card" th:onclick="|location.href='@{/pm/settlement}'|">
-	      <div class="icon">💰</div>
-	      <div class="title">정산내역</div>
-	      <a th:href="@{/pm/settlement}">바로가기</a>
-	    </div>
-	    
-	    <div class="card" th:onclick="|location.href='@{/pm/usagehistory}'|">
-	      <div class="icon">📊</div>
-	      <div class="title">이용현황</div>
-	      <a th:href="@{/pm/usagehistory}">바로가기</a>
-	    </div>
-	    
-	    <div class="card" th:onclick="|location.href='@{/pm/matching}'|">
-	      <div class="icon">🤝</div>
-	      <div class="title">파킹메이트 매칭</div>
-	      <a th:href="@{/pm/matching}">바로가기</a>
-	    </div>
-  	</div>
-  <br>
-<a th:href="@{/}">뒤로 돌아가기</a><br>
-<a th:href="@{/mylocation}">내 위치 보기</a>
+	<th:block th:include="@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/companyProfile">회사소개</a></li>
+    <li><a href="/search">예약하기</a></li>
+    <li><a href="/mateUsagesStatus">이용현황</a></li>
+    <li><a href="/notice">공지사항</a></li>
+    <li><a href="/community">커뮤니티</a></li>
+    <li><a href="/mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+	<header>
+		<h1>파킹메이트 메인</h1>
+	</header>
+
+
+	<div class="main-container">
+		<div class="left-panel">
+			<div class="summary">
+				<div>
+					아이디: <span th:text="${worklog.id}">사용자ID</span>
+				</div>
+				<div>
+					주소: <span th:text="${mainAddr}">서울특별시 강남구 테헤란로</span> <span
+						th:text="${addrDetail}"></span>
+				</div>
+				<div>
+					총 대행 횟수: <span th:text="${totalServiceCount}">0</span> 회
+				</div>
+				<div>
+					총 정산 금액: <span th:text="${totalPayCount}">0</span> 원
+				</div>
+			</div>
+
+
+
+			<!-- 지도 영역 -->
+			<div id="my-map">
+				<div class="map-message">근처에서 매칭 가능한 장소들을 찾아보세요!</div>
+			</div>
+		</div>
+		<!-- 카드 리스트 영역 -->
+		<div class="card-list">
+			<div class="card" th:onclick="|location.href='@{/pm/worklog}'|">
+				근무관리 <a th:href="@{/pm/worklog}">바로가기</a>
+			</div>
+
+			<div class="card" th:onclick="|location.href='@{/pm/notice}'|">
+				공지사항 <a th:href="@{/pm/notice}">바로가기</a>
+			</div>
+
+			<div class="card" th:onclick="|location.href='@{/pm/settlement}'|">
+				정산내역 <a th:href="@{/pm/settlement}">바로가기</a>
+			</div>
+
+			<div class="card" th:onclick="|location.href='@{/pm/usagehistory}'|">
+				이용현황 <a th:href="@{/pm/usagehistory}">바로가기</a>
+			</div>
+
+			<div class="card" th:onclick="|location.href='@{/pm/matching}'|">
+				파킹메이트 매칭 <a th:href="@{/pm/matching}">바로가기</a>
+			</div>
+		</div>
+	</div>
+	<br>
+	<th:block th:include="@{/footer}"></th:block>
+	<div id="location-error-msg"
+		style="display: none; position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #ff6b6b; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 700; z-index: 9999; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); max-width: 90%; text-align: center;">
+		위치 정보를 불러올 수 없습니다. 브라우저 설정을 확인하거나 위치 정보 지원이 필요합니다.</div>
+
+	<script th:inline="javascript">
+/*<![CDATA[*/
+  var instadList = /*[[${instadList}]]*/ [];
+/*]]>*/
+</script>
+	<script>
+	kakao.maps.load(function() {
+	    const container = document.getElementById('my-map');
+	    const options = {
+	        center: new kakao.maps.LatLng(37.557540, 126.925399),
+	        level: 5
+	    };
+
+	    const map = new kakao.maps.Map(container, options);
+	    const errorMsgDiv = document.getElementById('location-error-msg');
+	    if (Array.isArray(instadList)) {
+	        instadList.forEach(item => {
+	            const lat = parseFloat(item.ulatitude);
+	            const lng = parseFloat(item.ulongitude);
+	            const name = item.lotName;
+
+	            if (!isNaN(lat) && !isNaN(lng)) {
+	                const position = new kakao.maps.LatLng(lat, lng);
+
+	                const marker = new kakao.maps.Marker({
+	                    map: map,
+	                    position: position
+	                });
+
+	                const infowindow = new kakao.maps.InfoWindow({
+	                    content: `<div style="padding:6px 10px; font-weight: bold;">${name}</div>`
+	                });
+
+	                kakao.maps.event.addListener(marker, 'click', function () {
+	                    infowindow.open(map, marker);
+	                });
+	            }
+	        });
+	    }
+	    function showErrorMsg() {
+	    	errorMsgDiv.style.display = 'block';
+	        errorMsgDiv.style.opacity = '1';
+
+	        setTimeout(() => {
+	            errorMsgDiv.style.opacity = '0';  // 서서히 투명해짐
+	            // 투명해지는 transition 시간 후에 display:none 처리
+	            setTimeout(() => {
+	                errorMsgDiv.style.display = 'none';
+	            }, 500); // CSS transition 시간과 맞춤
+	        }, 1000); // 1초 동안 보여줌
+	        
+	        const defaultPosition = new kakao.maps.LatLng(37.5563, 126.9220);
+	        
+	        defaultMarker.setMap(map);
+	        defaultInfowindow.open(map, defaultMarker);
+	        map.setCenter(defaultPosition);
+	    }
+
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(
+	            function(position) {
+	                const lat = position.coords.latitude;
+	                const lng = position.coords.longitude;
+	                const locPosition = new kakao.maps.LatLng(lat, lng);
+
+	                map.setCenter(locPosition);
+
+	                errorMsgDiv.style.display = 'none';
+	            },
+	            function(error) {
+	                showErrorMsg();
+	            }
+	        );
+	    } else {
+	        showErrorMsg();
+	    }
+	});
+
+	</script>
 </body>
-<th:block th:include="@{/footer}"></th:block>
 </html>

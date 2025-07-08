@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
 <meta charset="UTF-8">
 <title>파킹메이트 매칭중</title>
-
+<link rel="stylesheet" href="/css/booking/mateUsagesStatus.css">
   <!-- 복잡한 DOM 조작, AJAX, 이벤트 처리 
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
   <!-- 결제api -->
@@ -13,87 +14,30 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Js별도관리 -->
 <script src="/js/involveMateUsageStatusList.js"></script>
+<script src="/js/involveMateUsageStatus_Pay.js"></script>
+<!-- 세션관리 -->
+<script src="/js/checkSession.js"></script>
+<!--SweetAlert2  -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<style>
-    body {
-        font-family: sans-serif;
-    }
-    .container {
-        width: 90%;
-        margin: 20px auto;
-    }
-    .top-section {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 40px;
-    }
-    .status-box {
-        border: 2px solid #000;
-        padding: 40px;
-        width: 300px;
-        height: 150px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        font-size: 1.5em;
-        font-weight: bold;
-    }
-    .info-box {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .info-item {
-        border: 2px solid #000;
-        padding: 10px 15px;
-        width: 350px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.2em;
-    }
-    .button-group-inline {
-        display: flex;
-        gap: 5px;
-        margin-left: 10px;
-    }
-    .button-group-inline button {
-        padding: 5px 10px;
-        font-size: 0.9em;
-    }
-    .bottom-section {
-        display: flex;
-        margin-top: 30px;
-    }
-    .map-box {
-        border: 2px solid #000;
-        width: 70%;
-        height: 500px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2em;
-    }
-    .mate-info-box {
-        border: 2px solid #000;
-        width: 28%;
-        margin-left: 2%;
-        padding: 20px;
-        font-size: 1.1em;
-    }
-    .mate-info-box img {
-        width: 150px;
-        height: 150px;
-        background: #eee;
-        display: block;
-        margin: 20px auto;
-    }
-</style>
 </head>
 <body>
+<th:block th:include = "@{/header}"></th:block>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
 <div class="container">
+
+	<!-- 🚗 차량번호 탭 영역 -->
 	<div class="tab-container">
     <ul class="tab-list">
         <li th:each="usercarnum : ${reservedCarNums}">
@@ -105,6 +49,7 @@
         </li>
     </ul>
 	</div>
+	
     <!-- 상단 -->
     <div class="top-section">
     	<!-- 상태메세지박스 -->
@@ -134,14 +79,12 @@
 		          th:text="${#lists.isEmpty(findMate) ? '파킹메이트결제완료' : '파킹메이트 매칭완료!'}">
 		    </span>
 		</div>
+		
 		<!-- 예약정보 -->
-		 <div class="info-box" th:each="booking : ${bookingInfoByCarnum}">
-         </div>
         <div class="info-box" th:each="booking : ${bookingInfoByCarnum}">
             <div class="info-item">
                 <span>주차장:</span> 
                 <span th:text="${parkinglotdto != null ? parkinglotdto.name : '없음'}"></span>
-
             </div>
             <div class="info-item">
                 <span>입차시간:</span> 
@@ -153,11 +96,9 @@
             </div>
             <div class="info-item">
                 <span>결제금액:</span> 
-
                 <span th:text="${booking.price != 0 ? #numbers.formatInteger(booking.price, 3, 'COMMA') + '원' : '0원'}" id="lastpay"></span>
-
             </div>
-            <div class="info-item">
+            
                 <div class="button-group-inline">
 				    <!-- 입차하기 -->
 				    <input type="hidden" id="bookingnum-[[${booking.bookingnum]]" th:value="${booking.bookingnum}">
@@ -167,12 +108,9 @@
 				    <input type="hidden" id="bookingnum-[[${booking.bookingnum}]]" th:value="${booking.bookingnum}">
 				    <button type="button" id="outtimeBtn-[[${booking.bookingnum}]]" th:if="${booking['intime'] != null and booking['outtime'] == null}" 
     					onclick="updateOuttime(this)">출차하기</button>
-				
-				    <!-- 결제하기(광준싀 여기하삼) -->
+    				<!-- 결제하기 -->
 				    <button type="button" id="paymentBtn">결제하기</button>
-				    
 				</div>
-            </div>
         </div>
     </div>
 
@@ -193,7 +131,7 @@
 
     			const mateLat = parseFloat('[[${pmlatitude}?:0]]');
     			const mateLng = parseFloat('[[${pmlongitude}?:0]]');
-
+    			
 			    const mapContainer = document.getElementById('map');
 			    const mapOption = {
 			        center: new kakao.maps.LatLng(lat, lng), // 초기 중심 좌표(서울)
@@ -201,6 +139,18 @@
 			    };
 			    const map = new kakao.maps.Map(mapContainer, mapOption);
 			    
+			 	// ✅ 사용자 마커 이미지 URL
+			    const userImageSrc = '/img/pin_man2.png';
+			    const userImageSize = new kakao.maps.Size(40, 40);
+			    const userImageOption = { offset: new kakao.maps.Point(20, 40) };
+			    const userMarkerImage = new kakao.maps.MarkerImage(userImageSrc, userImageSize, userImageOption);
+
+			    // ✅ 메이트 마커 이미지 URL
+			    const mateImageSrc = '/img/pin_manwalking.png';
+			    const mateImageSize = new kakao.maps.Size(40, 40);
+			    const mateImageOption = { offset: new kakao.maps.Point(20, 40) };
+			    const mateMarkerImage = new kakao.maps.MarkerImage(mateImageSrc, mateImageSize, mateImageOption);
+
 			 	// 주차장 마커
 			    const markerPosition = new kakao.maps.LatLng(lat, lng);
 			    const marker = new kakao.maps.Marker({
@@ -209,16 +159,18 @@
 			        title: name
 			    });
 				
-			    // 유저 마커
+			 	// 유저 마커
 			    const userMarker = new kakao.maps.Marker({
 			        position: new kakao.maps.LatLng(userLat, userLng),
+			        image: userMarkerImage, // ✅ 이미지 추가
 			        map: map,
 			        title: "사용자 위치"
 			    });
-			    
+
 			    // 메이트 마커
 			    const mateMarker = new kakao.maps.Marker({
 			        position: new kakao.maps.LatLng(mateLat, mateLng),
+			        image: mateMarkerImage, // ✅ 이미지 추가
 			        map: map,
 			        title: "파킹메이트 위치"
 			    });
@@ -250,15 +202,24 @@
 			    distanceDiv.style.borderRadius = '8px';
 			    distanceDiv.style.fontSize = '14px';
 			    distanceDiv.style.fontWeight = 'bold';
+			   
+			 	// 거리 텍스트 생성
 			    distanceDiv.textContent = `현재 메이트와의 거리: ${distance} m (도보 약 ${estimatedTime_min}분 소요)`;
 
-			    const distanceOverlay = new kakao.maps.CustomOverlay({
-			        position: userMarker.getPosition(),
-			        content: distanceDiv,
-			        yAnchor: 1.5
-			    });
+			    // 메이트 정보박스 하단에 추가
+			    const mateInfoBox = document.querySelector('.mate-info-box');
+			    if (mateInfoBox) {
+			        distanceDiv.style.background = '#F0F1FF';
+			        distanceDiv.style.padding = '10px';
+			        distanceDiv.style.marginTop = '10px';
+			        distanceDiv.style.border = '2px solid #B1B2FF';
+			        distanceDiv.style.borderRadius = '8px';
+			        distanceDiv.style.fontSize = '14px';
+			        distanceDiv.style.fontWeight = 'bold';
+			        distanceDiv.style.textAlign = 'center';
 
-			    distanceOverlay.setMap(map);
+			        mateInfoBox.appendChild(distanceDiv);
+			    }
 			    
 			 	// 사용자와 메이트 경로 선 그리기
 			    const linePath = [
@@ -268,7 +229,7 @@
 
 			    const polyline = new kakao.maps.Polyline({
 			        path: linePath,
-			        strokeWeight: 4,
+			        strokeWeight: 3,
 			        strokeColor: '#FF0000',
 			        strokeOpacity: 0.8,
 			        strokeStyle: 'solid'
@@ -276,13 +237,20 @@
 
 			    polyline.setMap(map);
 			    const infowindow = new kakao.maps.InfoWindow({
-			        content: `<div style="padding:5px;"><b>${name}</b><br>${addr}</div>`,
+			        content:
+			        	`<div style="
+			                padding: 1px;
+			                width: 170px;
+			                font-size: 14px;
+			                text-align: left;">
+			                <b>${name}</b><br>${addr}</div>`,
 			        zIndex: 1
 			    });
 			    infowindow.open(map, marker);
 			});
 			</script>
         </div>
+        
         <div class="mate-info-box" th:if="${not #lists.isEmpty(findMate)}">
 		    <h2>파킹 메이트 정보</h2>
 		    <img src="/img/logo.png" alt="프로필 이미지">
@@ -294,48 +262,8 @@
 		</div>
     </div>
 </div>
-<script>
-//예측 가능한 실행 보장을 위해 DOMContentLoaded를 씀 
-document.addEventListener("DOMContentLoaded", function () {
-    const paymentBtn = document.getElementById("paymentBtn");
-    const lastpayText = document.getElementById('lastpay').textContent;
-    const finalPrice = parseInt(lastpayText.replace(/[^0-9]/g, '') || "0", 10);
 
-    paymentBtn.addEventListener("click", () => {
-        const IMP = window.IMP;
-        IMP.init("imp84584038"); // 본인의 imp 키로 대체
-
-        IMP.request_pay({
-            pg: "kakaopay",
-            pay_method: "card",
-            merchant_uid: "order_" + new Date().getTime(),
-            name: "주차장 금액 결제",
-            amount: finalPrice,
-            buyer_email: "이수한@naver.com",
-            buyer_name: "이수한",
-            buyer_tel: "010-1234-5678",
-            buyer_addr: "서울특별시",
-            buyer_postcode: "12345"
-        }, function (rsp) {
-            if (rsp.success) {
-                alert("주차장결제 성공!");
-
-                $.ajax({
-                    url: "/finalpayment",
-                    method: "POST",
-                    success: function () {
-                        location.href = "/";
-                    },
-                    error: function () {
-                        alert("결제 처리 후 상태 업데이트 실패!");
-                    }
-                });
-            } else {
-                alert("결제 실패: " + rsp.error_msg);
-            }
-        });
-    });
-});
-</script>
+<div style="height: 30px;"></div>
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

@@ -7,9 +7,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pm.mapper.ParkingMateMapper;
+import com.pm.booking.model.BookingDTO;
 import com.pm.pm.model.MatePayCheckDTO;
 import com.pm.pm.model.ParkingMateDTO;
+import com.pm.mapper.BookingMapper;
+import com.pm.mapper.ParkingMateMapper;
+
 
 @Service
 public class ParkingMateServiceImple implements ParkingMateService {
@@ -55,6 +58,29 @@ public class ParkingMateServiceImple implements ParkingMateService {
     @Override
     public int getSettlementWaitingCount(String mid) {
     	return mapper.getSettlementWaitingCount(mid);
+    }
+    @Override
+    public boolean acceptBooking(BookingDTO booking, String mateId) {
+        
+        int updatedRows = mapper.updateBookingWithPmLocation(
+            booking.getBookingnum(),
+            booking.getPmlatitude(),
+            booking.getPmlongitude(),
+            mateId
+        );
+
+        return updatedRows > 0;
+    }
+    @Override
+    public boolean settleMatePaycheck(String car_num) throws Exception {
+        int updated = mapper.updateEndtimeAndStatus(car_num);
+        return updated > 0;
+    }
+    
+    @Override
+    public String parkingmateById(String userid) throws Exception {
+    	
+    	return mapper.parkingmateById(userid);
     }
 }
 

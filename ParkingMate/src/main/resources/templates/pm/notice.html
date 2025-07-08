@@ -1,196 +1,265 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>Parking Mate</title>
-  <th:block th:include="@{/header}"></th:block>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<title>Parking Mate</title>
+<th:block th:include="@{/header}"></th:block>
+<style>
+* {
+	box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', '맑은 고딕', sans-serif;
-      background-color: #f5f7fa;
-      color: #2c3e50;
-    }
+body {
+	margin: 0;
+	font-family: 'Segoe UI', '맑은 고딕', sans-serif;
+	background-color: #f5f7fa;
+	color: #2c3e50;
+}
 
-    /* MAIN SECTION */
-    main {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+/* MAIN SECTION */
+main {
+	max-width: 1000px;
+	margin: 40px auto;
+	padding: 0 20px;
+}
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 25px;
-      border-left: 5px solid #B1B2FF;
-      padding-left: 15px;
-    }
+h1 {
+	font-size: 28px;
+	margin-bottom: 25px;
+	border-left: 5px solid #B1B2FF;
+	padding-left: 15px;
+}
 
-    /* NOTICE TABLE */
-    .notice-table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    }
+/* NOTICE TABLE */
+.notice-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
 
-    .notice-table thead {
-      background-color: #B1B2FF;
-      color: white;
-    }
+.notice-table thead {
+	background-color: #B1B2FF;
+	color: white;
+}
 
-    .notice-table th,
-    .notice-table td {
-      padding: 14px 16px;
-      text-align: center;
-    }
+.notice-table th, .notice-table td {
+	padding: 14px 16px;
+	text-align: center;
+}
 
-    .notice-table tbody tr:hover {
-      background-color: #f0f4ff;
-    }
+.notice-table tbody tr:hover {
+	background-color: #f0f4ff;
+}
 
-    .notice-table a {
-      color: #2c3e50;
-      text-decoration: none;
-      font-weight: 500;
-    }
+.notice-table a {
+	color: #2c3e50;
+	text-decoration: none;
+	font-weight: 500;
+}
 
-    .notice-table a:hover {
-      text-decoration: underline;
-    }
-    
-    .table-wrapper {
-      margin-top: 20px;
-    }
+.notice-table a:hover {
+	text-decoration: underline;
+}
 
-    .write-button-wrapper {
-      text-align: right;
-      margin-top: 12px;
-    }
+.table-wrapper {
+	margin-top: 20px;
+}
 
-    .write-button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #6C72FF;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
+.write-button-wrapper {
+	text-align: right;
+	margin-top: 12px;
+}
 
-    .write-button:hover {
-      background-color: #555bff;
-    }
+.write-button {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #6C72FF;
+	color: white;
+	border-radius: 6px;
+	text-decoration: none;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
 
-    /* DETAIL BOX */
-    #post-detail {
-      margin-top: 40px;
-      padding: 20px;
-      background-color: #ffffff;
-      border-left: 6px solid #AAC4FF;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
+.write-button:hover {
+	background-color: #555bff;
+}
 
-    #detail-title {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
+/* DETAIL BOX */
+#post-detail {
+	margin-top: 40px;
+	padding: 20px;
+	background-color: #ffffff;
+	border-left: 6px solid #AAC4FF;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
 
-    #detail-content {
-      white-space: pre-wrap;
-      line-height: 1.6;
-      color: #333;
-    }
+#detail-title {
+	font-size: 20px;
+	margin-bottom: 10px;
+}
 
-    .paging {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-    }
-    .paging a, .paging span {
-      display: inline-block;
-      margin: 0 5px;
-      padding: 6px 12px;
-      color: #6C72FF;
-      text-decoration: none;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      cursor: pointer;
-    }
-    .paging a:hover {
-      background-color: #6C72FF;
-      color: white;
-      border-color: #555bff;
-    }
-    .paging .current {
-      background-color: #555bff;
-      color: white;
-      border-color: #555bff;
-      cursor: default;
-    }
-  </style>
+#detail-content {
+	white-space: pre-wrap;
+	line-height: 1.6;
+	color: #333;
+}
+
+.paging {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 14px;
+}
+
+.paging a, .paging span {
+	display: inline-block;
+	margin: 0 5px;
+	padding: 6px 12px;
+	color: #6C72FF;
+	text-decoration: none;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+}
+
+.paging a:hover {
+	background-color: #6C72FF;
+	color: white;
+	border-color: #555bff;
+}
+
+.paging .current {
+	background-color: #555bff;
+	color: white;
+	border-color: #555bff;
+	cursor: default;
+}
+
+footer {
+	width: 100%;
+	padding: 15px 0;
+	text-align: center;
+	border-top: 1px solid #ddd;
+	flex-shrink: 0;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #666;
+}
+
+.back-button {
+	display: inline-block;
+	margin: 30px auto 0 auto;
+	padding: 10px 20px;
+	background-color: #6C72FF;
+	color: white;
+	font-weight: 600;
+	border: none;
+	border-radius: 6px;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+	background-color: #555bff;
+}
+</style>
 </head>
 <body>
-  <main>
-    <h1>공지사항</h1>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-    <div class="table-wrapper">
-      <table class="notice-table">
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>조회수</th>
-            <th>작성일</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:if="${#lists.isEmpty(arr)}">
-            <td colspan="5">등록된 게시글이 없습니다.</td>
-          </tr>
-          <tr th:each="dto : ${arr}">
-            <td th:text="${dto.idx}">번호</td>
-            <td>
-              <a
-                href="#"
-                class="clickable-title"
-                th:text="${dto.title}"
-                th:attr="data-title=${dto.title}, data-content=${dto.content}"
-                >공지제목</a
-              >
-            </td>
-            <td th:text="${dto.id}">작성자</td>
-            <td th:text="${dto.readnum}">조회수</td>
-            <td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">날짜</td>
-          </tr>
-        </tbody>
-      </table>
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-      <div th:if="${userid == 'admin'}" class="write-button-wrapper">
-        <a href="/pm/pmNoticeWrite" class="write-button">공지 등록</a>
-      </div>
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="main">메인</a></li>
+    <li><a href="worklog">근무관리</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="settlement">정산내역</a></li>
+    <li><a href="usagehistory">이용현황</a></li>
+    <li><a href="matching">메이트매칭</a></li>
+  </ul>
+</nav>
+	<main>
+		<h1>공지사항</h1>
+
+		<div class="table-wrapper">
+			<table class="notice-table">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>조회수</th>
+						<th>작성일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${#lists.isEmpty(arr)}">
+						<td colspan="5">등록된 게시글이 없습니다.</td>
+					</tr>
+					<tr th:each="dto : ${arr}">
+						<td th:text="${dto.idx}">번호</td>
+						<td><a href="#" class="clickable-title"
+							th:text="${dto.title}"
+							th:attr="data-title=${dto.title}, data-content=${dto.content}">공지제목</a>
+						</td>
+						<td th:text="${dto.id}">작성자</td>
+						<td th:text="${dto.readnum}">조회수</td>
+						<td th:text="${#dates.format(dto.writedate, 'yyyy-MM-dd')}">날짜</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div th:if="${userid == 'admin'}" class="write-button-wrapper">
+				<a href="/pm/pmNoticeWrite" class="write-button">공지 등록</a>
+			</div>
 
 
-      <div class="paging" th:utext="${pageStr}">
-      </div>
-    </div>
+			<div class="paging" th:utext="${pageStr}"></div>
+		</div>
 
-    <div id="post-detail" style="display: none;">
-      <h3 id="detail-title">제목</h3>
-      <div id="detail-content">내용</div>
-    </div>
-  </main>
+		<div id="post-detail" style="display: none;">
+			<h3 id="detail-title">제목</h3>
+			<div id="detail-content">내용</div>
+		</div>
+	</main>
 
-  <script>
+	<script>
     document.addEventListener("DOMContentLoaded", function () {
       const titleCells = document.querySelectorAll(".clickable-title");
       const detailBox = document.getElementById("post-detail");
@@ -210,7 +279,9 @@
       });
     });
   </script>
-  <a th:href="@{/parkingmate}">파킹메이트 메인</a>
+	<footer>
+		<a th:href="@{/parkingmate}" class="back-button">← 파킹메이트 메인으로 돌아가기</a>
+		<th:block th:include="@{/footer}"></th:block>
+	</footer>
 </body>
-<th:block th:include="@{/footer}"></th:block>
 </html>

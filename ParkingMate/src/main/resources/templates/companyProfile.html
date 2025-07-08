@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회사 소개 - ParkingMate</title>
+  <link rel="stylesheet" href="/css/companyProfile.css">
+</head>
+<body>
+  <th:block th:include="@{/header}"></th:block>
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+
+<nav id="floatingNav" th:if="${session.sid == 'admin'}">
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+<nav id="floatingNav" th:if="${session.sid != 'admin'}">
+  <ul>
+    <li><a href="companyProfile">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+  <section class="about-section">
+    <h1 class="about-title">우리는 공간을 찾고, 나누고, 효율화합니다</h1>
+    <p class="about-description">
+      ParkingMate는 도심의 주차난을 해결하기 위해<br>
+      비어있는 주차 공간을 발굴하고, 사용자 간 공유하며,<br>
+     특히 바쁜 도심 속에서 주차 대기 시간을 줄이고,<br>
+    오래 기다릴 시간이 부족한 분들을 위한 빠르고 편리한 점문 주차 대행 서비스를 제공합니다.
+    </p>
+
+    <div class="about-values">
+      <h2>📌 우리가 추구하는 가치</h2>
+      <ul>
+        <li><strong>효율성:</strong> 유휴 공간을 활용한 비용 절감</li>
+        <li><strong>편리함:</strong> 앱 기반 실시간 주차 공유 & 대행</li>
+        <li><strong>신뢰성:</strong> 검증된 대행 기사와 안전한 주차 환경</li>
+      </ul>
+    </div>
+
+    <div class="about-services">
+      <h2>🚗 주요 서비스</h2>
+      <div class="service-box">
+        <img src="/img/parkingnusiness.png" alt="주차장 공유 아이콘">
+        <h3>주차장 공유</h3>
+        <p>남는 주차 공간을 등록하고 필요한 사용자에게 시간 단위로 공유합니다.</p>
+      </div>
+      <div class="service-box">
+        <img src="/img/Pm.png" alt="주차 대행 아이콘">
+        <h3>주차 대행</h3>
+        <p>이용자가 차량을 맡기면, 전문 기사가 대신 주차 및 반환을 도와드립니다.</p>
+      </div>
+      <div class="service-box">
+        <img src="/img/parkingLot.png" alt="주차장 정보 아이콘">
+        <h3>주차장 정보</h3>
+        <p>내 주변 주차장, 가격, 혼잡도 등 실시간 정보를 제공합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <th:block th:include="@{/footer}"></th:block>
+</body>
+</html>

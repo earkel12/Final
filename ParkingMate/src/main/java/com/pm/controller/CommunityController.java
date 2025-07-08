@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.pm.booking.model.UserCarDTO;
 import com.pm.com.model.CommentDTO;
 import com.pm.com.model.CommunityDTO;
 import com.pm.com.model.ReviewDTO;
@@ -213,16 +214,16 @@ public class CommunityController {
 
 		int listSize = 5;
 		int pageSize = 5;
-		int totalCnt = service.getTotalCnt();
+		int totalCnt2 = service.getTotalCnt2();
 
-		List<ReviewDTO> arr = service.getReviewList(cp, listSize);
-		String pageStr = PageModule.makePaging("/comReview", totalCnt, listSize, pageSize, cp);
+		List<ReviewDTO> arr2 = service.getReviewList(cp, listSize);
+		String pageStr2 = PageModule.makePaging("/comReview", totalCnt2, listSize, pageSize, cp);
 
 		ModelAndView mav = new ModelAndView();
 		String userid = (String) session.getAttribute("sid");
-		mav.addObject("arr", arr);
+		mav.addObject("arr2", arr2);
 		mav.addObject("userid", userid);
-		mav.addObject("pageStr", pageStr);
+		mav.addObject("pageStr2", pageStr2);
 		mav.setViewName("/com/comReview");
 
 		return mav;
@@ -256,4 +257,20 @@ public class CommunityController {
 		mav.setViewName("com/comMsg");
 		return mav;
 	}
+	
+	@GetMapping("/reviewContent")
+	public String reviewContent(Model model,@RequestParam("bookingnum") int bookingnum) {
+		
+		try {
+			ReviewDTO reviewContent = service.reviewContent(bookingnum);
+			model.addAttribute("content", reviewContent);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "com/reviewContent";
+	}
+	
+	
 }

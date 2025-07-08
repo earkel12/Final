@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.pm.booking.model.BookingDTO;
 import com.pm.booking.model.UserCarDTO;
@@ -79,10 +80,6 @@ public class BookingController {
 	    // 2. 현재 시간 기준
 	    LocalDateTime now = LocalDateTime.now();
 	    booking.setBookingdate(now);
-	    booking.setIntime(now);  // 입차 시간도 현재로 설정
-
-	    // 3. 출차 시간 = 입차 + duration (단위: 시간)
-	    booking.setOuttime(now.plusHours(duration));
 
 	    // 4. 기타 정보
 	    booking.setStatus("예약접수");
@@ -112,12 +109,31 @@ public class BookingController {
 	
 	@PostMapping("/finalpayment")
 	@ResponseBody
-	public String finalupdatePayment(HttpSession session) {
+	public String finalupdatePayment(HttpSession session, @RequestParam("bookingcarnum") String bookingcarnum) {
 	    String userId = (String) session.getAttribute("sid");
+	    System.out.println("userId: " + userId);
+	    System.out.println("bookingcarnum: " + bookingcarnum);
+
 	    try {
-	        service.finalupdateStatus(userId);  
-	        return "OK";
+	        if (bookingcarnum == null || bookingcarnum.trim().isEmpty()) {
+	            System.out.println("bookingcarnum 파라미터가 전달되지 않았습니다.");
+	            return "FAIL";
+	        }
+
+	        int price = service.getBookingPriceById(userId, bookingcarnum);
+	        System.out.println("price: " + price);
+
+	        if (price == 0) {
+	            service.updateBookingStatusIfPriceZero(userId, bookingcarnum);
+	            System.out.println("0원 결제 상태 업데이트 완료");
+	            return "OK";
+	        } else {
+	            service.finalupdateStatus(userId, bookingcarnum);
+	            System.out.println("유료 결제 상태 업데이트 완료");
+	            return "OK";
+	        }
 	    } catch (Exception e) {
+	        e.printStackTrace();
 	        return "FAIL";
 	    }
 	}
@@ -125,7 +141,7 @@ public class BookingController {
 	//메이트이용현황 관련
 	@GetMapping("/mateUsagesStatus")
 	public String mateUsagesStatus(@SessionAttribute(value = "sid", required = false) String id,
-	        @RequestParam(value = "bookingcarnum", required = false) String bookingcarnum, Model model) {
+	        @RequestParam(value = "bookingcarnum", required = false) String bookingcarnum, Model model, RedirectAttributes rttr ) {
 		System.out.println("사용자ID:"+ id);
 		
 		if (id == null || id.isEmpty()) {
@@ -136,7 +152,12 @@ public class BookingController {
 		try {
 	        List<String> reservedCarNums = service.findBookingCarNumByUser(id);
 	        model.addAttribute("reservedCarNums", reservedCarNums);
-
+	        
+	        if (reservedCarNums == null || reservedCarNums.isEmpty()) {
+	            rttr.addFlashAttribute("msg", "현재 이용 중인 예약건이 없습니다.");
+	            return "redirect:/alertForNotExistMateUsage";
+	        }
+	        
 	        if (bookingcarnum == null && !reservedCarNums.isEmpty()) {
 	        	bookingcarnum = reservedCarNums.get(0);
 	        }
@@ -180,6 +201,12 @@ public class BookingController {
 	            e.printStackTrace();
 			}
 		}
+		
+		if (parkinglotdto == null || bookingInfoByCarnum == null) {
+	        model.addAttribute("noBooking", true);
+	        return "booking/mateUsagesStatus";
+	    }
+		
 		model.addAttribute("parkinglotdto", parkinglotdto);
 		
 		//지도위도, 경도추가
@@ -210,7 +237,13 @@ public class BookingController {
 		System.out.println("들어감");
 		return "booking/mateUsagesStatus";
 	}
-
+	
+	@GetMapping("/alertForNotExistMateUsage")
+    public String alertForNotExistMateUsage() {
+		return "booking/alertForNotExistMateUsage";
+    }
+	
+	
 	@PostMapping("/booking/updateIntime")
 	@ResponseBody
 	public Map<String, Object> updateIntime(@RequestParam("bookingnum")int bookingnum, HttpSession session) {

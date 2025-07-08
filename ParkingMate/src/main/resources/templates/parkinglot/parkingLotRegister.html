@@ -9,6 +9,50 @@
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
 
 <!-- ✅ 지도 섹션 -->
 <h2 class="form-title">주차장 등록 (관리자)</h2>
@@ -17,7 +61,6 @@
 
   <!-- 지도 -->
   <div id="map" class="map-box"></div>
-  <p class="map-info">※ 지도를 클릭해주세요!</p>
 
   <!-- 입력 테이블 -->
   <table class="form-table">
@@ -61,13 +104,14 @@
     <tr><th>경도</th><td><input type="text" name="longitude" id="longitude" readonly required></td></tr>
   </table>
 
+
+</form>
   <!-- 버튼 -->
   <div class="form-buttons">
     <button type="button" onclick="handleSubmit('insert')" class="btn-primary">등록하기</button>
     <button type="button" onclick="handleSubmit('delete')" class="btn-danger">삭제하기</button>
     <button type="button" onclick="handleSubmit('update')" class="btn-update">수정하기</button>
   </div>
-</form>
 </div>
 <script>
 kakao.maps.load(function () {

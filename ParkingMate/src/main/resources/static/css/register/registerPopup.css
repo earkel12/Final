@@ -1,0 +1,76 @@
+/* popup.css - 파킹메이트 비밀번호 변경 팝업 스타일 */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #4B55E1;
+  margin-bottom: 20px;
+}
+
+form {
+  max-width: 350px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #B1B2FF;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: #333;
+  font-weight: 500;
+}
+
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input[type="submit"],
+input[type="button"] {
+  width: 48%;
+  padding: 10px;
+  margin-top: 15px;
+  background-color: #B1B2FF;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: #4B55E1;
+}
+
+#pwd-check-msg {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  form {
+    width: 90%;
+  }
+
+  input[type="submit"],
+  input[type="button"] {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

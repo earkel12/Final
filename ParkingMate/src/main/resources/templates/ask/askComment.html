@@ -7,8 +7,59 @@
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
+
+    <h1 th:if = "${userid == 'admin'}">답변하기 (관리자)</h1>
+    <h1 th:if = "${userid != 'admin'}" th:text = "${userid+'님의 문의내역'}"></h1>
+
+<!-- 상단 메뉴 -->
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav" >
+  <ul>
+    <li><a href="companyProfile">회사소개관리</a></li>
+    <li><a href="memberListAdminMode">회원관리</a></li>
+    <li><a href="parkingLotRegister">주차장관리</a></li>
+    <li><a href="notice">공지사항관리</a></li>
+    <li><a href="faq">FAQ관리</a></li>
+    <li><a href="ask">문의답변</a></li>
+    <li><a href="comList">커뮤니티</a></li>
+  </ul>
+</nav>
+
     <h1>답변하기 (관리자)</h1>
     <form name="comment" action="comment" method="post" class="comment-form">
+    <div class = "container">
         <fieldset th:each="ask : ${askComment}">
             <input type="hidden" name="idx" th:value="${ask.idx}" />
 
@@ -35,13 +86,17 @@
 
             <section class="answer-box">
                 <label for="comment">답변 내용</label>
-                <textarea id="comment" name="comment" rows="8" placeholder="여기에 답변 내용을 입력하세요..."></textarea>
+                <textarea id="comment" name="comment" rows="8" placeholder="여기에 답변 내용을 입력하세요..."  th:readonly="${userid != 'admin'}" th:text="${ask.comment}" required></textarea>
             </section>
 
-            <div class="form-group btn-group">
-                <input type="submit" value="답변하기" />
+            <div class="form-group btn-group" th:if = "${userid == 'admin'}">
+                <input type="submit" value="답변하기" >
+            </div>
+             <div class="form-group btn-group">
+               	<a href = "javascript:history.back()" class = "backBut" style = "">돌아가기</a>
             </div>
         </fieldset>
+        </div>
     </form>
     <th:block th:include = "@{/footer}"></th:block>
 </body>

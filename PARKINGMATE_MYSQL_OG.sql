@@ -1,4 +1,4 @@
-여러분 mate_paycheck테이블 설정값변경 등 변경된 db 드립니다.
+#여러분 mate_paycheck테이블 설정값변경 등 변경된 db 드립니다.
 #테이블생성
 #순서대로 생성하기
 #유저테이블
@@ -206,3 +206,4 @@ create table faq (
 )ENGINE=InnoDB AUTO_INCREMENT=1;
 
 select id from user where name = '김두원' and tel = '없음';
+

@@ -3,31 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>주차장이용내역</title>
-<style>
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th, td {
-    border-bottom: 1px dotted #000;
-    text-align: center;
-    padding: 8px;
-}
-th {
-    background-color: #f2f2f2;
-}
-.tab {
-    background-color: #ddd;
-    border: 1px solid #aaa;
-    padding: 10px;
-    display: inline-block;
-    cursor: pointer;
-    margin-right: 5px;
-}
-.tab.active {
-    background-color: #bbb;
-}
-</style>
+<link rel="stylesheet" href="/css/mypage/myparkingHistory.css">
+<script src="/js/involveParkingHistory_review.js"></script>
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function moveToMyParkingHistory() {
     window.location.href = '/myParkingHistory';
@@ -36,9 +15,25 @@ function moveToMyParkingHistory() {
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
-<div>
-    <div class="tab" onclick="moveToMyParkingHistory()">주차장이용내역</div>
-    <div class="tab active">주차대행이용내역</div>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="myCarAdd">차량등록</a></li>
+    <li><a href="myCarList">차량목록</a></li>
+    <li><a href="userInfo">회원정보</a></li>    
+    <li><a href="myParkingHistory">주차장내역보기</a></li>
+    <li><a href="myAskInfo">문의내역</a></li>
+  </ul>
+</nav>
+
+<div class="table-wrapper" style="min-height: 375px;">
+<div class="filter-grid">
+    <div class="filter-item" onclick="goToFilter('all')">
+        <div>전체내역</div>
+    </div>
+    <div class="filter-item" onclick="goToFilter('valet')">
+        <div>파킹메이트내역</div>
+    </div>
 </div>
 
 <table>
@@ -64,21 +59,38 @@ function moveToMyParkingHistory() {
     	</td>
     <tbody>
         <tr th:each="parkingMateHistory : ${bookingParkingMateList}">
-            <td th:text="${parkingMateHistory.bookingnum}"></td>
-            <td th:text="${parkingMateHistory.bookingdate}"></td>
-            <td th:text="${parkingMateHistory.bookingcarnum}"></td>
-            <td th:text="${parkingMateHistory.parkinglot_name}"></td>
-            <td th:text="${parkingMateHistory.intime}"></td>
-            <td th:text="${parkingMateHistory.outtime}"></td>
-          	<td th:text="${parkingMateHistory.valet == 1 ? 'O' : 'X'}"></td>
-			<td th:text="${parkingMateHistory.instand == 1 ? 'O' : 'X'}"></td>
-            <td th:text="${parkingMateHistory.price}"></td>
-            <td th:text="${parkingMateHistory.status}"></td>
-            <td th:text="${parkingMateHistory.obstacle == 1 ? 'O' : 'X'}"></td>
-            <td><input type="button" value="리뷰쓰기" onclick="window.location.href='/myParkingHistoryReview';"></td>
+            <td th:text="${parkingMateHistory['bookingnum']}"></td>
+			<td th:text="${parkingMateHistory['bookingdate']}"></td>
+			<td th:text="${parkingMateHistory['bookingcarnum']}"></td>
+			<td th:text="${parkingMateHistory['parkinglot_name']}"></td>
+			<td th:text="${parkingMateHistory['intime']}"></td>
+			<td th:text="${parkingMateHistory['outtime']}"></td>
+			<td th:text="${parkingMateHistory['valet'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${parkingMateHistory['instand'] == 1 ? 'O' : 'X'}"></td>
+			<td th:text="${parkingMateHistory.['price'] != 0 ? #numbers.formatInteger(parkingMateHistory.['price'], 3, 'COMMA') + '원' : '0원'}"></td>
+			<td th:text="${parkingMateHistory['status']}"></td>
+			<td th:text="${parkingMateHistory['obstacle'] == 1 ? 'O' : 'X'}"></td>
+            <td>
+            	<th:block th:if="${reviewList.contains(parkingMateHistory['bookingnum'])}">
+			    <button disabled>작성완료</button>
+			  </th:block>
+			  <th:block th:unless="${reviewList.contains(parkingMateHistory['bookingnum'])}">
+			    <input type="button" value="리뷰쓰기"
+			           class="review-btn"
+			           th:data-bookingnum="${parkingMateHistory['bookingnum']}"
+			           th:data-bookingdate="${parkingMateHistory['bookingdate']}"
+			           th:data-parkinglot_name="${parkingMateHistory['parkinglot_name']}">
+			  </th:block>
+            </td>
         </tr>
     </tbody>
 </table>
+<div>
+    	<button class="back-btn" onclick="window.location.href='/mypageMain'">뒤로 돌아가기</button>
+	</div>
+</div>
+
+<div style="height: 30px;"></div>
 <th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

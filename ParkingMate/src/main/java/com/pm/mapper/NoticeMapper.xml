@@ -30,6 +30,10 @@
   		select count(*) from notice where division = 0
   	</select>
   	
+  	<update id = "readnumUpdate" parameterType="int">
+  		update notice set readnum = readnum+1 where idx = #{idx}
+  	</update>
+  	
 	<!-- 언더바로 인한 사용 이름 변경 -->
 	<resultMap id="noticePotoMap" type="com.pm.notice.model.NoticePotoDTO">
 	    <id column="idx" property="idx"/>

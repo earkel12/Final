@@ -2,29 +2,31 @@
 <html xmlns:th = http://www.thymeleaf.org>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script>
-    function selectGear(value) {
-        document.getElementById("gear").value = value;
+<title>ParkingMate</title>
+<link rel="stylesheet" href="/css/mypage/mycaradd.css">
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/involveMyCarAdd.js" defer></script>
 
-        // 선택된 버튼 강조 (css 클래스 토글)
-        document.getElementById("manualBtn").style.backgroundColor = (value === '수동') ? "#ccc" : "";
-        document.getElementById("autoBtn").style.backgroundColor = (value === '자동') ? "#ccc" : "";
-    }
-    function selectGas(value) {
-    	document.getElementById("gas_type").value = value;
-  
-    }
-    function openFindPopup(){
-    	window.open('/toFindCarPopup', '차량검색팝업', 'width=600, height=400');
-    }
-</script>
 </head>
 <body>
-<form name="carRegisterForm" action="/carRegisterForm" method="post">
+<th:block th:include = "@{/header}"></th:block>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="myCarAdd">차량등록</a></li>
+    <li><a href="myCarList">차량목록</a></li>
+    <li><a href="userInfo">회원정보</a></li>    
+    <li><a href="myParkingHistory">주차장내역보기</a></li>
+    <li><a href="myAskInfo">문의내역</a></li>
+  </ul>
+</nav>
+
+<div class="car-register-container">
+<form name="carRegisterForm" action="/carRegisterForm" method="post" onsubmit="return validateForm()">
 	<input type="hidden" id="id" name="id" th:value="${session.sid}">
 <fieldset>
-	<legend>유저차량등록</legend>
+	<legend>차량등록</legend>
 	<table>
 		<tr>
 			<th>차량번호:</th>
@@ -58,10 +60,10 @@
 			<!-- 실제 서버로 넘길 값 -->
 			<input type="hidden" id="gas_type" name="gas_type">
 			
-			휘발유<input type="radio" onclick="selectGas('휘발유')" id="gasoline_type">
-			경유<input type="radio" onclick="selectGas('경유')" id="diesel_type">
-			전기<input type="radio" onclick="selectGas('전기')" id="electric_type">
-			그외<input type="radio" onclick="selectGas('그외')" id="etc_type">
+			휘발유 <input type="radio" name="gas_type_visible" onclick="handleSelection('gas', '휘발유')" id="gasoline_type">
+			경유 <input type="radio" name="gas_type_visible" onclick="handleSelection('gas', '경유')" id="diesel_type">
+			전기 <input type="radio" name="gas_type_visible" onclick="handleSelection('gas', '전기')" id="electric_type">
+			그외 <input type="radio" name="gas_type_visible" onclick="handleSelection('gas', '그외')" id="etc_type">
 			
 			</td>
 		</tr>
@@ -75,20 +77,25 @@
 		    	<!-- 실제 서버로 넘길 값 -->
 		        <input type="hidden" id="gear" name="gear">
 		
-		        <button type="button" onclick="selectGear('수동')" id="manualBtn">수동</button>
-		        <button type="button" onclick="selectGear('자동')" id="autoBtn">자동</button>
+		        <button type="button" onclick="handleSelection('gear', '수동')" id="manualBtn">수동</button>
+				<button type="button" onclick="handleSelection('gear', '자동')" id="autoBtn">자동</button>
 		    </td>
 		</tr>
-		<div>
+		<tr>
+			<th></th>
+			<td></td>
+		</tr>
 			<tr>
-			<td colspan="2" align="right">
-			<input type="submit" value="차량등록">
-			<input type="button" value="취소" onclick="window.location.href='/mypageMain';">
-			</td>
+				<td colspan="2" align="right">
+				<input type="submit" value="차량등록">
+				<input type="button" value="취소" onclick="window.location.href='/mypageMain';">
+				</td>
 			</tr>
-		</div>
 	</table>
 </fieldset>
 </form>
+</div>
+
+<th:block th:include = "@{/footer}"></th:block>
 </body>
 </html>

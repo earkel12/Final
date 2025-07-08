@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ParkingMate</title>
+<script src="/js/checkSession.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="/css/mypage/mypageMain.css">
+
 </head>
 <body>
-<h1>마이페이지메인</h1>
-<h3>차량정보</h3>
-<ul>
-<li><a href="myCarAdd">내차량등록</a></li>
-<li><a href="myCarList">내챠랑확인하기</a></li>
-<li><a href="userInfo">회원정보</a></li>
-<li><a href="myParkingHistory">주차장이용내역</a></li>
-</ul>
-<br>
+<th:block th:include = "@{/header}"></th:block>
+
+<nav id="floatingNav">
+  <ul>
+    <li><a href="companyProfile">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
+
+<div class="mypage-container" >
+	<div th:if="${session.pmid == null}">
+	    <ul class="mypage-list">
+	        <li><a href="myCarAdd">내차량등록</a></li>
+	        <li><a href="myCarList">내차량확인하기</a></li>
+	        <li><a href="userInfo">회원정보</a></li>
+	        <li><a href="myParkingHistory">주차장이용내역</a></li>
+	        <li><a href="pm/register">파킹메이트등록</a></li>
+	    </ul>
+	</div>
+	<div th:if="${session.pmid != null}">
+	    <ul class="mypage-list">
+	        <li><a href="myCarAdd">내차량등록</a></li>
+	        <li><a href="myCarList">내차량확인하기</a></li>
+	        <li><a href="userInfo">회원정보</a></li>
+	        <li><a href="myParkingHistory">주차장이용내역</a></li>
+	        <li><a href="pm/main">파킹메이트</a></li>
+	    </ul>
+	</div>
+	
+    <button class="back-button" onclick="window.location.href='/'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        뒤로 돌아가기
+    </button>
+</div>
+
+<th:block th:include = "@{/footer}"></th:block>
+
 </body>
 </html>

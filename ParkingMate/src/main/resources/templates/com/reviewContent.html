@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>리뷰 상세보기</title>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9faff;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 30px 0;
+      color: #333;
+    }
+
+    table {
+      margin: 0 auto;
+      width: 85%;
+      max-width: 850px;
+      background: #fff;
+      border-collapse: collapse;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    td {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      font-size: 16px;
+      vertical-align: top;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 90%;
+      font-family: inherit;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      resize: none;
+      background-color: #f7f7f7;
+    }
+
+    #myform input[type="radio"] {
+      display: none;
+    }
+
+    #myform label {
+      font-size: 2em;
+      color: transparent;
+      text-shadow: 0 0 0 #ccc;
+      cursor: default;
+    }
+
+    #myform input[type="radio"]:checked ~ label {
+      text-shadow: 0 0 0 #ccc;
+    }
+
+    #myform label:has(~ input[type="radio"]:checked),
+    #myform input[type="radio"]:checked + label {
+      text-shadow: 0 0 0 gold;
+    }
+  </style>
+</head>
+<body>
+  <th:block th:include="@{/header}"></th:block>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="myCarAdd">차량등록</a></li>
+    <li><a href="myCarList">차량목록</a></li>
+    <li><a href="userInfo">userInfo</a></li>    
+    <li><a href="myParkingHistory">주차장내역보기</a></li>
+    <li><a href="/">문의내역</a></li>
+  </ul>
+</nav>
+  <h1>리뷰 상세보기</h1>
+
+  <table>
+    <tr>
+      <td><label>아이디:</label> <span th:text="${content.id}">아이디</span></td>
+      <td><label>작성일자:</label> <span th:text="${content.writedate}">2025-06-18</span></td>
+    </tr>
+
+    <tr>
+      <td><label>주차장:</label> <span th:text="${session.pname}">OO주차장</span></td>
+      <td>
+        <label>별점:</label>
+        <span id="myform">
+          <input type="radio" name="rating" value="1" id="rate1" disabled th:checked="${content.rating == 1}">
+          <label for="rate1">★</label>
+          <input type="radio" name="rating" value="2" id="rate2" disabled th:checked="${content.rating == 2}">
+          <label for="rate2">★</label>
+          <input type="radio" name="rating" value="3" id="rate3" disabled th:checked="${content.rating == 3}">
+          <label for="rate3">★</label>
+          <input type="radio" name="rating" value="4" id="rate4" disabled th:checked="${content.rating == 4}">
+          <label for="rate4">★</label>
+          <input type="radio" name="rating" value="5" id="rate5" disabled th:checked="${content.rating == 5}">
+          <label for="rate5">★</label>
+        </span>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <label>내용</label><br>
+        <textarea rows="8" readonly th:text="${content.content}">내용</textarea>
+      </td>
+    </tr>
+  </table>
+
+  <th:block th:include="@{/footer}"></th:block>
+</body>
+</html>

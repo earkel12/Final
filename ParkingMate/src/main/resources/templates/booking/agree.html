@@ -148,6 +148,50 @@ body {
 </head>
 <body>
 <th:block th:include="@{/header}"></th:block>
+<!-- 상단 메뉴 -->
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="/companyProfile">회사소개</a></li>
+    <li><a href="/search">예약하기</a></li>
+    <li><a href="/mateUsagesStatus">이용현황</a></li>
+    <li><a href="/notice">공지사항</a></li>
+    <li><a href="/community">커뮤니티</a></li>
+    <li><a href="/mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
 <div class="container">
 <div class="step-indicator">
   <div class="step">  예약  </div>
@@ -193,7 +237,7 @@ body {
 	<div class="terms" onclick="toggleTerms(this)">
 	  <div class="flex">
 	    <span class="terms-title">[선택] 마케팅 정보 수신 동의</span>
-	    <label><input type="checkbox" id="agree4"> 동의</label>
+	    <label><input type="checkbox" class="agree" id="agree4"> 동의</label>
 	  </div>
 	  <div class="terms-content">
 	    이벤트, 할인 정보 등 다양한 혜택을 문자 또는 이메일로 안내드립니다.  

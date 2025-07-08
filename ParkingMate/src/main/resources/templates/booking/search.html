@@ -60,6 +60,50 @@
 </head>
 <body>
 <th:block th:include = "@{/header}"></th:block>
+<!-- 상단 메뉴 -->
+<style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="companyProfile">회사소개</a></li>
+    <li><a href="search">예약하기</a></li>
+    <li><a href="mateUsagesStatus">이용현황</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="community">커뮤니티</a></li>
+    <li><a href="mypageMain">마이페이지</a></li>
+  </ul>
+</nav>
   <!-- 검색창 -->
   <div class="search-bar">
     <input id="searchInput" type="text" placeholder="지역 또는 주차장 이름 입력">
@@ -123,34 +167,47 @@
     	      clearMarkers();
 
     	      data.forEach(parking => {
-    	        const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
-    	        //마커 표시
-    	        const marker = new kakao.maps.Marker({
-    	          map: map,
-    	          position: position,
-    	          title: parking.name
-    	        });
-    	        markers.push(marker);
+    	    	  const position = new kakao.maps.LatLng(parking.latitude, parking.longitude);
+    	    	  const marker = new kakao.maps.Marker({ map: map, position, title: parking.name });
+    	    	  markers.push(marker);
 
-    	        const item = document.createElement('div');
-    	        item.className = 'parking-item';
-    	        item.innerHTML = `<strong>${parking.name}</strong><br>주소: ${parking.addr} / 30분당가격: ${parking.price}원`;
-    	        listContainer.appendChild(item);
+    	    	  const item = document.createElement('div');
+    	    	  item.className = 'parking-item';
+    	    	  item.innerHTML = `<strong>${parking.name}</strong><br>
+    	    	    주소: ${parking.addr} / 30분당가격: ${parking.price}원<br>
+    	    	    전체자리: ${parking.maxnum} / 가능자리: 계산중...`;
 
-    	        item.addEventListener('click', function () {
-    	          const content = `<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`;
-    	          infowindow.setContent(content);
-    	          infowindow.open(map, marker);
-    	          map.setCenter(position);
-    	          fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`)
-    	            .then(res => console.log("Session 저장 완료"));
-    	          document.getElementById('name').innerText = parking.name;
-    	        });
+    	    	  // 예약 수 API 호출
+    	    	  fetch(`/map/count?idx=${parking.idx}`)
+    	    	    .then(res => res.json())
+    	    	    .then(count => {
+    	    	      const available = parking.maxnum - count;
+    	    	      item.innerHTML = `<strong>${parking.name}</strong><br>
+    	    	        주소: ${parking.addr} <br>
+    	    	        30분당가격: ${parking.price}원 <br>
+    	    	        전체자리(가능): ${parking.maxnum}(${available})`;
+    	    	    })
+    	    	    .catch(err => {
+    	    	      item.innerHTML = `<strong>${parking.name}</strong><br>
+    	    	        주소: ${parking.addr} / 30분당가격: ${parking.price}원<br>
+    	    	        전체자리: ${parking.maxnum} / 가능자리: 정보없음`;
+    	    	    });
 
-    	        kakao.maps.event.addListener(marker, 'click', function () {
-    	          item.click();
-    	        });
-    	      });
+    	    	  document.getElementById('listContainer').appendChild(item);
+
+    	    	  item.addEventListener('click', function () {
+    	    	    infowindow.setContent(`<div style="padding:5px;"><b>${parking.name}</b><br>${parking.addr}</div>`);
+    	    	    infowindow.open(map, marker);
+    	    	    map.setCenter(position);
+    	    	    fetch(`/map/setSession?idx=${parking.idx}&name=${parking.name}&price=${parking.price}&price2=${parking.price2}`);
+    	    	    document.getElementById('name').innerText = parking.name;
+    	    	  });
+
+    	    	  kakao.maps.event.addListener(marker, 'click', function () {
+    	    	    item.click();
+    	    	  });
+    	    	});
+
     	    })
     	    .catch(err => console.error(err));
     	}
@@ -174,14 +231,23 @@
       }
     });
 
-    // 예약 버튼 클릭
+ // 예약 버튼 클릭
     document.getElementById('reserveBtn').addEventListener('click', function () {
       const selectedName = document.getElementById('name').innerText;
+      const countText = document.getElementById('count')?.innerText;
+
       if (selectedName === '-' || selectedName === '') {
         alert('먼저 주차장을 선택해주세요.');
-      } else {
-        location.href = 'booking';
+        return;
       }
+
+      const availableCount = parseInt(countText);
+      if (!isNaN(availableCount) && availableCount === 0) {
+        alert('만차입니다. 다른 주차장을 선택해주세요!');
+        return;
+      }
+
+      location.href = 'booking';
     });
   });
 </script>

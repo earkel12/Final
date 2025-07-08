@@ -1,10 +1,12 @@
 package com.pm.member.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pm.booking.model.BookingDTO;
 import com.pm.mapper.MemberMapper;
 import com.pm.member.model.MemberDTO;
 
@@ -52,6 +54,18 @@ public String pwdFind(MemberDTO dto) throws Exception {
 	@Override
 	public String getTelById(String id) throws Exception{
 	    return mapper.selectTelById(id);
+	}
+	
+	
+	//관리자모드-회원리스트
+	@Override
+	public List<Map<String, Object>> checkMemberListByAdmin() throws Exception {
+		return mapper.checkMemberListByAdmin();
+	}
+	//관리자모드-특정회원예약내역
+	@Override
+	public List<Map<String, Object>> findBookingListById(String id) throws Exception {
+		return mapper.findBookingListById(id);
 	}
 	
 

@@ -16,7 +16,8 @@ public interface BookingMapper {
 	public void insertBooking(BookingDTO booking) throws Exception;
 	public List<UserCarDTO> carbyid(String userid) throws Exception;
 	public void updateStatus(String userid) throws Exception;
-	public void finalupdateStatus(String userid) throws Exception;
+	//0원결제상태변경 로직 추가 후 파킹메이트 결제상태변경이 안되어 쿼리문변경 후 메소드 파라미터 변경
+	public void finalupdateStatus(Map<String, Object> param) throws Exception;
 	public int bookingCount(int idx) throws Exception;
 
 	public List<BookingParkingDTO> selectActiveInstadBookings();
@@ -24,13 +25,15 @@ public interface BookingMapper {
 	public BookingDTO getBookingByNum(int bookingnum);
 	public List<BookingParkingDTO> getBookingParkingListByMateId(String mateId);
 	
+	//0원이여도 결제완료상태 변경
+	public int getBookingPriceById(@Param("id") String id, @Param("bookingcarnum") String bookingcarnum) throws Exception;
+	public void updateBookingStatusIfPriceZero(Map<String, Object> param) throws Exception;
 	//메이트이용현황관련
 	public List<String> findBookingCarNumByUser(String id) throws Exception;
 	public List<Map<String, Object>> findBookingInfoByCarNum(String id, String bookingcarnum) throws Exception;
 	public ParkingLotDTO findParkinglotByName(String name) throws Exception;
 	public List<Map<String, Object>> findMatcingMate(@Param("id")String id, @Param("car_num")String car_num) throws Exception;
 
-	public int updateEndTime(int bookingnum) throws Exception;
 	public int updateStartTimePaycheck(int bookingnum) throws Exception;
 	public int updateOuttime(int bookingnum) throws Exception;
 	

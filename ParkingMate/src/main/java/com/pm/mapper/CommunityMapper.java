@@ -25,8 +25,11 @@ public interface CommunityMapper {
 	public List<ReviewDTO> getReviewList(int cp, int ls) throws Exception;
 
 	public int insertReview(ReviewDTO dto) throws Exception;
+	public ReviewDTO reviewContent(int bookingnum) throws Exception;
+	public int getTotalCnt2();
 
 	public int getSearchCount(String type, String keyword);
 	public List<CommunityDTO> searchCommunity(String type, String keyword, int cp, int listSize);
-
+	
+	
 }

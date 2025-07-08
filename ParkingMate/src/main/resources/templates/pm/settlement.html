@@ -10,7 +10,6 @@ body {
 	background-color: #f5f7fa;
 	color: #2c3e50;
 	margin: 0;
-	padding: 40px 20px;
 }
 
 h1 {
@@ -123,14 +122,87 @@ a:hover {
 		justify-content: center;
 	}
 }
+footer {
+	width: 100%;
+	padding: 15px 0;
+	text-align: center;
+	border-top: 1px solid #ddd;
+	flex-shrink: 0;
+	margin-top: 20px;
+	font-size: 14px;
+	color: #666;
+}
+
+.back-button {
+	display: inline-block;
+	margin: 30px auto 0 auto;
+	padding: 10px 20px;
+	background-color: #6C72FF;
+	color: white;
+	font-weight: 600;
+	border: none;
+	border-radius: 6px;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+	background-color: #555bff;
+	color: white;
+}
 </style>
 </head>
 <body>
+  <style>
+/* 상단 메뉴바 */
+#floatingNav {
+  width: 100%;
+  background-color: #B1B2FF;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#floatingNav ul {
+  display: flex;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#floatingNav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+#floatingNav a:hover {
+  background-color: #AAC4FF;
+}
+</style>
+<nav id="floatingNav">
+  <ul>
+    <li><a href="main">메인</a></li>
+    <li><a href="worklog">근무관리</a></li>
+    <li><a href="notice">공지사항</a></li>
+    <li><a href="settlement">정산내역</a></li>
+    <li><a href="usagehistory">이용현황</a></li>
+    <li><a href="matching">메이트매칭</a></li>
+  </ul>
+</nav>
 	<h1>파킹메이트 정산내역</h1>
 	<form action="/pm/settlement" method="get" class="filter-form">
-		<label for="startDate">시작일:</label> <input type="date" id="startDate"
+		<label for="startDate">매칭 시작일:</label> <input type="date" id="startDate"
 			name="startDate" th:value="${startDate}"> <label
-			for="endDate">종료일:</label> <input type="date" id="endDate"
+			for="endDate">매칭 종료일:</label> <input type="date" id="endDate"
 			name="endDate" th:value="${endDate}">
 		<button type="submit">조회</button>
 	</form>
@@ -140,8 +212,8 @@ a:hover {
 				<tr>
 					<th>번호</th>
 					<th>요청자ID</th>
-					<th>입차시간</th>
-					<th>출차시간</th>
+					<th>매칭시간</th>
+					<th>주차시간</th>
 					<th>상태구분</th>
 					<th>금액</th>
 					<th>메이트ID</th>
@@ -156,9 +228,9 @@ a:hover {
 					<td th:text="${dto.idx}">번호</td>
 					<td th:text="${dto.id}">요청자ID</td>
 					<td
-						th:text="${dto.starttime != null} ? ${#dates.format(dto.starttime, 'yyyy-MM-dd HH:mm')} : '미등록'">시작일시</td>
+						th:text="${dto.starttime != null} ? ${#dates.format(dto.starttime, 'yyyy-MM-dd HH:mm')} : ''">시작일시</td>
 					<td
-						th:text="${dto.endtime != null} ? ${#dates.format(dto.endtime, 'yyyy-MM-dd HH:mm')} : '미등록'">종료일시</td>
+						th:text="${dto.endtime != null} ? ${#dates.format(dto.endtime, 'yyyy-MM-dd HH:mm')} : ''">종료일시</td>
 
 					<td th:text="${dto.status}">상태구분</td>
 					<td th:text="${dto.price}">금액</td>
@@ -170,6 +242,9 @@ a:hover {
 		<br>
 	</form>
 </body>
-<a th:href="@{/parkingmate}">파킹메이트 메인</a>
-<th:block th:include="@{/footer}"></th:block>
+<footer>
+			<a th:href="@{/parkingmate}" class="back-button">← 파킹메이트 메인으로
+				돌아가기</a>
+			<th:block th:include="@{/footer}"></th:block>
+		</footer>
 </html>

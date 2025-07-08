@@ -16,9 +16,8 @@ public interface NoticeService {
 	public NoticeDTO contentSelect(int idx) throws Exception;
 	public int noticeDelete(int idx) throws Exception;
 	public int noticeUpdate(NoticeDTO dto) throws Exception;
-
-
 	public List<NoticeDTO> getAllNotice() throws Exception;
+	public int readnumUpdate(int idx) throws Exception;
 
 	public List<NoticeDTO> getPmNotice(int cp, int ls) throws Exception;
 	

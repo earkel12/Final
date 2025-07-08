@@ -3,9 +3,17 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #fafafa;
-    margin: 30px auto;
-    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: none;  /* max-width 제한 제거 */
     color: #333;
+}
+
+.container {
+    max-width: 900px;       /* 최대 너비: 화면보다 약간 좁게 */
+    margin: 0 auto;         /* 좌우 중앙 정렬 */
+    padding: 0 15px;        /* 좌우 내부 여백 (좁은 화면에서 여백 유지용) */
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
 }
 
 h1 {
@@ -114,3 +122,21 @@ input[type="submit"]:hover {
     background-color: #D2DAFF;
 }
 
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.backBut {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: gray;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	text-decoration: none;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
