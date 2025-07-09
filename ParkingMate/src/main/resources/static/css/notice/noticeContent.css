@@ -2,12 +2,11 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f6fa;
   margin: 0;
-  padding: 40px;
 }
 
 .card {
   max-width: 800px;
-  margin: auto;
+  margin: 40px auto;
   background: white;
   padding: 30px 40px;
   border-radius: 12px;

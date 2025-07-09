@@ -8,8 +8,6 @@
 <body>
 <th:block th:include = "@{/header}"></th:block>
 
-    <h1 th:if = "${userid == 'admin'}">답변하기 (관리자)</h1>
-    <h1 th:if = "${userid != 'admin'}" th:text = "${userid+'님의 문의내역'}"></h1>
 
 <!-- 상단 메뉴 -->
 <style>
@@ -57,7 +55,8 @@
   </ul>
 </nav>
 
-    <h1>답변하기 (관리자)</h1>
+    <h1 th:if = "${userid == 'admin'}">답변하기 (관리자)</h1>
+    <h1 th:if = "${userid != 'admin'}" th:text = "${userid+'님의 문의내역'}"></h1>
     <form name="comment" action="comment" method="post" class="comment-form">
     <div class = "container">
         <fieldset th:each="ask : ${askComment}">
